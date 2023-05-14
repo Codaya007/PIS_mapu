@@ -22,11 +22,11 @@
 <h3>Objetivos específicos:</h3>
 <ul>
   <li>
-    Análisis y diseño de la aplicación para la identificación de rutas dentro
+    Análizar y diseñar la aplicación para la identificación de rutas dentro
     del campus universitario
   </li>
   <li>
-    Implementación a nivel de lenguaje de programación del módulo diseñado.
+    Implementar a nivel de lenguaje de programación el módulo diseñado.
   </li>
 </ul>
 
@@ -42,7 +42,7 @@
   Una vez clonado el repositorio, vamos a encontrar dentro del proyecto 2
   carpetas principales: api y mobile-client. La carpeta api contiene el código
   fuente del servidor mientras que mobile-client contiene el código fuente de la
-  aplicación móvil. Para poder levantar correr estos programas, es necesario
+  aplicación móvil. Para poder levantarla aplicación, es necesario
   tener instalado Node v18 y npm. Adicionalmente, para la aplicación móvil
   necesitamos
   <a href="https://docs.expo.dev/get-started/installation/">instalar Expo</a>
