@@ -7,7 +7,7 @@
   <li><a href="#contrib">Contribuidores </a></li>
 </ul>
 
-## [Descripción del proyecto] (#description)
+<h2 id="description">Descripción del proyecto</h2>
 
 <p>
   El proyecto Integrador de saberes desigando al 4to ciclo de la carrera de
@@ -36,7 +36,7 @@
   web será de uso exclusivo para el personal de mantenimiento de la aplicación.
 </p>
 
-## [Instalación del proyecto] (#installation)
+<h2 id="installation">Instalación del proyecto</h2>
 
 <p>
   Una vez clonado el repositorio, vamos a encontrar dentro del proyecto 2
@@ -64,57 +64,31 @@ npm i
 npm start
 ```
 
-## [Contribuidores] (#contrib)
+<h2 id="contrib">Contribuidores</h2>
 
 <p>Aquí se encuentran los contribuidores de este proyecto:</p>
 
-<div style="display: flex; justify-content: space-evenly">
-  <div>
-    <a style="text-decoration: none" href="https://github.com/Codaya007">
-      <img
-        style="border-radius: 50%"
-        src="https://avatars.githubusercontent.com/Codaya007"
-        width="100px;"
-        alt=""
-      />
-      <br />
-      <p>Viviana Calva</p>
-    </a>
-  </div>
-  <div>
-    <a style="text-decoration: none" href="https://github.com/Codaya007">
-      <img
-        style="border-radius: 50%"
-        src="https://avatars.githubusercontent.com/Codaya007"
-        width="100px;"
-        alt=""
-      />
-      <br />
-      <p>Jhair Agila</p>
-    </a>
-  </div>
-  <div>
-    <a style="text-decoration: none" href="https://github.com/Daniel21004">
-      <img
-        style="border-radius: 50%"
-        src="https://avatars.githubusercontent.com/Daniel21004"
-        width="100px;"
-        alt=""
-      />
-      <br />
-      <p>Jorge Ortega</p>
-    </a>
-  </div>
-  <div>
-    <a style="text-decoration: none" href="https://github.com/Codaya007">
-      <img
-        style="border-radius: 50%"
-        src="https://avatars.githubusercontent.com/Codaya007"
-        width="100px;"
-        alt=""
-      />
-      <br />
-      <p>Dalton Maza</p>
-    </a>
-  </div>
-</div>
+<span>
+  <a style="text-decoration: none" href="https://github.com/Codaya007">
+    <img
+      style="border-radius: 50%"
+      src="https://avatars.githubusercontent.com/Codaya007"
+      width="100px;"
+      alt=""
+    />
+    <br />
+    <p>Viviana Calva</p>
+  </a>
+</span>
+<span>
+  <a style="text-decoration: none" href="https://github.com/Daniel21004">
+    <img
+      style="border-radius: 50%"
+      src="https://avatars.githubusercontent.com/Daniel21004"
+      width="100px;"
+      alt=""
+    />
+    <br />
+    <p>Jorge Ortega</p>
+  </a>
+</span>
