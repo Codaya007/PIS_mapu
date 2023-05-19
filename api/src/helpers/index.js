@@ -1,4 +1,4 @@
-const { EARTH_RADIUS_M } = require("../consts");
+const { EARTH_RADIUS_M } = require("../constants");
 const ValidationError = require("../errors/ValidationError");
 
 /**
