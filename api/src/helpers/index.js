@@ -40,4 +40,22 @@ const degToRad = (deg) => {
   return deg * (Math.PI / 180);
 };
 
-module.exports = { getDistanceBetweenCoordinates, degToRad };
+/**
+ * Valida un polígono geográfico de coordenadas
+ * @param {Array} polygon Polígono geográfico de coordenadas
+ * @return {Boolean} Es valido
+ */
+const isValidPolygon = (polygon) => {
+  if (!Array.isArray(polygon)) return false;
+
+  for (const coordinate of polygon) {
+    if (!Array.isArray(coordinate)) return false;
+    const [lat, lon] = coordinate;
+
+    if (typeof lat !== "number" || typeof lon !== "number") return false;
+  }
+
+  return true;
+};
+
+module.exports = { getDistanceBetweenCoordinates, degToRad, isValidPolygon };

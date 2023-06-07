@@ -3,6 +3,7 @@ const FailedRequest = require("../models/FailedRequest");
 const errorHandler = async (error, req, res, next) => {
   const status = error.status || 500;
   const message = error.message || "Ocurrió un error en el servidor";
+  const details = error.details || null;
 
   // Crear un nuevo documento FailedRequest
   const failedRequest = await FailedRequest.create({
@@ -15,7 +16,7 @@ const errorHandler = async (error, req, res, next) => {
     body: req.body,
   }).catch(console.log);
 
-  res.status(status).json({ error: message });
+  res.status(status).json({ message, details });
 };
 
 module.exports = errorHandler;
