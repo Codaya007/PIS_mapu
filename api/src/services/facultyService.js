@@ -22,4 +22,19 @@ const getCountFaculties = async (where = {}) => {
   return await Faculty.count(where);
 };
 
-module.exports = { createFaculty, getFaculties, getFaculty, getCountFaculties };
+const getFacultyById = async (_id) => {
+  return await Faculty.findOne({ _id });
+};
+
+const updateFacultyById = async (_id, newInfo) => {
+  return await Faculty.findByIdAndUpdate(_id, newInfo);
+};
+
+module.exports = {
+  createFaculty,
+  getFaculties,
+  getFaculty,
+  getCountFaculties,
+  getFacultyById,
+  updateFacultyById,
+};

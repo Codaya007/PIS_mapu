@@ -15,4 +15,6 @@ module.exports = {
 
     return res.json(newFaculty);
   },
+
+  getFacultyById: async (req, res, next) => {},
 };
