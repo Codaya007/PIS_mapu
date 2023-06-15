@@ -5,20 +5,21 @@ const facultySchema = new Schema({
   name: {
     type: String,
     required: true,
-    min: 5,
-    max: 150,
+    minLength: 5,
+    maxLength: 150,
+    unique: true,
   },
   description: {
     type: String,
     required: false,
     default: null,
-    max: 200,
+    maxLength: 200,
   },
   dean: {
     type: String,
     required: false,
     default: null,
-    max: 150,
+    maxLength: 150,
   },
   polygons: {
     type: Array,
