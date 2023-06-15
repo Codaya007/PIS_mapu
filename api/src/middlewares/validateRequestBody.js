@@ -15,7 +15,7 @@ const validateRequestBody = (validationSchema) => async (req, res, next) => {
         ? error.details?.map(
             (detail) => detail.context?.message || detail.message
           )
-        : error.message;
+        : [error.message];
 
       const message = `Se han encontrado algunos errores: ${errorsMessages.join(
         ". "

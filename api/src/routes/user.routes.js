@@ -1,18 +1,34 @@
 const { Router } = require("express");
 const userController = require("../controllers/userController");
-const { createUserSchema } = require("../validationSchemas/user");
-const middlewares = require("../middlewares");
 
 const userRouter = Router();
 
-userRouter.post("/login", middlewares.isLoggedIn, userController.validateLogin);
-userRouter.get("/", userController.getAllUser);
-userRouter.post(
-  "/",
-  middlewares.validateRequestBody(createUserSchema),
-  userController.registerUser
-);
+/**
+ * @route GET /
+ * @desc Obtener todas las facultades
+ * @access Public
+ */
+userRouter.get("/", userController.getAllUsers);
+
+/**
+ * @route GET /:id
+ * @desc Obtener todas las facultades
+ * @access Public
+ */
+userRouter.get("/:id", userController.getUserById);
+
+/**
+ * @route PUT /:id
+ * @desc Actualizar usuario por id
+ * @access Admin
+ */
 userRouter.put("/:id", userController.updateUser);
+
+/**
+ * @route DELETE /:id
+ * @desc Eliminar usuario por id
+ * @access Admin
+ */
 userRouter.delete("/:id", userController.deleteUser);
 
 module.exports = userRouter;

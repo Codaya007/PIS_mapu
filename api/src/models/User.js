@@ -1,54 +1,54 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema =  new Schema({
-    name: {
-        type: String,
-        required: true,
-        minlength: 3,
-        maxlength: 25,
+const userSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 25,
+  },
+  lastname: {
+    type: String,
+    required: true,
+    min: 3,
+    max: 25,
+  },
+  email: {
+    type: String,
+    required: true,
+    min: 5,
+    max: 30,
+    unique: true,
+  },
+  avatar: {
+    type: String,
+    required: false,
+    default:
+      "https://i.pinimg.com/474x/5d/69/42/5d6942c6dff12bd3f960eb30c5fdd0f9.jpg",
+  },
+  password: {
+    type: String,
+    required: true,
+    min: 5,
+    max: 30,
+  },
+  settings: {
+    nofitication: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
-    lastname: {
-        type: String,
-        required: true,
-        min: 3,
-        max: 25,
+    spam: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
-    email: {
-        type: String,
-        required: true,
-        min: 5,
-        max: 30,
-    },
-    avatar: {
-        type: String,
-        required: false,
-        default: 'https://i.pinimg.com/474x/5d/69/42/5d6942c6dff12bd3f960eb30c5fdd0f9.jpg',
-
-    },
-    password: {
-        type: String,
-        required: true,
-        min: 5,
-        max: 30,
-    },
-    settings: {
-        nofitication: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-        spam: {
-            type: Boolean,
-            required: false,
-            default: false,
-        }
-    },
-    role: {
-        type: String,
-        required: false,
-        default: "client",
-    }
+  },
+  role: {
+    type: String,
+    required: false,
+  },
 });
 
 const User = mongoose.model("users", userSchema);

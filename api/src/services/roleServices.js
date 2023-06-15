@@ -1,35 +1,56 @@
-const mongoose = require("mongoose");
+const { isValidObjectId } = require("mongoose");
 const Role = require("../models/role");
+const ValidationError = require("../errors/ValidationError");
 
-const getRole = async (name) => {
-  const role = await Role.findOne(name);
+const getRoleById = async (_id) => {
+  if (!isValidObjectId(_id))
+    throw new ValidationError("El id debe ser un ObjectId");
+
+  const role = await Role.findOne({ _id });
+
+  if (!role) throw new ValidationError("Rol no encontrado");
+
   return role;
 };
 
-const getAllRoles = async () => {
-  const allRoles = await Role.find();
+const getAllRoles = async (where = {}, skip, limit) => {
+  const allRoles = await Role.find(where).skip(skip).limit(limit);
+
   return allRoles;
+};
+
+const getCountRoles = async (where = {}) => {
+  return await Role.count(where);
 };
 
 const createRole = async (role) => {
   const roleCreated = await Role.create(role);
+
   return roleCreated;
 };
 
-const updateRole = async (id, role) => {
-  const idObject = new mongoose.Types.ObjectId(id);
-  const roleUpdated = await Role.findByIdAndUpdate(
-    idObject,
-    {
-      $set: role,
-    },
-    { new: true }
-  );
-  return roleUpdated;
+const updateRole = async (_id, newInfo) => {
+  let role = await getRoleById(_id);
+
+  role = await Role.updateOne({ _id }, newInfo);
+
+  return role;
 };
 
-const deleteRole = async (id) => {
-  const deleteRole = await Role.findByIdAndDelete(id);
-  return deleteRole;
+const deleteRole = async (_id) => {
+  if (!isValidObjectId(_id))
+    throw new ValidationError("El id debe ser un objectId");
+
+  const deletedRole = await Role.findByIdAndRemove(_id);
+
+  if (!deletedRole) throw new ValidationError("Rol no encontrado");
 };
-module.exports = { createRole, getRole, getAllRoles, updateRole, deleteRole };
+
+module.exports = {
+  getAllRoles,
+  getCountRoles,
+  getRoleById,
+  createRole,
+  updateRole,
+  deleteRole,
+};

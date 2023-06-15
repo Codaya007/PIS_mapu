@@ -1,31 +1,52 @@
+const ValidationError = require("../errors/ValidationError");
 const User = require("../models/User");
-var mongoose = require("mongoose");
 
-const getUser = async (name) => {
-  const user = await User.findOne(name);
-  return user;
-};
+const getAllUser = async (where = {}, skip = 10, limit = 10) => {
+  const allUser = await User.find(where).skip(skip).limit(limit);
 
-const getAllUser = async () => {
-  const allUser = await User.find();
   return allUser;
 };
 
-const updateUser = async (id, user) => {
-  const idObject = new mongoose.Types.ObjectId(id);
-  const userUpdate = await User.findByIdAndUpdate(
-    idObject,
-    {
-      $set: user,
-    },
-    { new: true }
-  );
-  return userUpdate;
+const getCountUser = async (where = {}) => {
+  return await User.count(where);
 };
 
-const deleteUser = async (id) => {
-  const deletedUser = await User.findByIdAndDelete(id);
-  return deletedUser;
+const getUserById = async (_id) => {
+  const user = await User.findOne({ _id });
+
+  if (!user) throw new ValidationError("Usuario no encontrado");
+
+  return user;
 };
 
-module.exports = { getUser, getAllUser, updateUser, deleteUser };
+const createUser = async (newUser) => {
+  const user = await User.create(newUser);
+
+  return user;
+};
+
+const updateUser = async (id, newInfo) => {
+  let user = await getUserById(_id);
+
+  user = await User.updateOne({ _id }, newInfo);
+
+  return user;
+};
+
+const deleteUser = async (_id) => {
+  if (!isValidObjectId(_id))
+    throw new ValidationError("El id debe ser un ObjectId");
+
+  const deletedUser = await User.findByIdAndRemove(_id);
+
+  if (!deletedUser) throw new ValidationError("Usuario no encontrada");
+};
+
+module.exports = {
+  getAllUser,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getCountUser,
+  createUser,
+};
