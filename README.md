@@ -92,3 +92,27 @@ npm start
     <p>Jorge Ortega</p>
   </a>
 </span>
+<span>
+  <a style="text-decoration: none" href="https://github.com/JhairAgila">
+    <img
+      style="border-radius: 50%"
+      src="https://avatars.githubusercontent.com/JhairAgila"
+      width="100px;"
+      alt=""
+    />
+    <br />
+    <p>Jhair Agila</p>
+  </a>
+</span>
+<span>
+  <a style="text-decoration: none" href="https://github.com/DaltonMaza">
+    <img
+      style="border-radius: 50%"
+      src="https://avatars.githubusercontent.com/DaltonMaza"
+      width="100px;"
+      alt=""
+    />
+    <br />
+    <p>Dalton Maza</p>
+  </a>
+</span>
