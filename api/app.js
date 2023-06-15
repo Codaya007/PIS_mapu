@@ -23,6 +23,8 @@ app.use(cors());
 // routes
 app.use("/", require("./src/routes/example.routes.js"));
 app.use("/faculty", require("./src/routes/faculty.routes.js"));
+app.use("/user", require("./src/routes/user.routes.js"));
+app.use("/role", require("./src/routes/role.routes.js"));
 app.use("/campus", require("./src/routes/campus.routes.js"));
 app.use("/block", require("./src/routes/block.routes.js"));
 
