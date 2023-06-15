@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const express = require("express");
+require("express-async-errors");
 const morgan = require("morgan");
 const cors = require("cors");
 const connectDB = require("./src/db/index.js");

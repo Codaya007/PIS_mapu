@@ -1,5 +1,6 @@
 const { EARTH_RADIUS_M } = require("../constants");
 const ValidationError = require("../errors/ValidationError");
+const { Types } = require("mongoose");
 
 /**
  * Calcula la distancia en metros entre dos coordenadas [latitud, longitud] usando la fórmula de Haversine
@@ -58,4 +59,11 @@ const isValidPolygon = (polygon) => {
   return true;
 };
 
-module.exports = { getDistanceBetweenCoordinates, degToRad, isValidPolygon };
+const isValidObjectId = Types.ObjectId.isValid;
+
+module.exports = {
+  getDistanceBetweenCoordinates,
+  degToRad,
+  isValidPolygon,
+  isValidObjectId,
+};

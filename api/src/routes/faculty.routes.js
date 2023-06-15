@@ -1,34 +1,9 @@
 const { Router } = require("express");
 const facultyController = require("../controllers/facultyController");
 const middlewares = require("../middlewares");
-const {
-  createFacultySchema,
-  updateFacultySchema,
-} = require("../ValidationSchemas/Faculty");
+const schemas = require("../ValidationSchemas/Faculty");
 
 const facultyRouter = Router();
-
-/**
- * @route POST /
- * @desc Crea una nueva facultad con la información pasada por body
- * @access Admin
- */
-facultyRouter.post(
-  "/",
-  middlewares.validateRequestBody(createFacultySchema),
-  facultyController.createFaculty
-);
-
-/**
- * @route PUT /:id
- * @desc Actualizar una facultad existente por id
- * @access Admin
- */
-facultyRouter.put(
-  "/:id",
-  middlewares.validateRequestBody(updateFacultySchema),
-  facultyController.createFaculty
-);
 
 /**
  * @route GET /
@@ -43,5 +18,34 @@ facultyRouter.get("/", facultyController.getAllFaculties);
  * @access Public
  */
 facultyRouter.get("/:id", facultyController.getFacultyById);
+
+/**
+ * @route POST /
+ * @desc Crea una nueva facultad con la información pasada por body
+ * @access Admin
+ */
+facultyRouter.post(
+  "/",
+  middlewares.validateRequestBody(schemas.createFacultySchema),
+  facultyController.createFaculty
+);
+
+/**
+ * @route PUT /:id
+ * @desc Actualizar una facultad existente por id
+ * @access Admin
+ */
+facultyRouter.put(
+  "/:id",
+  middlewares.validateRequestBody(schemas.updateFacultySchema),
+  facultyController.updateFaculty
+);
+
+/**
+ * @route DELETE /:id
+ * @desc Eliminar facultad por id
+ * @access Admin
+ */
+facultyRouter.delete("/:id", facultyController.deleteFacultyById);
 
 module.exports = facultyRouter;
