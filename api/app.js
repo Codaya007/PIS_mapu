@@ -22,6 +22,7 @@ app.use(cors());
 // routes
 app.use("/", require("./src/routes/example.routes.js"));
 app.use("/faculty", require("./src/routes/faculty.routes.js"));
+app.use("/block", require("./src/routes/block.routes.js"));
 
 // errorhandlers
 app.use("*", errorNotFound);
