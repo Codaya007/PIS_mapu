@@ -1,7 +1,7 @@
 const Bcrypt = require("bcrypt");
 const userService = require("../services/userService");
 const registerService = require("../services/registerService");
-// const User = require("../models/User");
+const User = require("../models/User");
 const { generateNewToken } = require("../helpers/tokenCreation");
 
 //TODO: Determinate the correct paramether on userController.getUser
@@ -41,21 +41,23 @@ module.exports = {
     }
   },
 
+  getAllUser: async (req, res) => {
+    try {
+      const totalUser = await userService.getAllUser();
+      res.status(200).json(totalUser);
+    } catch (error) {
+      res.status(400).json(`Error ${error}`);
+    }
+  },
+
   updateUser: async (req, res) => {
     try {
       if (req.params.id) {
-        // console.log(req.body.password)
-        let user = await userService.getUser({ name: req.body.name });
-        // let compare = Bcrypt.compareSync(req.body.password, user.password);
-        if (user) {
-          const updateUser = await userService.updateUser(
-            req.params.id,
-            req.body
-          );
-          res.status(200).json(updateUser);
-        } else {
-          res.status(400).json("Wrong id");
-        }
+        const updateUser = await userService.updateUser(
+          req.params.id,
+          req.body
+        );
+        res.status(200).json(updateUser);
       }
     } catch (error) {
       res.status(500).json(`Error ${error}`);

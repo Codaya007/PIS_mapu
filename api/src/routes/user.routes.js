@@ -6,6 +6,7 @@ const middlewares = require("../middlewares");
 const userRouter = Router();
 
 userRouter.post("/login", middlewares.isLoggedIn, userController.validateLogin);
+userRouter.get("/", userController.getAllUser);
 userRouter.post(
   "/",
   middlewares.validateRequestBody(createUserSchema),

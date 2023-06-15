@@ -6,6 +6,11 @@ const getUser = async (name) => {
   return user;
 };
 
+const getAllUser = async () => {
+  const allUser = await User.find();
+  return allUser;
+};
+
 const updateUser = async (id, user) => {
   const idObject = new mongoose.Types.ObjectId(id);
   const userUpdate = await User.findByIdAndUpdate(
@@ -20,7 +25,7 @@ const updateUser = async (id, user) => {
 
 const deleteUser = async (id) => {
   const deletedUser = await User.findByIdAndDelete(id);
-  return deleteUser;
+  return deletedUser;
 };
 
-module.exports = { getUser, updateUser, deleteUser };
+module.exports = { getUser, getAllUser, updateUser, deleteUser };
