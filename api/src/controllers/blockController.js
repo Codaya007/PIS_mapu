@@ -38,13 +38,9 @@ module.exports = {
     },
 
     deleteBlock: async (req, res, next) => {
-        // try{
         const number = req.params.number;
         const deleteBlock = await blockServices.deleteBlockByNumber(number);
 
         return res.json(deleteBlock);
-        // }catch(error){
-        //     return res.status(404).json({error: error.message});
-        // }
     },
 };

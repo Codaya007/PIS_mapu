@@ -39,6 +39,6 @@ const updateEventSchema = Joi.object({
 });
 
 module.exports = {
-    createEventSchema: createEventSchema,
-    updateEventSchema: updateEventSchema
+    createEventSchema,
+    updateEventSchema
 };
