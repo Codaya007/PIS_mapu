@@ -2,6 +2,7 @@ const { Double } = require("mongodb");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+//TODO: AGREGAR EL CAMPO HORA??
 const eventSchema = new Schema({
     name: {
         type: String,
@@ -21,7 +22,7 @@ const eventSchema = new Schema({
         required: false
     },
     price: {
-        type: Double,
+        type: Number,
         required: true
     },
 });

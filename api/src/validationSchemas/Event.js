@@ -21,6 +21,9 @@ const createEventSchema = Joi.object({
 
 // Definir el esquema de validación para la actualización de un Event
 const updateEventSchema = Joi.object({
+    id: Joi.string().strip().messages({
+        "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
+    }),
     name: Joi.string().optional().messages({
         "*": "El campo 'name' es optional",
     }),
