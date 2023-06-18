@@ -13,7 +13,7 @@ roleRouter.get("/:id", roleController.getRoleById);
 
 /**
  * @route GET /
- * @desc Obtener todas las facultades
+ * @desc Obtener todos los roles
  * @access Public
  */
 roleRouter.get("/", roleController.getAllRoles);
@@ -31,14 +31,14 @@ roleRouter.post(
 
 /**
  * @route GET /
- * @desc Obtener todas las facultades
+ * @desc Actuaizar role por id
  * @access Public
  */
 roleRouter.put("/:id", roleController.updateRole);
 
 /**
  * @route GET /
- * @desc Obtener todas las facultades
+ * @desc Eliminar rol por id
  * @access Public
  */
 roleRouter.delete("/:id", roleController.deleteRole);

@@ -1,7 +1,10 @@
 const { Router } = require("express");
 const campusController = require("../controllers/campusController");
 const middlewares = require("../middlewares");
-const { createCampusSchema, updateCampusSchema } = require("../validationSchemas/Campus");
+const {
+  createCampusSchema,
+  updateCampusSchema,
+} = require("../validationSchemas/Campus");
 
 const campusRouter = Router();
 
@@ -33,39 +36,27 @@ campusRouter.put(
  * @desc Elimina un campus donde el id brindado coincida
  * @access Admin
  */
-campusRouter.delete(
-  "/:id",
-  campusController.deleteCampusById
-);
+campusRouter.delete("/:id", campusController.deleteCampusById);
 
 /**
  * @route DELETE /
  * @desc Elimina un campus donde coincida la Query pasada por body
  * @access Admin
  */
-campusRouter.delete(
-  "/",
-  campusController.deleteCampus
-);
+campusRouter.delete("/", campusController.deleteCampus);
 
 /**
  * @route GET /
  * @desc Obtiene todos los campos registrados
  * @access Public
  */
-campusRouter.get(
-  "/",
-  campusController.getAllCampus
-);
+campusRouter.get("/", campusController.getAllCampus);
 
 /**
  * @route GET /:id
  * @desc Obtiene el campus que coincide con el id brindado
  * @access Public
  */
-campusRouter.get(
-  "/:id",
-  campusController.getCampusById
-);
+campusRouter.get("/:id", campusController.getCampusById);
 
 module.exports = campusRouter;
