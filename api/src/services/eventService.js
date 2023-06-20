@@ -6,7 +6,7 @@ const { isValidObjectId } = require("mongoose");
 
 const createEvent = async (eventData) => {
     const existingEvent = await Event.findOne({ "name": eventData.name });
-    if (existingEvent) throw new FieldExistingError(`El evento ya existe`)
+    if (existingEvent) throw new FieldExistingError(`El evento ya existe`, 400)
     const event = await Event.create(eventData);
 
     return event;
@@ -29,7 +29,7 @@ const getEventById = async (_id) => {
     if (!isValidObjectId(_id)) throw new ValidationError("El id debe ser un ObjectId");
     const event = await Event.findOne({ _id });
     if (!event) throw new NotExist("El evento no se encontro");
-
+    
     return event;
 };
 
@@ -39,6 +39,7 @@ const getCountEvents = async (where = {}) => {
 
 const updateEventById = async (_id, eventData) => {
     let existingEvent = await getEventById(_id)
+    if (!existingEvent) throw new NotExist("El evento no se encontro");
     existingEvent = await Event.updateOne({ _id }, eventData);
 
     return existingEvent;
@@ -47,7 +48,7 @@ const updateEventById = async (_id, eventData) => {
 const deleteEventById = async (_id) => {
     if (!isValidObjectId(_id)) throw new ValidationError("El id debe ser un ObjectId");
     const deletedEvent = await Event.findByIdAndRemove(_id);
-    if (!deletedEvent) throw new ValidationError("El evento no existe");
+    if (!deletedEvent) throw new NotExist("El evento no existe");
 
     return deletedEvent;
 };
