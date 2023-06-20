@@ -6,6 +6,26 @@ const { createCampusSchema, updateCampusSchema } = require("../validationSchemas
 const campusRouter = Router();
 
 /**
+ * @route GET /
+ * @desc Obtiene todos los campos registrados
+ * @access Public
+ */
+campusRouter.get(
+  "/",
+  campusController.getAllCampus
+);
+
+/**
+ * @route GET /:id
+ * @desc Obtiene el campus que coincide con el id brindado
+ * @access Public
+ */
+campusRouter.get(
+  "/:id",
+  campusController.getCampusById
+);
+
+/**
  * @route POST /
  * @desc Crea un campus con la información pasada por body
  * @access Admin
@@ -36,36 +56,6 @@ campusRouter.put(
 campusRouter.delete(
   "/:id",
   campusController.deleteCampusById
-);
-
-/**
- * @route DELETE /
- * @desc Elimina un campus donde coincida la Query pasada por body
- * @access Admin
- */
-campusRouter.delete(
-  "/",
-  campusController.deleteCampus
-);
-
-/**
- * @route GET /
- * @desc Obtiene todos los campos registrados
- * @access Public
- */
-campusRouter.get(
-  "/",
-  campusController.getAllCampus
-);
-
-/**
- * @route GET /:id
- * @desc Obtiene el campus que coincide con el id brindado
- * @access Public
- */
-campusRouter.get(
-  "/:id",
-  campusController.getCampusById
 );
 
 module.exports = campusRouter;
