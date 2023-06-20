@@ -1,5 +1,6 @@
 const Campus = require("../models/Campus");
-const mongoose = require("mongoose");
+const ValidationError = require("../errors/ValidationError");
+const { isValidObjectId } = require("mongoose");
 
 const createCampus = async (campusData) => {
   const campus = await Campus.create(campusData);
@@ -14,8 +15,14 @@ const getCampuses = async (where = {}, skip, limit) => {
 }
 
 const getCampusById = async (id) => {
+  if(!isValidObjectId(id)){
+    throw new ValidationError("El dato enviado debe ser un ObjectId");  
+  }
   const campus = await Campus.findById(id).exec();
 
+  if(!campus){
+    throw new ValidationError("Campus no encontrado");
+  }
   return campus;
 }
 
@@ -32,15 +39,17 @@ const updateCampusById = async (id, campusData) => {
 }
 
 const deleteCampusById = async (id) => {
+  if(!isValidObjectId(id)){
+    throw new ValidationError("El dato enviado debe ser un ObjectId");
+  }
+
   const campusDeleted = await Campus.findByIdAndDelete(id);
 
+  if(!campusDeleted){
+    throw new ValidationError("Campus no encontrado");
+  }
+
   return campusDeleted;
-}
-
-const deleteCampus = async (where = {}) => {
-  const numberCampusesDeleted = await Campus.deleteOne(where);
-
-  return numberCampusesDeleted;
 }
 
 module.exports = { 
@@ -49,6 +58,5 @@ module.exports = {
   getCampusById, 
   getCountCampuses, 
   updateCampusById, 
-  deleteCampusById, 
-  deleteCampus 
+  deleteCampusById
 };
