@@ -18,13 +18,6 @@ eventRouter.post(
 
 /**
  * @route GET /
- * @desc Obtener todos los eventos
- * @access Public
- */
-eventRouter.get("/events", eventController.getAllEvents);
-
-/**
- * @route GET /
  * @desc Obtener el evento por id
  * @access Public
  */
@@ -32,11 +25,10 @@ eventRouter.get("/:id", eventController.getEventById);
 
 /**
  * @route GET /
- * @desc Obtener el evento por el nombre
+ * @desc Obtener todos los eventos
  * @access Public
- * @queryparam {string} name - Nombre del evento
  */
-eventRouter.get("/", eventController.getEventByName);
+eventRouter.get("/", eventController.getAllEvents);
 
 /**
  * @route PUT /

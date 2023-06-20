@@ -18,13 +18,6 @@ const getEvents = async (where = {}, skip, limit) => {
     return events;
 };
 
-const getEventByName = async (name) => {
-    const event = await Event.findOne({ "name": name });
-    if (!event) throw new NotExist("El evento no se encontro");
-
-    return event;
-};
-
 const getEventById = async (_id) => {
     if (!isValidObjectId(_id)) throw new ValidationError("El id debe ser un ObjectId");
     const event = await Event.findOne({ _id });
@@ -53,4 +46,4 @@ const deleteEventById = async (_id) => {
     return deletedEvent;
 };
 
-module.exports = { createEvent, getEvents, getEventByName, getEventById, getCountEvents, updateEventById, deleteEventById };
+module.exports = { createEvent, getEvents, getEventById, getCountEvents, updateEventById, deleteEventById };

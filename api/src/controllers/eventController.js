@@ -10,13 +10,6 @@ module.exports = {
             return res.json(result); 
     },
 
-    getEventByName: async (req, res) => {
-            const name = req.query.name;
-            const result = await eventService.getEventByName(name);
-
-            return res.json(result);
-    },
-
     getAllEvents: async (req, res) => {
         const { skip = 0, limit = 10, ...where } = req.query;
 
