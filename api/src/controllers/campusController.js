@@ -8,10 +8,10 @@ module.exports = {
   },
   
   getAllCampus: async (req, res) => {
-    const { skip = 0, limit = 10 } = req.query;
+    const { skip = 0, limit = 10, ...where} = req.query;
 
-    const totalCount = await campusService.getCountCampuses(req.query);
-    const results = await campusService.getCampuses(req.query, skip, limit);
+    const totalCount = await campusService.getCountCampuses(where);
+    const results = await campusService.getCampuses(where, skip, limit);
 
     return res.json({ totalCount, results });
   },
@@ -23,7 +23,6 @@ module.exports = {
   },
 
   updateCampusById: async (req, res) => {
-    console.log(req.query);
     const updateCampus = await campusService.updateCampusById(req.params.id, req.body);
 
     return res.json(updateCampus);
@@ -33,11 +32,5 @@ module.exports = {
     const campusDeleted = await campusService.deleteCampusById(req.params.id);
   
     return res.json(campusDeleted);
-  },
-
-  deleteCampus: async (req, res) => {
-    const numberCampusesDeleted = await campusService.deleteCampus(req.body);
-
-    return res.json(numberCampusesDeleted);
   }
 };
