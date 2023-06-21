@@ -1,6 +1,5 @@
 const ValidationError = require("../errors/ValidationError");
 const Campus = require("../models/Campus");
-const ValidationError = require("../errors/ValidationError");
 const { isValidObjectId } = require("mongoose");
 
 const createCampus = async (campusData) => {
@@ -16,12 +15,12 @@ const getCampuses = async (where = {}, skip, limit) => {
 };
 
 const getCampusById = async (id) => {
-  if(!isValidObjectId(id)){
-    throw new ValidationError("El dato enviado debe ser un ObjectId");  
+  if (!isValidObjectId(id)) {
+    throw new ValidationError("El dato enviado debe ser un ObjectId");
   }
   const campus = await Campus.findById(id).exec();
 
-  if(!campus){
+  if (!campus) {
     throw new ValidationError("Campus no encontrado");
   }
   return campus;

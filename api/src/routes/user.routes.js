@@ -1,34 +1,36 @@
 const { Router } = require("express");
 const userController = require("../controllers/userController");
+const isAdmin = require("../middlewares/isAdmin");
 
 const userRouter = Router();
 
 /**
  * @route GET /
- * @desc Obtener todas las facultades
- * @access Public
+ * @desc Obtener todos las usuarios
+ * @access Private Admin
  */
-userRouter.get("/", userController.getAllUsers);
+userRouter.get("/", isAdmin, userController.getAllUsers);
 
 /**
  * @route GET /:id
- * @desc Obtener todas las facultades
- * @access Public
+ * @desc Obtener usuario por id
+ * @access Private Admin
  */
-userRouter.get("/:id", userController.getUserById);
+userRouter.get("/:id", isAdmin, userController.getUserById);
 
 /**
  * @route PUT /:id
  * @desc Actualizar usuario por id
- * @access Admin
+ * @access Private Admin
  */
-userRouter.put("/:id", userController.updateUser);
+userRouter.put("/:id", isAdmin, userController.updateUser);
 
+// No se podrá borrar usuarios, solo bloquearlos/retringirlos
 /**
  * @route DELETE /:id
- * @desc Eliminar usuario por id
- * @access Admin
+ * @desc Bloquear usuario por id
+ * @access Private Admin
  */
-userRouter.delete("/:id", userController.deleteUser);
+// userRouter.delete("/:id", userController.deleteUser);
 
 module.exports = userRouter;
