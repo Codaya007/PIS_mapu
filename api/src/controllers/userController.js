@@ -2,7 +2,7 @@ const userService = require("../services/userService");
 
 module.exports = {
   getAllUsers: async (req, res) => {
-    const { skip, limit, ...where } = req.query;
+    const { skip = 0, limit = 10, ...where } = req.query;
 
     const result = await userService.getAllUser(where, skip, limit);
     const totalCount = await userService.getCountUser(where);

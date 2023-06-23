@@ -51,6 +51,14 @@ const userSchema = new Schema({
   },
 });
 
+// Override the 'toJSON' function to customize the JSON output
+userSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    delete ret.password;
+    delete ret.__v;
+  },
+});
+
 const User = mongoose.model("users", userSchema);
 
 module.exports = User;

@@ -29,6 +29,9 @@ app.use("/faculty", require("./src/routes/faculty.routes.js"));
 app.use("/block", require("./src/routes/block.routes.js"));
 app.use("/campus", require("./src/routes/campus.routes.js"));
 app.use("/type", require("./src/routes/type.routes.js"));
+app.use("/category", require("./src/routes/category.routes.js"));
+app.use("/event", require("./src/routes/event.routes.js"));
+app.use("/image", require("./src/routes/images.routes.js"));
 
 // errorhandlers
 

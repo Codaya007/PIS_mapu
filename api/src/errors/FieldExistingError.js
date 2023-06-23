@@ -1,7 +1,8 @@
 class FieldExistingError extends Error {
-    constructor(message) {
+    constructor(message, status) {
       super(message);
       this.name = "FieldExistingError";
+      this.status = status
     }
   }
   

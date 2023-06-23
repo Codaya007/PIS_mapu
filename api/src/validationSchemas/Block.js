@@ -5,7 +5,7 @@ const ObjectId = mongoose.Types.ObjectId;
 // Definir el esquema de validación para la creación de un bloque
 const createBlockSchema = Joi.object({
   number: Joi.number().required().messages({
-    "*": "El campo 'number' es requerido", //? Posible error por usar una palabra reservada
+    "*": "El campo 'number' es requerido",
   }),
   avaible: Joi.boolean().required().default(true).messages({
     "*": "El campo 'avaible' es requerido y por defecto es 'true'",

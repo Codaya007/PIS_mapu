@@ -4,10 +4,7 @@ const NotExist = require('../errors/NotExist')
 
 const createBlock = async (blockData) => {
     const existingBlock = await getBlockByNumber(blockData.number)
-    if (existingBlock) {
-        throw new FieldExistingError(`El bloque número ${blockData.number} ya existe`)
-    }
-
+    if (existingBlock) throw new FieldExistingError(`El bloque número ${blockData.number} ya existe`)
     const block = await Block.create(blockData);
 
     return block;
@@ -21,7 +18,7 @@ const getBlocks = async (where = {}, skip, limit) => {
 
 const getBlockByNumber = async (number) => {
     const block = await Block.findOne({ "number": number });
-    
+
     return block;
 };
 
@@ -31,9 +28,7 @@ const getCountBlocks = async (where = {}) => {
 
 const updateBlockByNumber = async (number, blockData) => {
     const existingBlock = await getBlockByNumber(number)
-    if (existingBlock == null) {
-        throw new NotExist(`El bloque número ${number} no existe`)
-    }
+    if (existingBlock == null) throw new NotExist(`El bloque número ${number} no existe`)
 
     const block = await Block.findOneAndUpdate({ "number": number }, blockData, { new: true });
 

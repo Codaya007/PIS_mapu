@@ -10,10 +10,10 @@ module.exports = {
     },
 
     getAllBlocks: async (req, res) => {
-        const { skip = 0, limit = 10 } = req.query;
+        const { skip = 0, limit = 10, ...where } = req.query;
 
-        const totalCount = await blockServices.getCountBlocks(req.query);
-        const results = await blockServices.getBlocks(req.query, skip, limit);
+        const totalCount = await blockServices.getCountBlocks(where);
+        const results = await blockServices.getBlocks(where, skip, limit);
 
         return res.json({ totalCount, results });
     },
@@ -38,13 +38,9 @@ module.exports = {
     },
 
     deleteBlock: async (req, res, next) => {
-        // try{
         const number = req.params.number;
         const deleteBlock = await blockServices.deleteBlockByNumber(number);
 
         return res.json(deleteBlock);
-        // }catch(error){
-        //     return res.status(404).json({error: error.message});
-        // }
     },
 };
