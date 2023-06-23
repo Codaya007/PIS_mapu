@@ -19,22 +19,14 @@ module.exports = {
     },
 
     createBlock: async (req, res, next) => {
-        try {
             const newBlock = await blockServices.createBlock(req.body);
             return res.json(newBlock);
-        } catch (error) {
-            return res.status(400).json({ error: error.message });
-        }
     },
 
     updateBlock: async (req, res, next) => {
-        try {
             const number = req.params.number;
             const updateBlock = await blockServices.updateBlockByNumber(number, req.body);
             return res.json(updateBlock);
-        } catch (error) {
-            return res.status(404).json({ error: error.message });
-        }
     },
 
     deleteBlock: async (req, res, next) => {
