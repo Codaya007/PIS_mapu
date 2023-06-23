@@ -1,4 +1,6 @@
 const Joi = require("joi");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 // Definir el esquema de validación para la creación de un Punto perdido
 const createLostPointSchema = Joi.object({

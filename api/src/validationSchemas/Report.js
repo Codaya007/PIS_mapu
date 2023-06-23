@@ -1,4 +1,6 @@
 const Joi = require("joi");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 // Definir el esquema de validación para la creación de un Reporte
 const createReportSchema = Joi.object({
@@ -28,6 +30,14 @@ const createReportSchema = Joi.object({
         }),
 });
 
+// Definir el esquema de validación para la actualización de un Reporte
+const updateReportSchema = Joi.object({
+    revised: Joi.boolean().required().messages({
+        "*": "El campo 'revised' es opcional",
+    }),
+});
+
 module.exports = {
-    createReportSchema
+    createReportSchema,
+    updateReportSchema
 };
