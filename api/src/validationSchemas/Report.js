@@ -33,7 +33,7 @@ const createReportSchema = Joi.object({
 // Definir el esquema de validación para la actualización de un Reporte
 const updateReportSchema = Joi.object({
     revised: Joi.boolean().required().messages({
-        "*": "El campo 'revised' es opcional",
+        "*": "El campo 'revised' es requerido",
     }),
 });
 

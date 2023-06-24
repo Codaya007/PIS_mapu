@@ -32,6 +32,7 @@ app.use("/type", require("./src/routes/type.routes.js"));
 app.use("/category", require("./src/routes/category.routes.js"));
 app.use("/event", require("./src/routes/event.routes.js"));
 app.use("/image", require("./src/routes/images.routes.js"));
+app.use("/report", require("./src/routes/report.routes.js"));
 
 // errorhandlers
 

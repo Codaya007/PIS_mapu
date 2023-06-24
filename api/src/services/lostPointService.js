@@ -1,15 +1,15 @@
 const LostPoint = require("../models/LostPoint");
 
-const findOrCreateBlock = async (blockData) => {
-    const { latitude, longitude } = blockData;
+const findOrCreateLostPoint = async (lostPointData) => {
+    const { latitude, longitude } = lostPointData;
 
     const lostPoint = await LostPoint.findOneAndUpdate(
       { latitude, longitude },
-      blockData,
+      lostPointData,
       { upsert: true, new: true }
     );
   
     return lostPoint;
 };
 
-module.exports = { findOrCreateBlock };
+module.exports = { findOrCreateLostPoint };

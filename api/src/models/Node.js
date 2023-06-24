@@ -43,27 +43,7 @@ const nodeSchema = new Schema({
       weight: { type: Number, required: false, min: 1 },
     },
   ],
-  report: [
-    {
-      subNode: [
-        {
-          origin: {
-            type: String,
-            required: false,
-            minLength: 2,
-            maxLength: 20,
-          },
-          destinity: {
-            type: String,
-            required: false,
-            minLength: 2,
-            maxLength: 20,
-          },
-        },
-      ],
-      comment: { type: String, required: false, minLength: 3, maxLength: 200 },
-    },
-  ],
+
 });
 
 module.exports = mongoose.Schema("Node", nodeSchema);
