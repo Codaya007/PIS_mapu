@@ -1,5 +1,5 @@
 const { isValidObjectId } = require("mongoose");
-const Role = require("../models/role");
+const Role = require("../models/Role");
 const ValidationError = require("../errors/ValidationError");
 
 const getRoleById = async (_id) => {

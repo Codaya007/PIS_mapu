@@ -1,7 +1,10 @@
 const { Router } = require("express");
 const campusController = require("../controllers/campusController");
 const middlewares = require("../middlewares");
-const { createCampusSchema, updateCampusSchema } = require("../validationSchemas/Campus");
+const {
+  createCampusSchema,
+  updateCampusSchema,
+} = require("../validationSchemas/Campus");
 
 const campusRouter = Router();
 
@@ -53,9 +56,6 @@ campusRouter.put(
  * @desc Elimina un campus donde el id brindado coincida
  * @access Admin
  */
-campusRouter.delete(
-  "/:id",
-  campusController.deleteCampusById
-);
+campusRouter.delete("/:id", campusController.deleteCampusById);
 
 module.exports = campusRouter;

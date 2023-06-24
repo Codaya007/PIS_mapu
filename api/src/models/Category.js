@@ -5,20 +5,22 @@ const categorySchema = new Schema({
   name: {
     type: String,
     required: true,
-    maxlength: 50,
+    minLength: 2,
+    maxLength: 40,
   },
   description: {
     type: String,
-    required: false,
-    maxlength: 200,
+    required: true,
+    minLength: 2,
+    maxLength: 200,
   },
   icon: {
     type: String,
-    required: false,
-    maxlength: 500,
-  }
+    required: true,
+    minLength: 2,
+    maxLength: 30,
+  },
 });
 
 const Category = mongoose.model("Category", categorySchema);
-
 module.exports = Category;

@@ -46,5 +46,5 @@ const updateBlockSchema = Joi.object({
 
 module.exports = {
   createBlockSchema,
-  updateBlockSchema
+  updateBlockSchema,
 };
