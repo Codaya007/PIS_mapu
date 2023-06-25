@@ -31,6 +31,7 @@ app.use("/campus", require("./src/routes/campus.routes.js"));
 app.use("/category", require("./src/routes/category.routes.js"));
 app.use("/event", require("./src/routes/event.routes.js"));
 app.use("/image", require("./src/routes/images.routes.js"));
+app.use("/career", require("./src/routes/career.routes.js"));
 
 // errorhandlers
 app.use("*", errorNotFound);
