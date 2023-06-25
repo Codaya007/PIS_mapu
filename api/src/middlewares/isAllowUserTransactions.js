@@ -1,8 +1,6 @@
-const { default: mongoose } = require("mongoose");
+const { ADMIN_ROLE_NAME } = require("../constants");
 const ValidationError = require("../errors/ValidationError");
 const { validateToken } = require("../helpers/tokenCreation");
-const { ADMIN_ROLE_NAME } = require("../constants");
-const isAdmin = require("./isAdmin");
 
 module.exports = async (req, res, next) => {
   try {
@@ -10,8 +8,12 @@ module.exports = async (req, res, next) => {
     const user = await validateToken(bearerToken);
     req.user = user;
 
-    if (user.id !== req.params.id) {
-      throw new ValidationError("Token no coincide");
+    if (user.role === ADMIN_ROLE_NAME) {
+      return next();
+    } else {
+      if (user.id !== req.params.id) {
+        throw new ValidationError("Token no coincide");
+      }
     }
 
     return next();

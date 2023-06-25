@@ -13,7 +13,7 @@ module.exports = {
   getUserById: async (req, res, next) => {
     const { id } = req.params;
 
-    const user = userService.getUserById(id);
+    const user = await userService.getUserById(id);
 
     res.json(user);
   },

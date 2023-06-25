@@ -1,5 +1,8 @@
+const { isValidObjectId } = require("mongoose");
+
 const ValidationError = require("../errors/ValidationError");
 const User = require("../models/User");
+const { hashPassword } = require("../helpers/hashPassword");
 
 const getAllUser = async (where = {}, skip = 10, limit = 10) => {
   const allUser = await User.find(where).skip(skip).limit(limit);
@@ -25,10 +28,16 @@ const createUser = async (newUser) => {
   return user;
 };
 
-const updateUser = async (id, newInfo) => {
-  let user = await getUserById(_id);
+const updateUser = async (_id, newInfo) => {
+  if (!isValidObjectId(_id))
+    throw new ValidationError("El id debe ser un ObjectId");
 
-  user = await User.updateOne({ _id }, newInfo);
+  const hashedPassword = await hashPassword(newInfo.password);
+  newInfo.password = hashedPassword ? hashedPassword : newInfo.password;
+
+  let user = await User.updateOne({ _id }, newInfo);
+
+  if (!user) throw new ValidationError("Usuario no encontrada");
 
   return user;
 };

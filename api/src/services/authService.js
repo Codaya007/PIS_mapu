@@ -1,19 +1,19 @@
-const bcrypt = require("bcrypt");
 const { NORMAL_ROLE_NAME } = require("../constants");
 const ValidationError = require("../errors/ValidationError");
 const User = require("../models/User");
+const Role = require("../models/Role");
+const { hashPassword } = require("../helpers/hashPassword");
 
 const login = async (email, password) => {
   const user = await User.findOne({ email });
 
   if (!user) throw new ValidationError("Credenciales incorrectas");
 
-  const compare = Bcrypt.compareSync(password, user.password);
+  const compare = bcrypt.compareSync(password, user.password);
 
   if (!compare) {
     throw new ValidationError("Credenciales incorrectas");
   }
-
   return user;
 };
 
@@ -37,16 +37,7 @@ const register = async ({ password, ...newInfo }) => {
   return user;
 };
 
-const hashPassword = async (password) => {
-  const salt = 10;
-
-  const passwordHashed = await bcrypt.hash(req.body.password, salt);
-
-  return passwordHashed;
-};
-
 module.exports = {
   login,
   register,
-  hashPassword,
 };
