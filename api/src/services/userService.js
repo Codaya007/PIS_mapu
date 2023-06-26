@@ -26,9 +26,9 @@ const createUser = async (newUser) => {
 };
 
 const updateUser = async (id, newInfo) => {
-  let user = await getUserById(_id);
+  let user = await getUserById(id);
 
-  user = await User.updateOne({ _id }, newInfo);
+  user = await User.updateOne({ id }, newInfo);
 
   return user;
 };

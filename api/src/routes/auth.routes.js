@@ -4,6 +4,7 @@ const middlewares = require("../middlewares");
 const {
   loginSchema,
   registerUserSchema,
+  recoverPasswordSchema
 } = require("../validationSchemas/Auth");
 
 const authRouter = Router();
@@ -29,5 +30,26 @@ authRouter.post(
   middlewares.validateRequestBody(registerUserSchema),
   authController.registerUser
 );
+
+/**
+ * @route POST /generateToken
+ * @desc Generar token y enviar por correo para la recuperación de la contraseña
+ * @access Public
+ */
+authRouter.post(
+  "/generateToken",
+  middlewares.validateRequestBody(recoverPasswordSchema),
+  authController.generatePasswordRecoveryToken
+)
+
+/**
+ * @route POST /recovery-password
+ * @desc Recuperar la contraseña
+ * @access Public
+ */
+authRouter.post(
+  "/recovery-password",
+  authController.recoverPassword
+)
 
 module.exports = authRouter;
