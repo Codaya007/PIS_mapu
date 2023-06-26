@@ -43,7 +43,6 @@ const nodeSchema = new Schema({
       weight: { type: Number, required: false, min: 1 },
     },
   ],
-
 });
 
-module.exports = mongoose.Schema("Node", nodeSchema);
+module.exports = mongoose.model("Node", nodeSchema);
