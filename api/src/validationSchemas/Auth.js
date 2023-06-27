@@ -16,6 +16,9 @@ const registerUserSchema = Joi.object({
   password: Joi.string().required().min(8).alphanum().max(30).messages({
     "*": "El campo password es requerido y debe tener entre 8 y 30 caracteres alfanuméricos",
   }),
+  role: Joi.string().optional().messages({
+    "*": "El campo role es opcional",
+  }),
 });
 
 const loginSchema = Joi.object({
@@ -28,4 +31,10 @@ const loginSchema = Joi.object({
     .messages({ "*": "La contraseña es requerida" }),
 });
 
-module.exports = { registerUserSchema, loginSchema };
+const recoverPasswordSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "*" : "El campo email es requerido"
+  })
+});
+
+module.exports = { registerUserSchema, loginSchema, recoverPasswordSchema };

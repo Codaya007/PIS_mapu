@@ -7,15 +7,15 @@ module.exports = {
     const result = await userService.getAllUser(where, skip, limit);
     const totalCount = await userService.getCountUser(where);
 
-    res.json({ totalCount, result });
+    return res.json({ totalCount, result });
   },
 
   getUserById: async (req, res, next) => {
     const { id } = req.params;
 
-    const user = userService.getUserById(id);
+    const user = await userService.getUserById(id);
 
-    res.json(user);
+    return res.json(user);
   },
 
   updateUser: async (req, res) => {
@@ -23,12 +23,12 @@ module.exports = {
 
     const user = await userService.updateUser(id, req.body);
 
-    res.json(user);
+    return res.json(user);
   },
 
   deleteUser: async (req, res) => {
     const deletedUser = await userService.deleteUser(req.params.id);
 
-    res.json(deletedUser);
+    return res.json(deletedUser);
   },
 };

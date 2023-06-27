@@ -49,6 +49,14 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  token: {
+    type: String,
+    required: false
+  },
+  tokenExpiresAt: {
+    type: Date, 
+    required: false
+  }
 });
 
 // Override the 'toJSON' function to customize the JSON output

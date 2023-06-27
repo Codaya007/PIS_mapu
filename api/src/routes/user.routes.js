@@ -1,6 +1,8 @@
 const { Router } = require("express");
 const userController = require("../controllers/userController");
-const isAdmin = require("../middlewares/isAdmin");
+const { editUserSchema } = require("../validationSchemas/user");
+const middlewares = require("../middlewares");
+const isAdmin = require("../policies/isAdmin");
 
 const userRouter = Router();
 
@@ -23,7 +25,12 @@ userRouter.get("/:id", isAdmin, userController.getUserById);
  * @desc Actualizar usuario por id
  * @access Private Admin
  */
-userRouter.put("/:id", isAdmin, userController.updateUser);
+userRouter.put(
+  "/:id",
+  middlewares.validateRequestBody(editUserSchema),
+  isAdmin,
+  userController.updateUser
+);
 
 // No se podrá borrar usuarios, solo bloquearlos/retringirlos
 /**
