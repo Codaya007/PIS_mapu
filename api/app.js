@@ -34,6 +34,7 @@ app.use("/event", require("./src/routes/event.routes.js"));
 app.use("/image", require("./src/routes/images.routes.js"));
 app.use("/report", require("./src/routes/report.routes.js"));
 app.use("/career", require("./src/routes/career.routes.js"));
+app.use("/comment", require("./src/routes/comment.routes.js"));
 
 // errorhandlers
 

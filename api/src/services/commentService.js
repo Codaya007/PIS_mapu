@@ -1,10 +1,13 @@
 const Comment = require("../models/Comment");
 //TODO: IMPORTAR LOS SERVICIOS DE NODO Y USUARIO
+const NodeService = require("../services/nodeService")
+const UserService = require("../services/userService")
 const NotExist = require('../errors/NotExist');
 const ValidationError = require("../errors/ValidationError");
 
 const createComment = async (commentData) => {
-    //TODO: VALIDAR LOS ID DE USUARIO Y NODO (LLAMAR A LOS SERVICIOS DE NODO Y USUARIO)
+    validateNodeId(commentData.node)
+    validateUserId(commentData.user)
 
     const userComments = await getCommentByUserId(commentData.user);
     const comment = userComments.find((comment) => comment.node == commentData.node);
@@ -22,6 +25,18 @@ const getComments = async (where = {}, skip, limit) => {
     return comments;
 };
 
+const validateNodeId = async (nodeId) => {
+    NodeService.getNodeById(nodeId);
+
+    return true;
+}
+
+const validateUserId = async (userId) => {
+    UserService.getUserById(userId);
+
+    return true;
+}
+
 const getCommentById = async (_id) => {
     if (!isValidObjectId(_id))
         throw new ValidationError("El id debe ser un ObjectId");
@@ -35,31 +50,11 @@ const getCommentById = async (_id) => {
     return comment;
 };
 
-const getCommentByNodeId = async (nodeId) => {
-    if (!isValidObjectId(nodeId)) throw new ValidationError("El id debe ser un ObjectId");
-
-    //TODO: VALIDAR QUE EL ID DEL NODO EXISTA
-
-    const comment = await Comment.find({ "node": nodeId });
-
-    return comment;
-};
-
-const getCommentByUserId = async (userId) => {
-    if (!isValidObjectId(userId)) throw new ValidationError("El id debe ser un ObjectId");
-
-    //TODO: VALIDAR QUE EL ID DEL USUARIO EXISTA
-
-    const comment = await Comment.find({ "user": userId });
-
-    return comment;
-};
-
 const getCountComments = async (where = {}) => {
     return await Comment.count(where);
 };
 
-const updateCommentByNumber = async (_id, commentData) => {
+const updateCommentById = async (_id, commentData) => {
     let comment = await getCommentById(_id);
 
     comment = await Comment.updateOne({ _id }, commentData);
@@ -75,4 +70,4 @@ const deleteCommentById = async (_id) => {
     if (!deletedComment) throw new NotExist("Comentario no encontrado");
 };
 
-module.exports = { createComment, getComments, getCommentById, getCommentByNodeId, getCommentByUserId, getCountComments, updateCommentByNumber, deleteCommentById };
+module.exports = { createComment, getComments, getCommentById, getCountComments, updateCommentById, deleteCommentById };
