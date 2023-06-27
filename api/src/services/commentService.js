@@ -1,9 +1,9 @@
 const Comment = require("../models/Comment");
-//TODO: IMPORTAR LOS SERVICIOS DE NODO Y USUARIO
 const NodeService = require("../services/nodeService")
 const UserService = require("../services/userService")
 const NotExist = require('../errors/NotExist');
 const ValidationError = require("../errors/ValidationError");
+const { isValidObjectId } = require("mongoose");
 
 const createComment = async (commentData) => {
     validateNodeId(commentData.node)

@@ -1,6 +1,7 @@
 const Node = require("../models/Node");
 const ValidationError = require("../errors/ValidationError");
 const NotExist = require('../errors/NotExist')
+const { isValidObjectId } = require("mongoose");
 
 const getNodeById = async (_id) => {
     if (!isValidObjectId(_id)) throw new ValidationError("El id debe ser un ObjectId");
