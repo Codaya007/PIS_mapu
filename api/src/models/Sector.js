@@ -6,14 +6,14 @@ const sectorSchema = new Schema({
     type: Number,
     required: true,
     min: 1,
-    max: 30,
+    // max: 30,
     unique: true,
   },
-  polygons: [
-    {
-      value: { type: Number, required: true, min: 1, max: 10 },
-    },
-  ],
+  polygon: {
+    // Array de arrays de pares [latitud, longitud]
+    type: [[Number, Number]],
+    required: true,
+  },
 });
 
 module.exports = mongoose.Schema("Sector", sectorSchema);

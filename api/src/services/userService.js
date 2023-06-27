@@ -1,13 +1,12 @@
 const { isValidObjectId } = require("mongoose");
-
 const ValidationError = require("../errors/ValidationError");
-const User = require("../models/User");
 const { hashPassword } = require("../helpers/hashPassword");
+const User = require("../models/User");
 
 const getAllUser = async (where = {}, skip = 10, limit = 10) => {
-  const allUser = await User.find(where).skip(skip).limit(limit);
+  const allUsers = await User.find(where).skip(skip).limit(limit);
 
-  return allUser;
+  return allUsers;
 };
 
 const getCountUser = async (where = {}) => {
@@ -17,7 +16,7 @@ const getCountUser = async (where = {}) => {
 const getUserById = async (_id) => {
   if (!isValidObjectId(_id))
     throw new ValidationError("El id debe ser un ObjectId");
-  
+
   const user = await User.findOne({ _id });
 
   if (!user) throw new ValidationError("Usuario no encontrado");
@@ -32,14 +31,15 @@ const createUser = async (newUser) => {
 };
 
 const updateUser = async (_id, newInfo) => {
-  let user = await getUserById(id);
+  let user = await getUserById(_id);
 
-  const hashedPassword = await hashPassword(newInfo.password);
-  newInfo.password = hashedPassword ? hashedPassword : newInfo.password;
+  if (newInfo.password) {
+    newInfo.password = await hashPassword(newInfo.password);
+  }
 
-  let user = await User.updateOne({ _id }, newInfo);
+  user = await User.updateOne({ _id }, newInfo);
 
-  if (!user) throw new ValidationError("Usuario no encontrada");
+  if (!user) throw new ValidationError("Usuario no encontrado");
 
   return user;
 };
@@ -50,7 +50,7 @@ const deleteUser = async (_id) => {
 
   const deletedUser = await User.findByIdAndRemove(_id);
 
-  if (!deletedUser) throw new ValidationError("Usuario no encontrada");
+  if (!deletedUser) throw new ValidationError("Usuario no encontrado");
 };
 
 module.exports = {

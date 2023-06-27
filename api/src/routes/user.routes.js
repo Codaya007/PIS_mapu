@@ -1,8 +1,8 @@
 const { Router } = require("express");
 const userController = require("../controllers/userController");
-const isAllowGetInformation = require("../middlewares/isAllowUserTransactions");
 const { editUserSchema } = require("../validationSchemas/user");
 const middlewares = require("../middlewares");
+const isAdmin = require("../policies/isAdmin");
 
 const userRouter = Router();
 
@@ -11,14 +11,14 @@ const userRouter = Router();
  * @desc Obtener todos las usuarios
  * @access Private Admin
  */
-userRouter.get("/", isAllowGetInformation, userController.getAllUsers);
+userRouter.get("/", isAdmin, userController.getAllUsers);
 
 /**
  * @route GET /:id
  * @desc Obtener usuario por id
  * @access Private Admin
  */
-userRouter.get("/:id", isAllowGetInformation, userController.getUserById);
+userRouter.get("/:id", isAdmin, userController.getUserById);
 
 /**
  * @route PUT /:id
@@ -28,7 +28,7 @@ userRouter.get("/:id", isAllowGetInformation, userController.getUserById);
 userRouter.put(
   "/:id",
   middlewares.validateRequestBody(editUserSchema),
-  isAllowGetInformation,
+  isAdmin,
   userController.updateUser
 );
 

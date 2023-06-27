@@ -33,8 +33,8 @@ const nodeSchema = new Schema({
   sector: {
     type: String,
     required: true,
-    minLength: 2,
-    maxLength: 30,
+    // minLength: 2,
+    // maxLength: 30,
   },
   adyacency: [
     {
