@@ -1,29 +1,30 @@
 const Report = require("../models/Report");
 const LostPointService = require("../services/lostPointService");
 const NodeService = require("../services/nodeService.js")
-//TODO FALTAN SERVICIOS SUBNODO   
+const SubNodeService = require("../services/subNodeService")
 const ValidationError = require("../errors/ValidationError");
-const NotExist = require('../errors/NotExist')
+const { isValidObjectId } = require("mongoose");
 const constants = require('../constants/index')
 
-
+//TODO: FALTA QUE JHAIR TERMINE BIEN LO DEL NODO EN EL CONTROLADOR
 const createReport = async (reportData) => {
-    const classifier = classifierReport(reportData)
+    const classifier = await classifierReport(reportData)
 
-    await validateClassifierReport(classifier);
+    await validateClassifierReport(classifier, reportData);
 
     const report = await Report.create(reportData);
 
     return report;
 };
 
-const validateClassifierReport = async (classifier) => {
-    if (classifier == constants.NODE) {
-        existField(await NodeService.getNodeById(reportData.node))
-    } else if (classifier == constants.SUBNODE) {
-        // TODO: REALIZAR LOS MISMO PARA SUBNODO   
-    } else if (classifier == constants.LOSTPOINT) {
-        await LostPointService.findOrCreateLostPoint(reportData.lostPoint)
+const validateClassifierReport = async (classifier, reportData) => {
+    if (classifier === constants.NODE) {
+        await NodeService.getNodeById(reportData.node)
+    } else if (classifier === constants.SUBNODE) {
+        await SubNodeService.getSubNodeById(reportData.subnode)
+    } else if (classifier === constants.LOSTPOINT) {
+        const res = await LostPointService.findOrCreateLostPoint(reportData.lostPoint)
+        reportData.lostPoint = res._id;
     } else {
         throw new ValidationError("El reporte debe ser de tipo actualización o punto perdido");
     }
@@ -42,11 +43,6 @@ const classifierReport = async (reportData) => {
     }
 }
 
-const existField = async (field) => {
-    if (!field) {
-        throw new NotExist('El nodo o subnodo no existe')
-    }
-}
 
 const getReports = async (where = {}, skip, limit) => {
     const reports = await Report.find(where).skip(skip).limit(limit);
