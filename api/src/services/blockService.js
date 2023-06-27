@@ -1,10 +1,13 @@
 const Block = require("../models/Block");
+const FacultyService = require("../services/facultyService");
 const FieldExistingError = require('../errors/FieldExistingError')
 const NotExist = require('../errors/NotExist')
 
 const createBlock = async (blockData) => {
     const existingBlock = await getBlockByNumber(blockData.number)
+    const existingFaculty = await FacultyService.getFacultyById(blockData.faculty)
     if (existingBlock) throw new FieldExistingError(`El bloque número ${blockData.number} ya existe`)
+    if (!existingFaculty) throw new NotExist(`La facultad no existe`)
     const block = await Block.create(blockData);
 
     return block;

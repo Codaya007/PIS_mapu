@@ -15,6 +15,9 @@ const getCountUser = async (where = {}) => {
 };
 
 const getUserById = async (_id) => {
+  if (!isValidObjectId(_id))
+    throw new ValidationError("El id debe ser un ObjectId");
+  
   const user = await User.findOne({ _id });
 
   if (!user) throw new ValidationError("Usuario no encontrado");
@@ -29,8 +32,7 @@ const createUser = async (newUser) => {
 };
 
 const updateUser = async (_id, newInfo) => {
-  if (!isValidObjectId(_id))
-    throw new ValidationError("El id debe ser un ObjectId");
+  let user = await getUserById(id);
 
   const hashedPassword = await hashPassword(newInfo.password);
   newInfo.password = hashedPassword ? hashedPassword : newInfo.password;

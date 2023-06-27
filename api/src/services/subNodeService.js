@@ -10,6 +10,7 @@ const getSubNodeById = async (_id) => {
   if (!subNode) {
     throw new ValidationError("SubNode no encontrado");
   }
+  
   return subNode;
 };
 

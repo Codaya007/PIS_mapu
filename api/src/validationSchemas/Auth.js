@@ -31,4 +31,10 @@ const loginSchema = Joi.object({
     .messages({ "*": "La contraseña es requerida" }),
 });
 
-module.exports = { registerUserSchema, loginSchema };
+const recoverPasswordSchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "*" : "El campo email es requerido"
+  })
+});
+
+module.exports = { registerUserSchema, loginSchema, recoverPasswordSchema };
