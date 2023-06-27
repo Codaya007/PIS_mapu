@@ -1,8 +1,7 @@
 const authService = require("../services/authService");
 const { generateNewToken } = require("../helpers/tokenCreation");
-const { TRANSPORTER } = require("../constants/index");
+const transporter = require("../configs/emailerConfig");
 const userService = require("../services/userService");
-const bcrypt = require("bcrypt");
 const { use } = require("../routes/auth.routes");
 
 module.exports = {
@@ -23,7 +22,7 @@ module.exports = {
 
   registerUser: async (req, res) => {
     const user = await authService.register(req.body);
-
+    
     const payload = { id: user.id };
     const token = await generateNewToken(payload);
 
@@ -35,13 +34,16 @@ module.exports = {
     const token = await authService.generatePasswordRecoveryToken(email);
     
     const mailOptions = {
-      from: TRANSPORTER.options.auth.user,
+      from: transporter.options.auth.user,
       to: email,
       subject: "Recuperación de contraseña",
-      text: `Enlace para recuperar contraseña: http://localhost:3000/recovery-password?token=${token}`,
+      html:`
+      <b>Haga click en el siguiente enlace o pégelo en su navegador web para la recuperación de contraseña</b>
+      <a href="http://localhost:3000/auth/recovery-password?token=${token}">http://localhost:3000/auth/recovery-password?token=${token}</a>
+      ` 
     };
 
-    await TRANSPORTER.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
 
     return res.json({ token });
   },
@@ -50,8 +52,12 @@ module.exports = {
     const token = req.query.token;
     const user = await authService.validateToken(token);
     user.password = await authService.hashPassword(req.body.password);
-    user.save();
+    const newUser = await user.save();
+    let message = "Error";
+    if(newUser){
+      message = "Contraseña actualizada"
+    }
 
-    return res.json({ user });
+    return res.json(message);
   },
 };
