@@ -3,4 +3,5 @@ module.exports = {
   errorNotFound: require("./errorNotFound"),
   validateRequestBody: require("./validateRequestBody"),
   isLoggedIn: require("./isLoggedIn"),
+  isAll: require("./isAllowUserTransactions"),
 };
