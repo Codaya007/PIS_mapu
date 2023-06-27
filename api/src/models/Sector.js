@@ -16,4 +16,4 @@ const sectorSchema = new Schema({
   },
 });
 
-module.exports = mongoose.Schema("Sector", sectorSchema);
+module.exports = mongoose.model("Sector", sectorSchema);
