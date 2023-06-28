@@ -37,6 +37,7 @@ app.use("/subnode", require("./src/routes/subNode.routes.js"));
 app.use("/report", require("./src/routes/report.routes.js"));
 app.use("/career", require("./src/routes/career.routes.js"));
 app.use("/sector", require("./src/routes/sector.routes.js"));
+app.use("/suscription", require("./src/routes/suscription.routes.js"));
 
 // errorhandlers
 app.use("*", errorNotFound);

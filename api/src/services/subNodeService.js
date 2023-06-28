@@ -10,7 +10,7 @@ const getSubNodeById = async (_id) => {
   if (!subNode) {
     throw new ValidationError("SubNode no encontrado");
   }
-  
+
   return subNode;
 };
 
@@ -42,6 +42,7 @@ const deleteSubNode = async (_id) => {
   }
   const deleteSubNode = SubNode.deleteOne({ _id });
   if (!deleteSubNode) throw ValidationError("SubNode no encontrado");
+
   return deleteSubNode;
 };
 
