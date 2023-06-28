@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
-import campusReducer from "./slices/campusSlice";
+import facultyReducer from "./slices/facultySlice";
 
 export const store = configureStore({
-  reducer: { campusReducer, authReducer },
+  reducer: { authReducer, facultyReducer },
 });

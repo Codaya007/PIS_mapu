@@ -9,13 +9,13 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.user = action.payload;
+      state.user = action.payload.user;
 
       localStorage.setItem("user", JSON.stringify(action.payload?.user));
-      // localStorage.setItem("token", JSON.stringify(action.payload?.token));
+      localStorage.setItem("token", JSON.stringify(action.payload?.token));
     },
-    getProfile:  (state, action) => {
-      state.user  = action.payload;
+    getProfile: (state, action) => {
+      state.user = action.payload;
     },
     updateProfile: (state, action) => {
       state.user = action.payload;
@@ -24,7 +24,7 @@ export const authSlice = createSlice({
       state.user = null;
       // state.token = null;
 
-      localStorage.removeItem("user")
+      localStorage.removeItem("user");
       // localStorage.removeItem("token")
     },
   },
