@@ -17,7 +17,7 @@ module.exports = {
   getFacultyById: async (req, res, next) => {
     const { id } = req.params;
 
-    const faculty = facultyService.getFacultyById(id);
+    const faculty = await facultyService.getFacultyById(id);
 
     if (!faculty) {
       return res.status(404).json({ message: "Facultad no encontrada" });
