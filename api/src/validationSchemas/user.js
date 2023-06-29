@@ -60,6 +60,9 @@ const editUserSchema = Joi.object({
   role: Joi.string().optional().messages({
     "*": "El campo role es opcional",
   }),
+  bloqued: Joi.boolean().optional().messages({
+    "*": "El campo bloqued debe ser un booleano",
+  }),
 });
 
 module.exports = { createUserSchema, editUserSchema };
