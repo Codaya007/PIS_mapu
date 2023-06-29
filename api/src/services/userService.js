@@ -11,6 +11,7 @@ const getAllUser = async (where = {}, skip = 10, limit = 10) => {
 };
 
 const getCountUser = async (where = {}) => {
+  where.deletedAt = null;
   return await User.count(where);
 };
 

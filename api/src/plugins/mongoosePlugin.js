@@ -1,7 +1,7 @@
 // Definir el plugin personalizado
 
 const timestampsPlugin = (schema, options) => {
-  console.log("Ejecutando plugin  mongoose");
+  // console.log("Ejecutando plugin  mongoose");
   schema.add({
     createdAt: { type: Date, default: Date.now },
     deletedAt: { type: Date, default: null },
