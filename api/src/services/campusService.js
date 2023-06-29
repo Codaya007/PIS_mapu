@@ -41,7 +41,7 @@ const updateCampusById = async (id, campusData) => {
 };
 
 const deleteCampusById = async (id) => {
-  if (!mongoose.isValidObjectId(id))
+  if (!isValidObjectId(id))
     throw new ValidationError("El id debe ser un objectId");
 
   const campusDeleted = await Campus.findByIdAndDelete(id);

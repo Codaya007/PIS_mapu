@@ -13,20 +13,14 @@ const campusRouter = Router();
  * @desc Obtiene todos los campos registrados
  * @access Public
  */
-campusRouter.get(
-  "/",
-  campusController.getAllCampus
-);
+campusRouter.get("/", campusController.getAllCampus);
 
 /**
  * @route GET /:id
  * @desc Obtiene el campus que coincide con el id brindado
  * @access Public
  */
-campusRouter.get(
-  "/:id",
-  campusController.getCampusById
-);
+campusRouter.get("/:id", campusController.getCampusById);
 
 /**
  * @route POST /
