@@ -1,9 +1,12 @@
 import { Box, Button, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import FacultyTable from "../components/FacultyTable";
+import { deleteFacultyById } from "../services/facultyServices";
 import { fetchFaculties } from "../store/actions/facultyActions";
-import { setPage } from "../store/slices/facultySlice";
+import { getWithoutFetchSlice, setPage } from "../store/slices/facultySlice";
+import { toast } from "react-toastify";
 
 function Faculties() {
   const {
@@ -12,30 +15,47 @@ function Faculties() {
     limit,
     skip,
     currentSliceFaculties: faculties,
+    fetched,
   } = useSelector((state) => state.facultyReducer);
-  const dispacth = useDispatch();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispacth(fetchFaculties(skip, limit));
+    if (!fetched) dispatch(fetchFaculties());
+  }, []);
+
+  useEffect(() => {
+    if (totalPages < page) dispatch(setPage(page - 1));
+  }, [totalPages]);
+
+  useEffect(() => {
+    if (fetched) {
+      dispatch(getWithoutFetchSlice());
+    } else {
+      dispatch(fetchFaculties());
+    }
   }, [page]);
 
   const handlePageChange = (newPage) => {
-    dispacth(setPage(newPage));
+    dispatch(setPage(newPage));
   };
 
   const handleEdit = (facultyId) => {
-    // Lógica para editar una facultad
-    console.log(`Editar facultad con ID: ${facultyId}`);
+    navigate(`/edit-faculty/${facultyId}`);
   };
 
-  const handleDelete = (facultyId) => {
-    // Lógica para eliminar una facultad
-    console.log(`Eliminar facultad con ID: ${facultyId}`);
+  const handleDelete = async (facultyId) => {
+    try {
+      await deleteFacultyById(facultyId);
+      dispatch(fetchFaculties());
+      toast.success("Eliminación exitosa");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Algo salió mal");
+    }
   };
 
   const handleCreate = () => {
-    // Lógica para crear una nueva facultad
-    console.log("Crear nueva facultad");
+    navigate("/create-faculty");
   };
 
   return (

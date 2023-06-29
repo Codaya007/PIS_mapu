@@ -1,5 +1,6 @@
 import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 function Header() {
   const { user } = useSelector((state) => state.authReducer);
@@ -14,15 +15,19 @@ function Header() {
       bg="blue.500"
       color="white"
     >
-      <Text fontSize="xl" fontWeight="bold">
-        Mapu
-      </Text>
+      <Link to={"/"}>
+        <Text fontSize="xl" fontWeight="bold">
+          Mapu
+        </Text>
+      </Link>
       {user && (
         <Box display="flex" alignItems="center">
           <Avatar name={user.name} src={user.avatar} size="sm" mr={2} />
-          <Text>
-            {user.name} {user.lastname}
-          </Text>
+          <Link to={"/profile"}>
+            <Text>
+              {user.name} {user.lastname}
+            </Text>
+          </Link>
         </Box>
       )}
     </Flex>

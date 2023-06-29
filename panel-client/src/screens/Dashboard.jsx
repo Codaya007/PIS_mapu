@@ -1,5 +1,5 @@
 import { Box, SimpleGrid, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
-// import MapContainerComponent from "../components/Map";
+import MapContainerComponent from "../components/Map";
 
 function Dashboard() {
   // Datos de ejemplo
@@ -58,7 +58,8 @@ function Dashboard() {
           <StatNumber color={"blue.500"}>{createdFaculties}</StatNumber>
         </Stat>
       </SimpleGrid>
-      {/* <MapContainerComponent /> */}
+
+      <MapContainerComponent />
     </Box>
   );
 }

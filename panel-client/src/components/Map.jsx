@@ -1,3 +1,4 @@
+import { Box } from "@chakra-ui/react";
 import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
 import iconMarker from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
@@ -10,25 +11,30 @@ const icon = L.icon({
 });
 
 function MapContainerComponent() {
-  const universityCoordinates = [-3.99313, -79.20259];
+  const position = [-4.035475, -79.200633];
+
+  //   .leaflet-container {
+  //   width: 90%;
+  //   height: 80vh;
+  // }
 
   return (
-    <div style={{ display: "block" }}>
+    <Box p={4}>
       <MapContainer
-        center={universityCoordinates}
-        zoom={18}
+        style={{ width: "90%", height: "60vh" }}
+        center={position}
+        zoom={15}
         scrollWheelZoom={false}
-        style={{ height: 400, width: "100%", zIndex: 94 }}
       >
         <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         />
-        <Marker icon={icon} position={universityCoordinates}>
-          <Popup>Universidad Nacional de Loja</Popup>
+        <Marker icon={icon} position={position}>
+          <Popup>Universidad Nacional De Loja</Popup>
         </Marker>
       </MapContainer>
-    </div>
+    </Box>
   );
 }
 

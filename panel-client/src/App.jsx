@@ -6,8 +6,10 @@ import Header from "./components/Header";
 import SidebarMenu from "./components/SideBar";
 import Dashboard from "./screens/Dashboard";
 import Faculties from "./screens/Faculties";
+import FacultyForm from "./screens/FacultyForm";
 import LoginForm from "./screens/Login";
 import NotFound from "./screens/NotFound";
+import Profile from "./screens/Profile";
 import { login } from "./store/slices/authSlice";
 
 function App() {
@@ -30,14 +32,17 @@ function App() {
 
   return (
     <>
-      <Flex>
+      <Flex height={"100%"}>
         {shouldShowSidebar && <SidebarMenu />}
-        <Box flex="1" p={0} bg={"whitesmoke"}>
+        <Box flex="1" p={0} marginLeft={"70px"} height={"100vh"}>
           <Header />
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/faculty" element={<Faculties />} />
+            <Route path="/create-faculty" element={<FacultyForm />} />
+            <Route path="/edit-faculty/:id" element={<FacultyForm />} />
+            <Route path="/profile" element={<Profile />} />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </Box>

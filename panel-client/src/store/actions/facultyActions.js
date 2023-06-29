@@ -1,14 +1,17 @@
-import axios from "axios";
-import { API_BASEURL } from "../../constants";
-import { getSlice } from "../slices/facultySlice";
+import { toast } from "react-toastify";
+import { getFaculties } from "../../services/facultyServices";
+import { getAll, getSlice } from "../slices/facultySlice";
 
 export const fetchFaculties = (skip, limit) => async (dispatch) => {
   try {
-    const response = await axios.get(
-      `${API_BASEURL}/faculty?skip=${skip}&limit=${limit}`
-    );
-    dispatch(getSlice(response.data));
+    const data = await getFaculties(skip, limit);
+
+    if (skip || limit) {
+      dispatch(getSlice(data));
+    } else {
+      dispatch(getAll(data));
+    }
   } catch (error) {
-    alert(error.message || "Algo salió mal");
+    toast.error(error.response?.data?.message || "Algo salió mal");
   }
 };
