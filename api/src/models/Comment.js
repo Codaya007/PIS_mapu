@@ -13,7 +13,7 @@ const commentSchema = new Schema({
   },
   node: {
     type: Schema.Types.ObjectId,  // Tipo ObjectId para referencia
-    ref: 'User',  // Nombre del modelo referenciado
+    ref: 'Node',  // Nombre del modelo referenciado
     required: true
   },
 });

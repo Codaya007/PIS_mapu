@@ -11,7 +11,7 @@ const createComment = async (commentData) => {
 
     const userComments = await getCommentByUserId(commentData.user);
     const comment = userComments.find((comment) => comment.node == commentData.node);
-    if (comment) throw new ValidationError("El usuario ya escribio un commentario a este nodo");
+    if (comment) throw new ValidationError("Ya se escribio un comentario para este punto de interés");
 
     const newComment = Comment.create(commentData);
 
