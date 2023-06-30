@@ -31,7 +31,7 @@ const validateToken = async (bearerToken) => {
 
   const decoded = jwt.verify(token, JWT_SECRET);
   const _id = decoded.id;
-  console.log(`DECODED ${decoded.id}`);
+  // console.log(`DECODED ${decoded.id}`);
   const user = await User.findOne({ _id });
 
   if (!user) {

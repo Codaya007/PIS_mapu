@@ -4,12 +4,14 @@ const { hashPassword } = require("../helpers/hashPassword");
 const User = require("../models/User");
 
 const getAllUser = async (where = {}, skip = 10, limit = 10) => {
+  where.deletedAt = null;
   const allUsers = await User.find(where).skip(skip).limit(limit);
 
   return allUsers;
 };
 
 const getCountUser = async (where = {}) => {
+  where.deletedAt = null;
   return await User.count(where);
 };
 
@@ -25,6 +27,12 @@ const getUserById = async (_id) => {
 };
 
 const createUser = async (newUser) => {
+  const userExists = await User.find({ email: newUser.email });
+
+  if (userExists) {
+    throw new ValidationError(`El email ${newUser.email} ya está registrado`);
+  }
+
   const user = await User.create(newUser);
 
   return user;
@@ -37,9 +45,7 @@ const updateUser = async (_id, newInfo) => {
     newInfo.password = await hashPassword(newInfo.password);
   }
 
-  user = await User.updateOne({ _id }, newInfo);
-
-  if (!user) throw new ValidationError("Usuario no encontrado");
+  user = await User.findOneAndUpdate({ _id }, newInfo, { new: true });
 
   return user;
 };
@@ -48,9 +54,11 @@ const deleteUser = async (_id) => {
   if (!isValidObjectId(_id))
     throw new ValidationError("El id debe ser un ObjectId");
 
-  const deletedUser = await User.findByIdAndRemove(_id);
+  const toDelete = await updateUser(_id, { email: null });
 
-  if (!deletedUser) throw new ValidationError("Usuario no encontrado");
+  const deleted = await toDelete.softDelete();
+
+  return deleted;
 };
 
 module.exports = {

@@ -22,6 +22,7 @@ app.use(cors());
 
 // routes
 app.use("/", require("./src/routes/example.routes.js"));
+app.use("/dashboard", require("./src/routes/dashboard.routes.js"));
 app.use("/auth", require("./src/routes/auth.routes.js"));
 app.use("/user", require("./src/routes/user.routes.js"));
 app.use("/me", require("./src/routes/me.routes.js"));

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { putProfile } from "../services/authServices";
 import { fetchProfile } from "../store/actions/authActions";
+import { useEffect } from "react";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.authReducer);
@@ -35,6 +36,10 @@ const Profile = () => {
       toast.error(error.response?.data?.message || "Algo salió mal");
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchProfile());
+  }, []);
 
   return (
     <Box maxWidth="500px" mx="auto" p="4">
