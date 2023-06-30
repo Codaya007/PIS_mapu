@@ -10,12 +10,14 @@ module.exports = {
   },
 
   getAllSuscriptions: async (req, res) => {
-    const { skip = 0, limit = 10 } = req.query;
-    const suscriptions = await suscriptionService.getAllSuscriptions(req.query);
-    const totalSuscriptions = await suscriptionService.getCountSuscriptions(
-      req.query,
+    const { skip = 0, limit = 10, where = req.user.id } = req.query;
+    const suscriptions = await suscriptionService.getAllSuscriptions(
+      where,
       skip,
       limit
+    );
+    const totalSuscriptions = await suscriptionService.getCountSuscriptions(
+      where
     );
     return res.json({ totalSuscriptions, suscriptions });
   },
