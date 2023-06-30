@@ -29,14 +29,6 @@ module.exports = {
         return res.json(newComment);
     },
 
-    updateComment: async (req, res, next) => {
-        const { id } = req.params;
-
-        const comment = await commentService.updateCommentById(id, req.body);
-
-        res.json(comment);
-    },
-
     deleteComment: async (req, res, next) => {
         const { id } = req.params;
 

@@ -54,14 +54,6 @@ const getCountComments = async (where = {}) => {
     return await Comment.count(where);
 };
 
-const updateCommentById = async (_id, commentData) => {
-    let comment = await getCommentById(_id);
-
-    comment = await Comment.updateOne({ _id }, commentData);
-
-    return comment;
-};
-
 const deleteCommentById = async (_id) => {
     if (!isValidObjectId(_id)) throw new ValidationError("El id debe ser un ObjectId");
 

@@ -31,17 +31,6 @@ commentRouter.get("/", commentController.getAllComments);
 commentRouter.get("/:id", commentController.getComment);
 
 /**
- * @route PUT /
- * @desc Actualizar un commentario con la información pasada por body
- * @access User
- */
-commentRouter.put(
-    "/:id",
-    middlewares.validateRequestBody(updateCommentSchema),
-    commentController.updateComment
-);
-
-/**
  * @route DELETE /
  * @desc Eliminar un comentario mediante su id
  * @access Public
