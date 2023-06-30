@@ -25,19 +25,19 @@ const createCampusSchema = Joi.object({
     "*": "El campo 'name' es requerido y debe tener un largo máximo de 20 caracteres",
   }),
   description: Joi.string().optional().max(200).messages({
-    "*" : "El campo 'description' debe tener un largo máximo de 200 caracteres",
+    "*": "El campo 'description' debe tener un largo máximo de 200 caracteres",
   }),
   address: Joi.string().required().max(300).messages({
-    "*" : "El campo 'address' es requerido y debe tener un largo máximo de 300 caracteres",
+    "*": "El campo 'address' es requerido y debe tener un largo máximo de 300 caracteres",
   }),
   //accessPoints: Joi.required()
   //  .custom((accessPoints, helpers) => {
   //    if (!Array.isArray(accessPoints)) return helpers.error("any.invalid");
 
   //    for (const accessPoint in accessPoints) {
-        //verificar cada accesspoint
+  //verificar cada accesspoint
   //    }
-      
+
   //    return accessPoints;
   //  })
   //  .messages({
@@ -51,22 +51,22 @@ const updateCampusSchema = Joi.object({
     "*": "El campo 'name' debe tener un largo máximo de 20 caracteres",
   }),
   description: Joi.string().optional().max(200).messages({
-    "*" : "El campo 'description' debe tener un largo máximo de 200 caracteres",
+    "*": "El campo 'description' debe tener un largo máximo de 200 caracteres",
   }),
   address: Joi.string().optional().max(300).messages({
-    "*" : "El campo 'address' debe tener un largo máximo de 300 caracteres",
+    "*": "El campo 'address' debe tener un largo máximo de 300 caracteres",
   }),
   id: Joi.string().required().custom(isValidObjectId).messages({
-    "*" : "Id no válido",
+    "*": "Id no válido",
   }),
   //accessPoints: Joi.optional()
   //  .custom((accessPoints, helpers) => {
   //    if (!Array.isArray(accessPoints)) return helpers.error("any.invalid");
 
   //    for (const accessPoint in accessPoints) {
-        //verificar cada accesspoint
+  //verificar cada accesspoint
   //    }
-      
+
   //    return accessPoints;
   //  })
   //  .messages({
@@ -76,5 +76,5 @@ const updateCampusSchema = Joi.object({
 
 module.exports = {
   createCampusSchema,
-  updateCampusSchema
+  updateCampusSchema,
 };
