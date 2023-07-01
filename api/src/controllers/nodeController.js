@@ -31,8 +31,8 @@ module.exports = {
 
     deleteNode: async (req, res, next) => {
         const id = req.params.id;
-        const deleteBlock = await nodeService.deleteNodeById(id);
+        const deleteNode = await nodeService.deleteNodeById(id);
 
-        return res.json(deleteBlock);
+        return res.json(deleteNode);
     },
 };

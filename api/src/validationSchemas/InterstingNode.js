@@ -46,10 +46,10 @@ const createInterstingNodeSchema = Joi.object({
         "*": "El campor 'available' es requerido"
     }),
     type: Joi.string().required().messages({
-        "*": "El campor 'available' es requerido"
+        "*": "El campor 'type' es requerido"
     }),
     category: Joi.string().optional().messages({
-        "*": "El campor 'available' es requerido"
+        "*": "El campor 'category' es requerido"
     }),
     sector: Joi.string()
         .custom((value, helpers) => {
@@ -78,8 +78,8 @@ const updateInterstingNodeSchema = Joi.object({
     available: Joi.boolean().optional().messages({
         "*": "El campor 'available' es requerido"
     }),
-    type: Joi.string().optional().messages({
-        "*": "El campor 'available' es requerido"
+    category: Joi.string().optional().messages({
+        "*": "El campor 'category' es requerido"
     }),
     sector: Joi.string()
         .custom((value, helpers) => {
@@ -92,7 +92,8 @@ const updateInterstingNodeSchema = Joi.object({
         .messages({
             "*": "El campo 'sector' es requerido y debe ser un ID válido",
         }),
-}).external(validateType)
+}).external(validateCategory)
+
 module.exports = {
     createInterstingNodeSchema,
     updateInterstingNodeSchema,
