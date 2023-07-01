@@ -23,20 +23,16 @@ const getCountSuscriptions = (where = {}) => {
   return Suscription.count(where);
 };
 
-const createSuscription = async (email, evento) => {
-  const suscription = {
-    userEmail: email,
-    eventName: evento,
-  };
+const createSuscription = async (suscription) => {
   const newSuscription = await Suscription.create(suscription);
   return newSuscription;
 };
 
-const updateSuscription = async (_id, emailUser, suscription) => {
+const updateSuscription = async (_id, suscription, idUser) => {
   if (!isValidObjectId(_id)) {
     throw new ValidationError("El id no es de tipo ObjecId");
   }
-  if (suscription.userEmail != emailUser) {
+  if (suscription.userId != idUser) {
     throw new ValidationError("No se ha iniciado sesion con esa cuenta");
   }
 

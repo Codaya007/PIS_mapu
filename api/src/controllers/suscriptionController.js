@@ -2,15 +2,40 @@ const suscriptionService = require("../services/suscriptionService");
 
 module.exports = {
   createSuscription: async (req, res) => {
-    const newSuscription = await suscriptionService.createSuscription(
-      req.user.email,
-      req.body.eventName
-    );
+    req.body.userId = req.user.id;
+    const newSuscription = await suscriptionService.createSuscription(req.body);
     return res.json({ newSuscription });
   },
 
   getAllSuscriptions: async (req, res) => {
-    const { skip = 0, limit = 10, where = req.user.id } = req.query;
+    const { skip = 0, limit = 10, ...where } = req.query;
+    const suscriptions = await suscriptionService.getAllSuscriptions(
+      where,
+      skip,
+      limit
+    );
+    const totalSuscriptions = await suscriptionService.getCountSuscriptions(
+      where
+    );
+    return res.json({ totalSuscriptions, suscriptions });
+  },
+  getUserSuscriptions: async (req, res) => {
+    let { skip = 0, limit = 10, ...where } = req.query;
+    where = { userId: req.user.id };
+    const suscriptions = await suscriptionService.getAllSuscriptions(
+      where,
+      skip,
+      limit
+    );
+    const totalSuscriptions = await suscriptionService.getCountSuscriptions(
+      where
+    );
+    return res.json({ totalSuscriptions, suscriptions });
+  },
+
+  getAnyUserSuscriptions: async (req, res) => {
+    let { skip = 0, limit = 10, ...where } = req.query;
+    where = { userId: req.params.id };
     const suscriptions = await suscriptionService.getAllSuscriptions(
       where,
       skip,
@@ -32,8 +57,8 @@ module.exports = {
     const { id } = req.params;
     const updatedSuscription = await suscriptionService.updateSuscription(
       id,
-      req.user.email,
-      req.body
+      req.body,
+      req.user.id
     );
     return res.json(updatedSuscription);
   },

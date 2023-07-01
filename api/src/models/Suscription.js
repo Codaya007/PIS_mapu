@@ -2,14 +2,14 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const suscriptionSchema = new Schema({
-  userEmail: {
-    type: String,
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "users",
     required: true,
-    maxLength: 30,
-    minLength: 5,
   },
-  eventName: {
-    type: String,
+  eventId: {
+    type: Schema.Types.ObjectId,
+    ref: "events",
     required: true,
   },
 });

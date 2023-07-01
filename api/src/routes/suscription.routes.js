@@ -23,6 +23,28 @@ suscriptionRouter.post(
 );
 
 /**
+ * @route GET / user suscriptions
+ * @desc Obtener todas las suscripciones del usuario logueado
+ * @access usuario
+ */
+suscriptionRouter.get(
+  "/user",
+  isLoggedIn,
+  suscriptionController.getUserSuscriptions
+);
+
+/**
+ * @route GET / user suscriptions
+ * @desc Obtener todas las suscripciones del usuario
+ * @access usuario
+ */
+suscriptionRouter.get(
+  "/user/:id",
+  isLoggedIn,
+  suscriptionController.getAnyUserSuscriptions
+);
+
+/**
  * @route GET /
  * @desc Obtener suscripcion
  * @access cliente and admin
