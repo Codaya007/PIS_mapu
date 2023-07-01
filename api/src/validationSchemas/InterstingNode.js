@@ -58,49 +58,42 @@ const createInterstingNodeSchema = Joi.object({
             }
             return value;
         })
-        .optional()
+        .optional() //TODO: CAMBIAR A REQUIERED CUANDO SE ARREGLE LO DE SECTOR
         .messages({
             "*": "El campo 'sector' es requerido y debe ser un ID válido",
         }),
 }).external(validateType).external(validateCategory)
 
-// Definir el esquema de validación
-// const updateFacultySchema = Joi.object({
-//     name: Joi.string()
-//         .optional()
-//         .min(5)
-//         .max(150)
-//         .external(nameIsUnique)
-//         .messages({
-//             "name.external": "Ya existe una facultad con este nombre",
-//             "*": "El campo 'name' debe ser un string de entre 5 y 150 caracteres",
-//         }),
-//     description: Joi.string().allow("", null).optional().max(200).messages({
-//         "*": "El campo 'description' debe tener un máximo de 200 caracteres",
-//     }),
-//     dean: Joi.string().allow("", null).optional().max(150).messages({
-//         "*": "El campo 'dean' debe tener un máximo de 150 caracteres",
-//     }),
-//     id: Joi.string()
-//         .required()
-//         .custom(isValidObjectId)
-//         .messages({ "*": "Id no válido" }),
-//     polygons: Joi.optional()
-//         .custom((polygons, helpers) => {
-//             if (!Array.isArray(polygons)) return helpers.error("any.invalid");
-
-//             for (const polygon of polygons) {
-//                 if (!isValidPolygon(polygon)) return helpers.error("any.invalid");
-//             }
-
-//             return polygons;
-//         })
-//         .messages({
-//             "*": "El campo 'polygons' debe ser un array de polígonos geográficos",
-//         }),
-// }).external(nameIsUnique);
-
+// Definir el esquema de validación para la actualización de un Nodo de interés
+const updateInterstingNodeSchema = Joi.object({
+    id: Joi.string().strip().messages({
+        "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
+    }),
+    latitude: Joi.number().optional().min(-200).max(200).messages({
+        "*": "El campor 'latitude' es requerido y debe ser de tipo number con un valor entre -200 y 200"
+    }),
+    longitude: Joi.number().optional().min(-200).max(200).messages({
+        "*": "El campor 'longitude' es requerido y debe ser de tipo number con un valor entre -200 y 200"
+    }),
+    available: Joi.boolean().optional().messages({
+        "*": "El campor 'available' es requerido"
+    }),
+    type: Joi.string().optional().messages({
+        "*": "El campor 'available' es requerido"
+    }),
+    sector: Joi.string()
+        .custom((value, helpers) => {
+            if (!ObjectId.isValid(value)) {
+                return helpers.error("any.invalid");
+            }
+            return value;
+        })
+        .optional() 
+        .messages({
+            "*": "El campo 'sector' es requerido y debe ser un ID válido",
+        }),
+}).external(validateType)
 module.exports = {
     createInterstingNodeSchema,
-    // updateFacultySchema,
+    updateInterstingNodeSchema,
 };

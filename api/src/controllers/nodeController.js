@@ -23,16 +23,16 @@ module.exports = {
         return res.json(newNode);
     },
 
-    // updateBlock: async (req, res, next) => {
-    //     const number = req.params.number;
-    //     const updateBlock = await nodeService.updateBlockByNumber(number, req.body);
-    //     return res.json(updateBlock);
-    // },
+    updateNode: async (req, res, next) => {
+        const id = req.params.id;
+        const updateNode = await nodeService.updateNodeById(id, req.body);
+        return res.json(updateNode);
+    },
 
-    // deleteBlock: async (req, res, next) => {
-    //     const number = req.params.number;
-    //     const deleteBlock = await nodeService.deleteBlockByNumber(number);
+    deleteNode: async (req, res, next) => {
+        const id = req.params.id;
+        const deleteBlock = await nodeService.deleteNodeById(id);
 
-    //     return res.json(deleteBlock);
-    // },
+        return res.json(deleteBlock);
+    },
 };

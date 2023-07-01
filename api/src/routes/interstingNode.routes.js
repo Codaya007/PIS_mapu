@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const nodeController = require("../controllers/nodeController");
 const middlewares = require("../middlewares");
-const { createInterstingNodeSchema } = require("../validationSchemas/InterstingNode");
+const { createInterstingNodeSchema, updateInterstingNodeSchema } = require("../validationSchemas/InterstingNode");
 
 const nodeRouter = Router();
 
@@ -30,25 +30,25 @@ nodeRouter.get("/", nodeController.getAllNodes);
  */
 nodeRouter.get("/:id", nodeController.getNode);
 
-// /**
-//  * @route PUT /
-//  * @desc Actualizar un bloque con la información pasada por body
-//  * @access Admin
-//  */
-// nodeRouter.put( 
-//     "/:number",
-//     middlewares.validateRequestBody(updateBlockSchema),
-//     nodeController.updateBlock
-// );
+/**
+ * @route PUT /
+ * @desc Actualizar un nodo con la información pasada por body
+ * @access Admin
+ */
+nodeRouter.put( 
+    "/:id",
+    middlewares.validateRequestBody(updateInterstingNodeSchema),
+    nodeController.updateNode
+);
 
-// /**
-//  * @route DELETE /
-//  * @desc Eliminar un bloque mediante su numero de bloque
-//  * @access Admin
-//  */
-// nodeRouter.delete( 
-//     "/:number",
-//     nodeController.deleteBlock
-// );
+/**
+ * @route DELETE /
+ * @desc Eliminar un nodo por id
+ * @access Admin
+ */
+nodeRouter.delete( 
+    "/:id",
+    nodeController.deleteNode
+);
 
 module.exports = nodeRouter;
