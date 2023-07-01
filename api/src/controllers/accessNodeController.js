@@ -19,7 +19,7 @@ module.exports = {
 
   createAccessNode: async (req, res) => {
     req.body.type = "Acceso";
-    const newAccessNode = await nodeService.createNode(req.body);
+    const newAccessNode = await nodeService.createAccessNode(req.body);
     res.json({ newAccessNode });
   },
 

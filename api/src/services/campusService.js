@@ -13,6 +13,10 @@ const getCampuses = async (where = {}, skip, limit) => {
 
   return campuses;
 };
+const getCampusByName = async (name) => {
+  const campus = await Campus.findOne({ name });
+  return campus;
+};
 
 const getCampusById = async (id) => {
   if (!isValidObjectId(id)) {
@@ -66,4 +70,5 @@ module.exports = {
   updateCampusById,
   deleteCampusById,
   deleteCampus,
+  getCampusByName,
 };

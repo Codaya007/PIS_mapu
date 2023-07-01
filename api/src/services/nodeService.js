@@ -2,6 +2,7 @@ const Node = require("../models/Node");
 const ValidationError = require("../errors/ValidationError");
 const NotExist = require("../errors/NotExist");
 const { isValidObjectId } = require("mongoose");
+const campusService = require("../services/campusService");
 
 const getNodeById = async (_id) => {
   if (!isValidObjectId(_id))
@@ -41,6 +42,43 @@ const createNode = async (node) => {
   return nodeCreated;
 };
 
+const createAccessNode = async (node) => {
+  const campus = await campusService.getCampusByName(node.campus);
+  let isAccessPoint = false;
+  for (let i = 0; i < campus.accessPoints.length; i++) {
+    for (let j = 0; j < 1; j++) {
+      if (
+        campus.accessPoints[i][j] === node.latitude &&
+        campus.accessPoints[i][j + 1] === node.longitude
+      ) {
+        isAccessPoint = true;
+      }
+    }
+  }
+
+  if (isAccessPoint) {
+    throw new ValidationError("El nodo ya en campus");
+  }
+  campus.accessPoints.push([node.latitude, node.longitude]);
+
+  if (campus.accessPoints.length > 4) {
+    throw new ValidationError(
+      "El campus no pude tener mas de 4 puntos de acceso"
+    );
+  }
+  const campusUpdated = await campusService.updateCampusById(
+    campus._id,
+    campus
+  );
+  if (!campusUpdated) {
+    throw new ValidationError("No hay existe ese campus");
+  }
+  delete node.campus;
+  const nodeModel = node;
+  const nodeCreated = await Node.create(nodeModel);
+  return nodeCreated;
+};
+
 const updateNode = async (_id, node) => {
   if (!isValidObjectId(_id)) {
     throw new ValidationError("El id no es de tipo Object id");
@@ -56,7 +94,35 @@ const updateAccessNode = async (_id, node) => {
   if (!isValidObjectId(_id)) {
     throw new ValidationError("El id no es de tipo ObjectId");
   }
-  await getAccesNodeById(_id);
+
+  const campus = await campusService.getCampusByName(node.campus);
+  let isAccessPoint = false;
+  for (let i = 0; i < campus.accessPoints.length; i++) {
+    for (let j = 0; j < 1; j++) {
+      if (
+        campus.accessPoints[i][j] == node.altitude &&
+        campus.accessPoints[i][j + 1] == node.altitude
+      ) {
+        isAccessPoint = true;
+      }
+    }
+  }
+  if (!isAccessPoint) {
+    campus.accessPoints.push([node.latitude, node.longitude]);
+  }
+  if (campus.accessPoints.length > 4) {
+    throw new ValidationError(
+      "El campus no pude tener mas de 4 puntos de acceso"
+    );
+  }
+  const campusUpdated = await campusService.updateCampusById(
+    campus._id,
+    campus
+  );
+  if (!campusUpdated) {
+    throw new ValidationError("No hay existe ese campus");
+  }
+  delete node.campus;
   return await Node.updateOne({ _id }, node);
 };
 
@@ -89,4 +155,5 @@ module.exports = {
   getCountNodes,
   getAccesNodeById,
   deleteAccessNode,
+  createAccessNode,
 };
