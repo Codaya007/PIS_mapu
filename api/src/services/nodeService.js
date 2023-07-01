@@ -94,34 +94,6 @@ const updateAccessNode = async (_id, node) => {
   if (!isValidObjectId(_id)) {
     throw new ValidationError("El id no es de tipo ObjectId");
   }
-
-  const campus = await campusService.getCampusByName(node.campus);
-  let isAccessPoint = false;
-  for (let i = 0; i < campus.accessPoints.length; i++) {
-    for (let j = 0; j < 1; j++) {
-      if (
-        campus.accessPoints[i][j] == node.altitude &&
-        campus.accessPoints[i][j + 1] == node.altitude
-      ) {
-        isAccessPoint = true;
-      }
-    }
-  }
-  if (!isAccessPoint) {
-    campus.accessPoints.push([node.latitude, node.longitude]);
-  }
-  if (campus.accessPoints.length > 4) {
-    throw new ValidationError(
-      "El campus no pude tener mas de 4 puntos de acceso"
-    );
-  }
-  const campusUpdated = await campusService.updateCampusById(
-    campus._id,
-    campus
-  );
-  if (!campusUpdated) {
-    throw new ValidationError("No hay existe ese campus");
-  }
   delete node.campus;
   return await Node.updateOne({ _id }, node);
 };
