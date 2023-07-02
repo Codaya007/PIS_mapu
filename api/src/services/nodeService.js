@@ -1,5 +1,35 @@
 const Node = require("../models/Node");
 const ValidationError = require("../errors/ValidationError");
+const NotExist = require('../errors/NotExist')
+const { isValidObjectId } = require("mongoose");
+
+const createNode = async (nodeData) => {
+  await sameCoordenates(nodeData);
+
+  const node = await Node.create(nodeData);
+
+  return node;
+};
+
+const sameCoordenates = async (nodeData) => {
+  const sameCoor = await Node.find({ "latitude": nodeData.latitude, "longitude": nodeData.longitude });
+
+  if (sameCoor.length > 0) throw new ValidationError("La latitud y longitud ya existen", sameCoor)
+
+}
+
+const getNodes = async (where = {}, skip, limit) => {
+  const nodes = await Node.find(where).skip(skip).limit(limit);
+
+  return nodes;
+};
+
+const getCountNodes = async (where = {}) => {
+  return await Node.count(where);
+};
+
+const getNodeById = async (_id) => {
+  if (!isValidObjectId(_id)) throw new ValidationError("El id debe ser un ObjectId");
 const NotExist = require("../errors/NotExist");
 const { isValidObjectId } = require("mongoose");
 const campusService = require("../services/campusService");
@@ -15,6 +45,28 @@ const getNodeById = async (_id) => {
   return node;
 };
 
+const updateNodeById = async (_id, nodeData) => {
+  await sameCoordenates(nodeData);
+
+  let node = await getNodeById(_id);
+
+
+  node = await Node.updateOne({ _id }, nodeData);
+
+  return node;
+};
+
+const deleteNodeById = async (_id) => {
+  if (!isValidObjectId(_id))
+    throw new ValidationError("El id debe ser un ObjectId");
+
+  const deletedNode = await Node.findByIdAndRemove(_id);
+
+  if (!deletedNode) throw new ValidationError("Nodo no encontrado");
+
+  return deletedNode;
+};
+  
 const getAccesNodeById = async (_id) => {
   if (!isValidObjectId(_id)) {
     throw new ValidationError("El id debe ser de tipo ObjectId");
@@ -128,4 +180,7 @@ module.exports = {
   getAccesNodeById,
   deleteAccessNode,
   createAccessNode,
+  getNodes, 
+  updateNodeById,
+  deleteNodeById
 };
