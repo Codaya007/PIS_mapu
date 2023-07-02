@@ -16,16 +16,18 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
     min: 5,
     max: 30,
-    unique: true,
+    default: null,
+  },
+  bloqued: {
+    type: Boolean,
+    default: false,
   },
   avatar: {
     type: String,
     required: false,
-    default:
-      "https://i.pinimg.com/474x/5d/69/42/5d6942c6dff12bd3f960eb30c5fdd0f9.jpg",
+    default: null,
   },
   password: {
     type: String,
@@ -37,12 +39,12 @@ const userSchema = new Schema({
     nofitication: {
       type: Boolean,
       required: false,
-      default: false,
+      default: true,
     },
     spam: {
       type: Boolean,
       required: false,
-      default: false,
+      default: true,
     },
   },
   role: {
@@ -51,12 +53,12 @@ const userSchema = new Schema({
   },
   token: {
     type: String,
-    required: false
+    required: false,
   },
   tokenExpiresAt: {
-    type: Date, 
-    required: false
-  }
+    type: Date,
+    required: false,
+  },
 });
 
 // Override the 'toJSON' function to customize the JSON output
@@ -64,6 +66,12 @@ userSchema.set("toJSON", {
   transform: function (doc, ret) {
     delete ret.password;
     delete ret.__v;
+    delete ret.token;
+    delete ret.tokenExpiresAt;
+
+    if (!ret.avatar)
+      ret.avatar =
+        "https://i.pinimg.com/474x/5d/69/42/5d6942c6dff12bd3f960eb30c5fdd0f9.jpg";
   },
 });
 

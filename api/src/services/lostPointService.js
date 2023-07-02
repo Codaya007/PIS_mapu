@@ -1,10 +1,10 @@
 const LostPoint = require("../models/LostPoint");
 
 const findOrCreateLostPoint = async (lostPointData) => {
-    const { latitude, longitude } = lostPointData;
+    const { latitude, length } = lostPointData;
 
     const lostPoint = await LostPoint.findOneAndUpdate(
-      { latitude, longitude },
+      { latitude, length },
       lostPointData,
       { upsert: true, new: true }
     );
