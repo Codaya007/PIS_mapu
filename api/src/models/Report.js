@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-//TODO FALTA LA CREACION DE SUBNODO
 const reportSchema = new Schema({
     node: {
         type: Schema.Types.ObjectId,
@@ -17,7 +16,6 @@ const reportSchema = new Schema({
         type: String,
         required: false,
         default: "",
-        minLength: 3,
         maxLength: 200
 
     },

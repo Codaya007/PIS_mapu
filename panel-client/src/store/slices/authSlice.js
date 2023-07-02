@@ -16,9 +16,11 @@ export const authSlice = createSlice({
     },
     getProfile: (state, action) => {
       state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action?.payload));
     },
     updateProfile: (state, action) => {
       state.user = action.payload;
+      localStorage.setItem("user", JSON.stringify(action?.payload));
     },
     logout: (state, action) => {
       state.user = null;
