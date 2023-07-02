@@ -26,10 +26,10 @@ const createFacultySchema = Joi.object({
     "string.external": "Ya existe una facultad con este nombre",
     "*": "El campo 'name' es requerido y debe tener entre 5 y 150 caracteres",
   }),
-  description: Joi.string().optional().max(200).messages({
+  description: Joi.string().allow("", null).optional().max(200).messages({
     "*": "El campo 'description' debe tener un máximo de 200 caracteres",
   }),
-  dean: Joi.string().optional().max(150).messages({
+  dean: Joi.string().allow("", null).optional().max(150).messages({
     "*": "El campo 'dean' debe tener un máximo de 150 caracteres",
   }),
   polygons: Joi.required()
@@ -56,10 +56,10 @@ const updateFacultySchema = Joi.object({
       "name.external": "Ya existe una facultad con este nombre",
       "*": "El campo 'name' debe ser un string de entre 5 y 150 caracteres",
     }),
-  description: Joi.string().optional().max(200).messages({
+  description: Joi.string().allow("", null).optional().max(200).messages({
     "*": "El campo 'description' debe tener un máximo de 200 caracteres",
   }),
-  dean: Joi.string().optional().max(150).messages({
+  dean: Joi.string().allow("", null).optional().max(150).messages({
     "*": "El campo 'dean' debe tener un máximo de 150 caracteres",
   }),
   id: Joi.string()

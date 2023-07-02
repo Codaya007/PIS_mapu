@@ -2,9 +2,12 @@ const Joi = require("joi");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
-// Definir el esquema de validación para la creación de un Punto perdido
-const createLostPointSchema = Joi.object({
-    latitude: Joi.string()
+// Definir el esquema de validación para la creación de un comentario
+const createCommentSchema = Joi.object({
+    content: Joi.string().required().messages({
+        "*": "El campo 'content' es requerido",
+    }),
+    user: Joi.string()
         .custom((value, helpers) => {
             if (!ObjectId.isValid(value)) {
                 return helpers.error("any.invalid");
@@ -13,9 +16,9 @@ const createLostPointSchema = Joi.object({
         })
         .required()
         .messages({
-            "*": "El campo 'latitude' es requerido y debe ser un ID válido",
+            "*": "El campo 'user' es requerido y debe ser un ID válido",
         }),
-    length: Joi.string()
+    node: Joi.string()
         .custom((value, helpers) => {
             if (!ObjectId.isValid(value)) {
                 return helpers.error("any.invalid");
@@ -24,10 +27,10 @@ const createLostPointSchema = Joi.object({
         })
         .required()
         .messages({
-            "*": "El campo 'length' es requerido y debe ser un ID válido",
+            "*": "El campo 'user' es requerido y debe ser un ID válido",
         }),
 });
 
 module.exports = {
-    createLostPointSchema
+    createCommentSchema
 };

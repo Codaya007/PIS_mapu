@@ -38,6 +38,6 @@ userRouter.put(
  * @desc Bloquear usuario por id
  * @access Private Admin
  */
-// userRouter.delete("/:id", userController.deleteUser);
+userRouter.delete("/:id", isAdmin, userController.deleteUser);
 
 module.exports = userRouter;

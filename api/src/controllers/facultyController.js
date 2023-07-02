@@ -2,18 +2,22 @@ const facultyService = require("../services/facultyService.js");
 
 module.exports = {
   getAllFaculties: async (req, res) => {
-    const { skip = 0, limit = 10, ...where } = req.query;
+    const { skip = 0, limit, ...where } = req.query;
 
     const totalCount = await facultyService.getCountFaculties(where);
-    const results = await facultyService.getFaculties(where, skip, limit);
+    const results = await facultyService.getFaculties(
+      where,
+      skip,
+      limit || totalCount
+    );
 
-    return res.json({ totalCount, results });
+    return res.json({ totalCount, results, limit });
   },
 
   getFacultyById: async (req, res, next) => {
     const { id } = req.params;
 
-    const faculty = facultyService.getFacultyById(id);
+    const faculty = await facultyService.getFacultyById(id);
 
     if (!faculty) {
       return res.status(404).json({ message: "Facultad no encontrada" });

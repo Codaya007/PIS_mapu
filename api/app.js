@@ -22,6 +22,7 @@ app.use(cors());
 
 // routes
 app.use("/", require("./src/routes/example.routes.js"));
+app.use("/dashboard", require("./src/routes/dashboard.routes.js"));
 app.use("/auth", require("./src/routes/auth.routes.js"));
 app.use("/user", require("./src/routes/user.routes.js"));
 app.use("/me", require("./src/routes/me.routes.js"));
@@ -36,8 +37,11 @@ app.use("/image", require("./src/routes/images.routes.js"));
 app.use("/subnode", require("./src/routes/subNode.routes.js"));
 app.use("/report", require("./src/routes/report.routes.js"));
 app.use("/career", require("./src/routes/career.routes.js"));
+app.use("/comment", require("./src/routes/comment.routes.js"));
 app.use("/sector", require("./src/routes/sector.routes.js"));
 app.use("/suscription", require("./src/routes/suscription.routes.js"));
+app.use("/intersting-node", require("./src/routes/interstingNode.routes.js"));
+app.use("/access-node", require("./src/routes/accessNode.route.js"));
 
 // errorhandlers
 app.use("*", errorNotFound);

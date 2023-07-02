@@ -7,26 +7,42 @@ const { isValidObjectId } = require("mongoose");
 const createEvent = async (eventData) => {
     const existingEvent = await Event.findOne({ "name": eventData.name });
     if (existingEvent) throw new FieldExistingError(`El evento ya existe`, 400)
+    if (eventData.untilDate < eventData.sinceDate) throw new ValidationError("La fecha de inicio del evento debe ser antes de la fecha de termino")
     const event = await Event.create(eventData);
 
     return event;
 };
 
-const getEvents = async (where = {}, skip, limit) => {
+const getEvents = async (mobile, search, where = {}, skip, limit) => {
+    await applyRegex(mobile, search, where);
     const events = await Event.find(where).skip(skip).limit(limit);
 
     return events;
 };
 
+const applyRegex = async (mobile, search, where) => {
+    if (mobile === 'true') {
+        where.untilDate = { $gte: new Date() };
+    }
+
+    if (search && typeof search === 'string') {
+        where.$or = [
+            { name: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } }
+        ];
+    }
+}
+
 const getEventById = async (_id) => {
     if (!isValidObjectId(_id)) throw new ValidationError("El id debe ser un ObjectId");
     const event = await Event.findOne({ _id });
     if (!event) throw new NotExist("El evento no se encontro");
-    
+
     return event;
 };
 
-const getCountEvents = async (where = {}) => {
+const getCountEvents = async (mobile, search, where = {}) => {
+    await applyRegex(mobile, search, where);
     return await Event.count(where);
 };
 

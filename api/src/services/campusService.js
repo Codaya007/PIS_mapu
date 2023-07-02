@@ -13,6 +13,10 @@ const getCampuses = async (where = {}, skip, limit) => {
 
   return campuses;
 };
+const getCampusByName = async (name) => {
+  const campus = await Campus.findOne({ name });
+  return campus;
+};
 
 const getCampusById = async (id) => {
   if (!isValidObjectId(id)) {
@@ -41,7 +45,7 @@ const updateCampusById = async (id, campusData) => {
 };
 
 const deleteCampusById = async (id) => {
-  if (!mongoose.isValidObjectId(id))
+  if (!isValidObjectId(id))
     throw new ValidationError("El id debe ser un objectId");
 
   const campusDeleted = await Campus.findByIdAndDelete(id);
@@ -66,4 +70,5 @@ module.exports = {
   updateCampusById,
   deleteCampusById,
   deleteCampus,
+  getCampusByName,
 };

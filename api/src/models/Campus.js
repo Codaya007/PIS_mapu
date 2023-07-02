@@ -18,10 +18,17 @@ const campusSchema = new Schema({
     required: true,
     maxlength: 300,
   },
-  //accessPoints: {
-  //  type: Array,
-  //  required: true,
-  //}
+  accessPoints: {
+    type: [[String]],
+    required: true,
+    // validate: {
+    //   validator: function (arr) {
+    //     return arr.length === 1 && arr[0].length === 2;
+    //   },
+    //   message:
+    //     "accessPoints must be an array of a single array with 2 elements.",
+    // },
+  },
 });
 
 const Campus = mongoose.model("Campus", campusSchema);
