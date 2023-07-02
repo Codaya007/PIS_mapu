@@ -1,5 +1,8 @@
 const Joi = require("joi");
 const Type = require("../models/Type");
+const constants = require("../constants")
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const validateType = async (value, helpers) => {
     const { type } = value;
@@ -13,6 +16,13 @@ const validateType = async (value, helpers) => {
             message: "El tipo de nodo no existe",
         });
     }
+
+    if (type != constants.ROUTE_NODO_TYPE) {
+        return helpers.error("any.invalid", {
+            message: "El tipo de nodo debe ser ROUTE",
+        });
+    }
+
     return value;
 }
 
@@ -59,7 +69,7 @@ const updateRouteNodeSchema = Joi.object({
             }
             return value;
         })
-        .optional() 
+        .optional()
         .messages({
             "*": "El campo 'sector' es requerido y debe ser un ID válido",
         }),

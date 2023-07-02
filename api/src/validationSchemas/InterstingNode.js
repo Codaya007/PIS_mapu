@@ -1,6 +1,8 @@
 const Joi = require("joi");
 const Type = require("../models/Type");
 const Category = require("../models/Category");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 const validateType = async (value, helpers) => {
     const { type } = value;
@@ -86,7 +88,7 @@ const updateInterstingNodeSchema = Joi.object({
             }
             return value;
         })
-        .optional() 
+        .optional()
         .messages({
             "*": "El campo 'sector' es requerido y debe ser un ID válido",
         }),
