@@ -1,65 +1,89 @@
 const Comment = require("../models/Comment");
-const NodeService = require("../services/nodeService")
-const UserService = require("../services/userService")
-const NotExist = require('../errors/NotExist');
+const nodeService = require("../services/nodeService");
+const userService = require("../services/userService");
+const NotExist = require("../errors/NotExist");
 const ValidationError = require("../errors/ValidationError");
 const { isValidObjectId } = require("mongoose");
 
 const createComment = async (commentData) => {
-    validateNodeId(commentData.node)
-    validateUserId(commentData.user)
+  validateNodeId(commentData.node);
+  validateUserId(commentData.user);
 
-    const userComments = await getCommentByUserId(commentData.user);
-    const comment = userComments.find((comment) => comment.node == commentData.node);
-    if (comment) throw new ValidationError("Ya se escribio un comentario para este punto de interés");
+  const userComments = await getCountComments({
+    user: commentData.user,
+    node: commentData.node,
+  });
 
-    const newComment = Comment.create(commentData);
+  if (userComments) {
+    throw new ValidationError(
+      "Ya se escribió un comentario para este punto de interés"
+    );
+  }
 
-    return newComment;
+  const newComment = await Comment.create(commentData);
 
+  return newComment;
 };
 
 const getComments = async (where = {}, skip, limit) => {
-    const comments = await Comment.find(where).skip(skip).limit(limit);
+  const comments = await Comment.find(where).skip(skip).limit(limit);
 
-    return comments;
+  return comments;
 };
 
 const validateNodeId = async (nodeId) => {
-    NodeService.getNodeById(nodeId);
+  nodeService.getNodeById(nodeId);
 
-    return true;
-}
+  return true;
+};
 
 const validateUserId = async (userId) => {
-    UserService.getUserById(userId);
+  await userService.getUserById(userId);
 
-    return true;
-}
+  return true;
+};
 
 const getCommentById = async (_id) => {
-    if (!isValidObjectId(_id))
-        throw new ValidationError("El id debe ser un ObjectId");
+  if (!isValidObjectId(_id))
+    throw new ValidationError("El id debe ser un ObjectId");
 
-    const comment = await Comment.findOne({ _id });
+  const comment = await Comment.findOne({ _id });
 
-    if (!comment) {
-        throw new NotExist("Comentario no encontrado");
-    }
+  if (!comment) {
+    throw new NotExist("Comentario no encontrado");
+  }
 
-    return comment;
+  return comment;
 };
 
 const getCountComments = async (where = {}) => {
-    return await Comment.count(where);
+  return await Comment.count(where);
 };
 
 const deleteCommentById = async (_id) => {
-    if (!isValidObjectId(_id)) throw new ValidationError("El id debe ser un ObjectId");
+  if (!isValidObjectId(_id))
+    throw new ValidationError("El id debe ser un ObjectId");
 
-    const deletedComment = await Comment.findByIdAndRemove(_id);
+  const deletedComment = await Comment.findByIdAndRemove(_id);
 
-    if (!deletedComment) throw new NotExist("Comentario no encontrado");
+  if (!deletedComment) throw new NotExist("Comentario no encontrado");
 };
 
-module.exports = { createComment, getComments, getCommentById, getCountComments, updateCommentById, deleteCommentById };
+const updateCommentById = async (_id, newInfo) => {
+  await getCommentById(_id);
+
+  const updatedComment = await Comment.findByIdAndUpdate(id, newInfo, {
+    new: true,
+  });
+
+  return updatedComment;
+};
+
+module.exports = {
+  createComment,
+  getComments,
+  getCommentById,
+  getCountComments,
+  updateCommentById,
+  deleteCommentById,
+};
