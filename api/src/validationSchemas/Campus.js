@@ -30,22 +30,15 @@ const createCampusSchema = Joi.object({
   address: Joi.string().required().max(300).messages({
     "*": "El campo 'address' es requerido y debe tener un largo máximo de 300 caracteres",
   }),
-  //accessPoints: Joi.required()
-  //  .custom((accessPoints, helpers) => {
-  //    if (!Array.isArray(accessPoints)) return helpers.error("any.invalid");
-
-  //    for (const accessPoint in accessPoints) {
-  //verificar cada accesspoint
-  //    }
-
-  //    return accessPoints;
-  //  })
-  //  .messages({
-  //    "*" : "El campo 'accessPoints' ",
-  //  }),
+  accessPoints: Joi.array().optional().messages({
+    "*": "El campo accessPoint debe ser una array",
+  }),
 }).external(nameIsUnique);
 
 const updateCampusSchema = Joi.object({
+  id: Joi.string().required().custom(isValidObjectId).messages({
+    "*": "Id no válido",
+  }),
   name: Joi.string().optional().max(20).external(nameIsUnique).messages({
     "name.external": "Ya existe un campus con este nombre",
     "*": "El campo 'name' debe tener un largo máximo de 20 caracteres",
@@ -59,19 +52,10 @@ const updateCampusSchema = Joi.object({
   id: Joi.string().required().custom(isValidObjectId).messages({
     "*": "Id no válido",
   }),
-  //accessPoints: Joi.optional()
-  //  .custom((accessPoints, helpers) => {
-  //    if (!Array.isArray(accessPoints)) return helpers.error("any.invalid");
 
-  //    for (const accessPoint in accessPoints) {
-  //verificar cada accesspoint
-  //    }
-
-  //    return accessPoints;
-  //  })
-  //  .messages({
-  //    "*" : "El campo 'accessPoints' ",
-  //  }),
+  accessPoints: Joi.array().optional().messages({
+    "*": "El campo accessPoint debe ser una array",
+  }),
 }).external(nameIsUnique);
 
 module.exports = {

@@ -3,16 +3,16 @@ const Schema = mongoose.Schema;
 
 const nodeSchema = new Schema({
   latitude: {
-    type: String,
+    type: Number,
     required: true,
-    minLength: 1,
-    unique: true,
+    min: -200,
+    max: 200
   },
   longitude: {
-    type: String,
+    type: Number,
     required: true,
-    minLength: 1,
-    unique: true,
+    min: -200,
+    max: 200
   },
   available: {
     type: Boolean,
@@ -26,13 +26,13 @@ const nodeSchema = new Schema({
   },
   category: {
     type: String,
-    required: true,
+    required: false,
     minLength: 2,
     maxLength: 30,
   },
   sector: {
     type: String,
-    required: true,
+    required: false,
     // minLength: 2,
     // maxLength: 30,
   },
