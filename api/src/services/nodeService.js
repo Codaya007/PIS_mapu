@@ -44,7 +44,7 @@ const getNodeById = async (_id) => {
 
   const node = await Node.findOne({ _id });
 
-  if (!node) throw new NotExist("Nodo no encontrado");
+  if (!node) throw new NotExist("Nodo no encontrado"); 
 
   return node;
 };
