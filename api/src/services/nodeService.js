@@ -5,6 +5,14 @@ const campusService = require("../services/campusService");
 const { isValidObjectId } = require("mongoose");
 const { LIMIT_ACCESS_POINTS_BY_CAMPUS } = require("../constants");
 
+const applyRegex = async (type, where) => {
+  if (type && typeof type === 'string') {
+    where.$or = [
+      { type: { $regex: type, $options: 'i' } },
+    ];
+  }
+}
+
 const createNode = async (nodeData) => {
   await sameCoordenates(nodeData);
 
@@ -23,7 +31,8 @@ const sameCoordenates = async (nodeData) => {
     throw new ValidationError("La latitud y longitud ya existen");
 };
 
-const getNodes = async (where = {}, skip, limit) => {
+const getNodes = async (where = {}, skip, limit, type) => {
+  await applyRegex(type, where);
   const nodes = await Node.find(where).skip(skip).limit(limit);
 
   return nodes;
@@ -80,7 +89,8 @@ const getAllNodes = async (where = {}, skip, limit) => {
   return nodes;
 };
 
-const getCountNodes = async (where = {}) => {
+const getCountNodes = async (where = {}, type) => {
+  await applyRegex(type, where);
   const countNodes = await Node.count(where);
 
   return countNodes;

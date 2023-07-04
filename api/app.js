@@ -41,7 +41,8 @@ app.use("/comment", require("./src/routes/comment.routes.js"));
 app.use("/sector", require("./src/routes/sector.routes.js"));
 app.use("/suscription", require("./src/routes/suscription.routes.js"));
 app.use("/intersting-node", require("./src/routes/interstingNode.routes.js"));
-app.use("/access-node", require("./src/routes/accessNode.route.js"));
+app.use("/access-node", require("./src/routes/accessNode.routes.js"));
+app.use("/route-node", require("./src/routes/routeNode.routes.js"));
 
 // errorhandlers
 app.use("*", errorNotFound);

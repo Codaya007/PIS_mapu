@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const Type = require("../models/Type");
-const Category = require("../models/Category");
+const constants = require("../constants")
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -16,40 +16,27 @@ const validateType = async (value, helpers) => {
             message: "El tipo de nodo no existe",
         });
     }
-    return value;
-}
-const validateCategory = async (value, helpers) => {
-    const { category } = value;
-    let result;
-    if (category) {
-        result = await Category.findOne({ "name": category })
-    }
 
-    if (!result) {
+    if (type != constants.ROUTE_NODO_TYPE) {
         return helpers.error("any.invalid", {
-            message: "La categoria no existe",
+            message: "El tipo de nodo debe ser ROUTE",
         });
     }
+
     return value;
 }
 
 
-// Definir el esquema de validación para la creación de un Nodo de interes
-const createInterstingNodeSchema = Joi.object({
+// Definir el esquema de validación para la creación de un Nodo de ruta
+const createRouteNodeSchema = Joi.object({
     latitude: Joi.number().required().min(-200).max(200).messages({
         "*": "El campor 'latitude' es requerido y debe ser de tipo number con un valor entre -200 y 200"
     }),
     longitude: Joi.number().required().min(-200).max(200).messages({
         "*": "El campor 'longitude' es requerido y debe ser de tipo number con un valor entre -200 y 200"
     }),
-    available: Joi.boolean().required().messages({
-        "*": "El campor 'available' es requerido"
-    }),
     type: Joi.string().required().messages({
         "*": "El campor 'type' es requerido"
-    }),
-    category: Joi.string().optional().messages({
-        "*": "El campor 'category' es requerido"
     }),
     sector: Joi.string()
         .custom((value, helpers) => {
@@ -62,10 +49,10 @@ const createInterstingNodeSchema = Joi.object({
         .messages({
             "*": "El campo 'sector' es requerido y debe ser un ID válido",
         }),
-}).external(validateType).external(validateCategory)
+}).external(validateType)
 
-// Definir el esquema de validación para la actualización de un Nodo de interés
-const updateInterstingNodeSchema = Joi.object({
+// Definir el esquema de validación para la actualización de un Nodo de ruta
+const updateRouteNodeSchema = Joi.object({
     id: Joi.string().strip().messages({
         "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
     }),
@@ -74,12 +61,6 @@ const updateInterstingNodeSchema = Joi.object({
     }),
     longitude: Joi.number().optional().min(-200).max(200).messages({
         "*": "El campor 'longitude' es requerido y debe ser de tipo number con un valor entre -200 y 200"
-    }),
-    available: Joi.boolean().optional().messages({
-        "*": "El campor 'available' es requerido"
-    }),
-    category: Joi.string().optional().messages({
-        "*": "El campor 'category' es requerido"
     }),
     sector: Joi.string()
         .custom((value, helpers) => {
@@ -92,9 +73,9 @@ const updateInterstingNodeSchema = Joi.object({
         .messages({
             "*": "El campo 'sector' es requerido y debe ser un ID válido",
         }),
-}).external(validateCategory)
+})
 
 module.exports = {
-    createInterstingNodeSchema,
-    updateInterstingNodeSchema,
+    createRouteNodeSchema,
+    updateRouteNodeSchema,
 };
