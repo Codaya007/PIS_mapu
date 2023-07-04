@@ -35,4 +35,13 @@ module.exports = {
 
         return res.json(deleteNode);
     },
+
+    timeBetween: async (req, res) => {
+        const origin = req.body.origin;
+        const destination = req.body.destination;
+        const speed = req.body.speed;
+        const time = await nodeService.timeCoordinates(origin, destination, speed);
+
+        return res.json(time);
+    }
 };
