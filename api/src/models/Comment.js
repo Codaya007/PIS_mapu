@@ -6,6 +6,11 @@ const commentSchema = new Schema({
     type: String,
     required: true
   },
+  hide: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   user: {
     type: Schema.Types.ObjectId,  // Tipo ObjectId para referencia
     ref: 'User',  // Nombre del modelo referenciado
