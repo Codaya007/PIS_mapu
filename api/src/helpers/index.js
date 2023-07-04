@@ -2,6 +2,7 @@ const { EARTH_RADIUS_M } = require("../constants");
 const ValidationError = require("../errors/ValidationError");
 const { Types } = require("mongoose");
 const crypto = require("crypto");
+const qrcode = require("qrcode");
 
 /**
  * Calcula la distancia en metros entre dos coordenadas [latitud, longitud] usando la fórmula de Haversine
@@ -114,6 +115,21 @@ const getEndOfMonth = (month, year) => {
   return endDate;
 };
 
+/**
+ * Crea un código QR desde una cadena de texto
+ * @param {String} text Texto a transformar en QR
+ * @returns {String} datos del código QR
+ */
+const generateQRcode = async (text) => {
+  try {
+    const qrCodeDataURL = await qrcode.toDataURL(text);
+    return qrCodeDataURL;
+  } catch (error) {
+    console.error("Error al generar el código QR:", error);
+    throw error;
+  }
+};
+
 const timeBetweenCoordinates = (origin, destination, speed) => {
   const distance = getDistanceBetweenCoordinates(origin, destination);
 
@@ -130,5 +146,6 @@ module.exports = {
   generateUrlFriendlyToken,
   getStartOfMonth,
   getEndOfMonth,
+  generateQRcode,
   timeBetweenCoordinates
 };
