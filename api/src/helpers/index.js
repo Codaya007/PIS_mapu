@@ -114,6 +114,14 @@ const getEndOfMonth = (month, year) => {
   return endDate;
 };
 
+const timeBetweenCoordinates = (origin, destination, speed) => {
+  const distance = getDistanceBetweenCoordinates(origin, destination);
+
+  const time = distance / speed;
+
+  return time;
+}
+
 module.exports = {
   getDistanceBetweenCoordinates,
   degToRad,
@@ -122,4 +130,5 @@ module.exports = {
   generateUrlFriendlyToken,
   getStartOfMonth,
   getEndOfMonth,
+  timeBetweenCoordinates
 };

@@ -4,6 +4,7 @@ const NotExist = require("../errors/NotExist");
 const campusService = require("../services/campusService");
 const { isValidObjectId } = require("mongoose");
 const { LIMIT_ACCESS_POINTS_BY_CAMPUS } = require("../constants");
+const { timeBetweenCoordinates } = require("../helpers/index");
 
 const applyRegex = async (type, where) => {
   if (type && typeof type === 'string') {
@@ -185,6 +186,19 @@ const deleteAccessNode = async (_id) => {
   return await Node.deleteOne({ _id });
 };
 
+const timeCoordinates = async (origin, destination, speed) => {
+  if(speed <= 0){
+    throw new ValidationError("La velocidad tiene que ser mayor a 0");
+  }
+
+  const secondsStimate = await timeBetweenCoordinates(origin, destination, speed);
+
+  const minutes = Math.floor(secondsStimate / 60);
+  const seconds = Math.round(secondsStimate % 60);
+
+  return time={minutes, seconds};
+};
+
 module.exports = {
   getAllNodes,
   getCountNodes,
@@ -199,4 +213,5 @@ module.exports = {
   getNodes,
   updateNodeById,
   deleteNodeById,
+  timeCoordinates
 };
