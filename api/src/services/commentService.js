@@ -4,10 +4,11 @@ const userService = require("../services/userService");
 const NotExist = require("../errors/NotExist");
 const ValidationError = require("../errors/ValidationError");
 const { isValidObjectId } = require("mongoose");
+const constants = require("../constants/index")
 
 const createComment = async (commentData) => {
-  validateNodeId(commentData.node);
-  validateUserId(commentData.user);
+  validateNode(commentData.node);
+  validateUser(commentData.user);
 
   const userComments = await getCountComments({
     user: commentData.user,
@@ -25,23 +26,36 @@ const createComment = async (commentData) => {
   return newComment;
 };
 
-const getComments = async (where = {}, skip, limit) => {
+const getComments = async (where = {}, skip, limit, mobile) => {
+  await applyRegex(where, mobile);
   const comments = await Comment.find(where).skip(skip).limit(limit);
 
   return comments;
 };
 
-const validateNodeId = async (nodeId) => {
-  nodeService.getNodeById(nodeId);
+const validateNode = async (nodeId) => {
+  const node = await nodeService.getNodeById(nodeId);
+  if (node.type != constants.INTEREST_NODO_TYPE) {
+    throw new ValidationError("El comentario debe escribirse en un Nodo de Interes")
+  }
 
   return true;
 };
 
-const validateUserId = async (userId) => {
-  await userService.getUserById(userId);
+const validateUser = async (userId) => {
+  const user = await userService.getUserById(userId);
+  if (user.bloqued == true) {
+    throw new ValidationError('El usuario se encuentra bloqueado')
+  }
 
   return true;
 };
+
+const applyRegex = async (where, mobile) => {
+  if (mobile === 'true') {
+    where.hide = false
+  }
+}
 
 const getCommentById = async (_id) => {
   if (!isValidObjectId(_id))
@@ -56,8 +70,19 @@ const getCommentById = async (_id) => {
   return comment;
 };
 
-const getCountComments = async (where = {}) => {
+const getCountComments = async (where = {}, mobile) => {
+  await applyRegex(where, mobile);
   return await Comment.count(where);
+};
+
+const updateCommentById = async (_id, newInfo) => {
+  await getCommentById(_id);
+
+  const updatedComment = await Comment.findByIdAndUpdate(_id, newInfo, {
+    new: true,
+  });
+
+  return updatedComment;
 };
 
 const deleteCommentById = async (_id) => {
@@ -67,16 +92,8 @@ const deleteCommentById = async (_id) => {
   const deletedComment = await Comment.findByIdAndRemove(_id);
 
   if (!deletedComment) throw new NotExist("Comentario no encontrado");
-};
-
-const updateCommentById = async (_id, newInfo) => {
-  await getCommentById(_id);
-
-  const updatedComment = await Comment.findByIdAndUpdate(id, newInfo, {
-    new: true,
-  });
-
-  return updatedComment;
+  
+  return deletedComment;
 };
 
 module.exports = {

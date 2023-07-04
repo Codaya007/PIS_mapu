@@ -130,6 +130,14 @@ const generateQRcode = async (text) => {
   }
 };
 
+const timeBetweenCoordinates = (origin, destination, speed) => {
+  const distance = getDistanceBetweenCoordinates(origin, destination);
+
+  const time = distance / speed;
+
+  return time;
+}
+
 module.exports = {
   getDistanceBetweenCoordinates,
   degToRad,
@@ -139,4 +147,5 @@ module.exports = {
   getStartOfMonth,
   getEndOfMonth,
   generateQRcode,
+  timeBetweenCoordinates
 };
