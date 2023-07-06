@@ -1,7 +1,10 @@
 const { Router } = require("express");
 const nodeController = require("../controllers/nodeController");
 const middlewares = require("../middlewares");
-const { createInterstingNodeSchema, updateInterstingNodeSchema } = require("../validationSchemas/InterstingNode");
+const {
+  createInterestingNodeSchema,
+  updateInterestingNodeSchema,
+} = require("../validationSchemas/InterestingNode");
 
 const nodeRouter = Router();
 
@@ -11,9 +14,9 @@ const nodeRouter = Router();
  * @access Admin
  */
 nodeRouter.post(
-    "/",
-    middlewares.validateRequestBody(createInterstingNodeSchema),
-    nodeController.createNode
+  "/",
+  middlewares.validateRequestBody(createInterestingNodeSchema),
+  nodeController.createNode
 );
 
 /**
@@ -35,10 +38,10 @@ nodeRouter.get("/:id", nodeController.getNode);
  * @desc Actualizar un nodo con la información pasada por body
  * @access Admin
  */
-nodeRouter.put( 
-    "/:id",
-    middlewares.validateRequestBody(updateInterstingNodeSchema),
-    nodeController.updateNode
+nodeRouter.put(
+  "/:id",
+  middlewares.validateRequestBody(updateInterestingNodeSchema),
+  nodeController.updateNode
 );
 
 /**
@@ -46,9 +49,6 @@ nodeRouter.put(
  * @desc Eliminar un nodo por id
  * @access Admin
  */
-nodeRouter.delete( 
-    "/:id",
-    nodeController.deleteNode
-);
+nodeRouter.delete("/:id", nodeController.deleteNode);
 
 module.exports = nodeRouter;
