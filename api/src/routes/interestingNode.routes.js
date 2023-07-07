@@ -19,6 +19,11 @@ nodeRouter.post(
   nodeController.createNode
 );
 
+nodeRouter.post(
+    "/time",
+    nodeController.timeBetween
+);
+
 /**
  * @route GET /
  * @desc Obtener todos los nodos
