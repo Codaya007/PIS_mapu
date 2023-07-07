@@ -9,6 +9,7 @@ import {
   Text,
   VStack,
   Link as LinkStyle,
+  Checkbox,
 } from "native-base";
 import { useNavigate } from "react-router-native";
 
@@ -63,6 +64,23 @@ const Register = () => {
           <Button mt="2" colorScheme="indigo">
             Registrarse
           </Button>
+          <Box display={"flex"} justifyContent={"center"}>
+            <Checkbox
+              //isInvalid
+              value="acept"
+              colorScheme="indigo"
+            >
+              <Text
+                fontSize="sm"
+                color="coolGray.600"
+                _dark={{
+                  color: "warmGray.200",
+                }}
+              >
+                Acepto los Términos y condiciones
+              </Text>
+            </Checkbox>
+          </Box>
         </VStack>
         <HStack mt="6" justifyContent="center">
           <Text
