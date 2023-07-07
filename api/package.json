@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
+    "test": "nodemon ./src/helpers/findNearestRoute.js",
     "dev": "nodemon app.js"
   },
   "keywords": [],
