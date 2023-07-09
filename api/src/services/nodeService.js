@@ -148,6 +148,8 @@ const updateAccessNode = async (_id, node) => {
     throw new ValidationError("El id no es de tipo ObjectId");
   }
 
+  await getAccesNodeById(_id);
+
   delete node.campus;
   return await Node.updateOne({ _id }, node);
 };
