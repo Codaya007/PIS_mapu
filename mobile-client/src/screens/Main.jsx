@@ -7,6 +7,8 @@ import LoginForm from "./Login";
 import Register from "./Register";
 import About from "./About";
 import Events from "./Events";
+import Favorites from "./Favorites";
+import ForgotPasswordForm from "./ForgotPasswordForm";
 
 const Main = () => {
   return (
@@ -19,6 +21,9 @@ const Main = () => {
         <Route path="/sign-up" Component={Register} />
         <Route path="/about" Component={About} />
         <Route path="/events" Component={Events} />
+        <Route path="/favorites" Component={Favorites} />
+        <Route path="/forgot-password" Component={ForgotPasswordForm} />
+        <Route path="/reset-password/:token" Component={ForgotPasswordForm} />
         <Route path="/*" Component={Home} />
       </Routes>
     </View>

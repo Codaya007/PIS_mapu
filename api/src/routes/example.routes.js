@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const imageController = require("../controllers/imageController");
 
 const exampleRouter = Router();
 
@@ -10,5 +11,10 @@ const exampleRouter = Router();
 exampleRouter.get("/", async (req, res, next) => {
   res.json({ message: "El servidor está funcionando :)" });
 });
+
+exampleRouter.post(
+  "/",
+  imageController.createQR
+);
 
 module.exports = exampleRouter;

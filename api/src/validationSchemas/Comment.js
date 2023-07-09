@@ -31,6 +31,18 @@ const createCommentSchema = Joi.object({
         }),
 });
 
+// Definir el esquema de validación para la actualización de un comentario
+const updateCommentSchema = Joi.object({
+    id: Joi.string().strip().messages({
+        "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
+    }),
+    hide: Joi.boolean().required().messages({
+        "*": "El campo 'hide' es requerido, de tipo Boolean",
+    }),
+});
+
+
 module.exports = {
-    createCommentSchema
+    createCommentSchema,
+    updateCommentSchema
 };

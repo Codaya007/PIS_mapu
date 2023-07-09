@@ -1,5 +1,5 @@
 import React from "react";
-import { VStack, Box, Divider, Heading } from "native-base";
+import { VStack, Heading, FlatList, Text } from "native-base";
 import Event from "../components/Event";
 
 const events = [
@@ -35,10 +35,11 @@ const events = [
 
 const Events = () => {
   return (
-    <Box border="1" borderRadius="md" margin="1rem">
+    <>
       <Heading
         size="lg"
         fontWeight="600"
+        padding={5}
         color="coolGray.800"
         _dark={{
           color: "warmGray.50",
@@ -46,12 +47,18 @@ const Events = () => {
       >
         Eventos programados en el campus UNL
       </Heading>
-      <VStack space={3} mt="5">
-        {events.map((event) => (
-          <Event key={event._id} event={event} />
-        ))}
-      </VStack>
-    </Box>
+      <FlatList
+        data={events}
+        renderItem={({ item: event }) => (
+          <>
+            <Event key={event._id} event={event} />
+            <Text height={4}></Text>
+          </>
+        )}
+        keyExtractor={(event) => event._id}
+      />
+    </>
+    // </FlatList>
   );
 };
 
