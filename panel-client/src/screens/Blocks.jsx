@@ -41,7 +41,7 @@ function Blocks() {
   };
 
   const handleEdit = (blockId) => {
-    // navigate(`/edit-block/${blockId}`);
+    navigate(`/edit-block/${blockId}`);
   };
 
   const handleDelete = async (blockId) => {
@@ -55,7 +55,7 @@ function Blocks() {
   };
 
   const handleCreate = () => {
-    // navigate("/create-block");
+    navigate("/create-block");
   };
 
 
