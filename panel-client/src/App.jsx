@@ -7,6 +7,8 @@ import SidebarMenu from "./components/SideBar";
 import Dashboard from "./screens/Dashboard";
 import Faculties from "./screens/Faculties";
 import FacultyForm from "./screens/FacultyForm";
+import Blocks from "./screens/Blocks";
+import BlockForm from "./screens/BlockForm";
 import LoginForm from "./screens/Login";
 import NotFound from "./screens/NotFound";
 import Profile from "./screens/Profile";
@@ -39,6 +41,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/block" element={<Blocks />} />
+            <Route path="/create-block" element={<BlockForm />} />
+            <Route path="/edit-block/:id" element={<BlockForm />} />
             <Route path="/faculty" element={<Faculties />} />
             <Route path="/create-faculty" element={<FacultyForm />} />
             <Route path="/edit-faculty/:id" element={<FacultyForm />} />
