@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  faculties: [],
-  currentSliceFaculties: [],
+  blocks: [],
+  currentSliceBlocks: [],
   pages: 1,
   currentPage: 1,
   totalCount: 0,
@@ -11,28 +11,28 @@ const initialState = {
   fetched: false,
 };
 
-export const facultySlice = createSlice({
+export const blockSlice = createSlice({
   name: "block",
   initialState,
   reducers: {
     getAll: (state, action) => {
-      state.faculties = action.payload.results;
+      state.blocks = action.payload.results;
       state.totalCount = action.payload.totalCount;
       state.fetched = true;
       state.pages = Math.ceil(state.totalCount / state.limit);
-      state.currentSliceFaculties = action.payload.results.slice(
+      state.currentSliceBlocks = action.payload.results.slice(
         state.skip,
         state.skip + state.limit
       );
     },
     getSlice: (state, action) => {
-      state.currentSliceFaculties = action.payload.results;
+      state.currentSliceBlocks = action.payload.results;
       state.totalCount = action.payload.totalCount;
       state.pages = Math.ceil(state.totalCount / state.limit);
     },
     // En base a skip y limit edita el currentSliceFaculties
     getWithoutFetchSlice: (state, action) => {
-      state.currentSliceFaculties = state.faculties.slice(
+      state.currentSliceBlocks = state.blocks.slice(
         state.skip,
         state.skip + state.limit
       );
@@ -42,9 +42,9 @@ export const facultySlice = createSlice({
       state.currentPage = action.payload;
       state.skip = (state.currentPage - 1) * state.limit;
     },
-    // createFaculty: (state, action) => {},
-    // updateFaculty: (state, action) => {},
-    // deleteFaculty: (state, action) => {},
+    // createBlock: (state, action) => {},
+    // updateBlock: (state, action) => {},
+    // deleteBlock: (state, action) => {},
   },
 });
 
@@ -52,11 +52,11 @@ export const facultySlice = createSlice({
 export const {
   getAll,
   getSlice,
-  // createFaculty,
-  // updateFaculty,
-  // deleteFaculty,
+  // createBlock,
+  // updateBlock,
+  // deleteBlock,
   setPage,
   getWithoutFetchSlice,
-} = facultySlice.actions;
+} = blockSlice.actions;
 
-export default facultySlice.reducer;
+export default blockSlice.reducer;
