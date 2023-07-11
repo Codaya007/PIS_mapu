@@ -1,15 +1,6 @@
 import React from "react";
-import { ScrollView, StyleSheet } from "react-native";
-import {
-  Box,
-  Container,
-  HStack,
-  Icon,
-  IconButton,
-  StatusBar,
-  Text,
-  View,
-} from "native-base";
+import { StyleSheet } from "react-native";
+import { Box, HStack, StatusBar, Text } from "native-base";
 import Constants from "expo-constants";
 import theme from "../theme";
 import { Link, useLocation } from "react-router-native";
@@ -64,22 +55,12 @@ const AppBar = (props) => {
         <AppBarTab to={"/login"}>Iniciar sesión</AppBarTab>
         <AppBarTab to={"/sign-up"}>Registrarse</AppBarTab>
         <AppBarTab to={"/events"}>Eventos</AppBarTab>
+        <AppBarTab to={"/favorites"}>Favoritos</AppBarTab>
+        <AppBarTab to={"/forgot-password"}>Olvidé contraseña</AppBarTab>
+        <AppBarTab to={"/reset-password"}>Recuperar contraseña</AppBarTab>
         <AppBarTab to={"/about"}>Acerca</AppBarTab>
       </HStack>
     </>
-    // <View style={styles.container}>
-    //   <ScrollView
-    //     showsHorizontalScrollIndicator={false}
-    //     horizontal
-    //     style={styles.scroll}
-    //   >
-    //     <AppBarTab to={"/"}>Mapa</AppBarTab>
-    //     <AppBarTab to={"/login"}>Iniciar sesión</AppBarTab>
-    //     <AppBarTab to={"/sign-up"}>Registrarse</AppBarTab>
-    //     <AppBarTab to={"/events"}>Eventos</AppBarTab>
-    //     <AppBarTab to={"/about"}>Acerca</AppBarTab>
-    //   </ScrollView>
-    // </View>
   );
 };
 

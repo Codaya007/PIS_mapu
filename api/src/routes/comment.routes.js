@@ -31,6 +31,13 @@ commentRouter.get("/", commentController.getAllComments);
 commentRouter.get("/:id", commentController.getComment);
 
 /**
+ * @route PUT /
+ * @desc Actualizar la visibilidad de un comentario por ID
+ * @access Admin
+ */
+commentRouter.put("/:id", commentController.updateComment);
+
+/**
  * @route DELETE /
  * @desc Eliminar un comentario mediante su id
  * @access Public

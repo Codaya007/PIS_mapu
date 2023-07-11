@@ -4,6 +4,15 @@ const NotExist = require("../errors/NotExist");
 const campusService = require("../services/campusService");
 const { isValidObjectId } = require("mongoose");
 const { LIMIT_ACCESS_POINTS_BY_CAMPUS } = require("../constants");
+const { timeBetweenCoordinates } = require("../helpers/index");
+
+const applyRegex = async (type, where) => {
+  if (type && typeof type === 'string') {
+    where.$or = [
+      { type: { $regex: type, $options: 'i' } },
+    ];
+  }
+}
 
 const createNode = async (nodeData) => {
   await sameCoordenates(nodeData);
@@ -23,7 +32,8 @@ const sameCoordenates = async (nodeData) => {
     throw new ValidationError("La latitud y longitud ya existen");
 };
 
-const getNodes = async (where = {}, skip, limit) => {
+const getNodes = async (where = {}, skip, limit, type) => {
+  await applyRegex(type, where);
   const nodes = await Node.find(where).skip(skip).limit(limit);
 
   return nodes;
@@ -35,7 +45,7 @@ const getNodeById = async (_id) => {
 
   const node = await Node.findOne({ _id });
 
-  if (!node) throw new NotExist("Nodo no encontrado");
+  if (!node) throw new NotExist("Nodo no encontrado"); 
 
   return node;
 };
@@ -80,7 +90,8 @@ const getAllNodes = async (where = {}, skip, limit) => {
   return nodes;
 };
 
-const getCountNodes = async (where = {}) => {
+const getCountNodes = async (where = {}, type) => {
+  await applyRegex(type, where);
   const countNodes = await Node.count(where);
 
   return countNodes;
@@ -177,6 +188,19 @@ const deleteAccessNode = async (_id) => {
   return await Node.deleteOne({ _id });
 };
 
+const timeCoordinates = async (origin, destination, speed) => {
+  if(speed <= 0){
+    throw new ValidationError("La velocidad tiene que ser mayor a 0");
+  }
+
+  const secondsStimate = await timeBetweenCoordinates(origin, destination, speed);
+
+  const minutes = Math.floor(secondsStimate / 60);
+  const seconds = Math.round(secondsStimate % 60);
+
+  return time={minutes, seconds};
+};
+
 module.exports = {
   getAllNodes,
   getCountNodes,
@@ -191,4 +215,5 @@ module.exports = {
   getNodes,
   updateNodeById,
   deleteNodeById,
+  timeCoordinates
 };
