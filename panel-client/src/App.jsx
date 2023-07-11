@@ -7,10 +7,13 @@ import SidebarMenu from "./components/SideBar";
 import Dashboard from "./screens/Dashboard";
 import Faculties from "./screens/Faculties";
 import FacultyForm from "./screens/FacultyForm";
+import Campuses from "./screens/Campuses";
 import LoginForm from "./screens/Login";
 import NotFound from "./screens/NotFound";
 import Profile from "./screens/Profile";
 import { login } from "./store/slices/authSlice";
+import CapusesForm from "./screens/CampusForm";
+import ProfileEdit from "./screens/ProfileEdit";
 
 function App() {
   const location = useLocation();
@@ -42,7 +45,11 @@ function App() {
             <Route path="/faculty" element={<Faculties />} />
             <Route path="/create-faculty" element={<FacultyForm />} />
             <Route path="/edit-faculty/:id" element={<FacultyForm />} />
+            <Route path="/campus" element={< Campuses />} />
+            <Route path="/edit-campus/:id" element={<CapusesForm />}/>
+            <Route path="/create-campus" element={< CapusesForm/>} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/edit-profile/:id" element={<ProfileEdit />} />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </Box>
