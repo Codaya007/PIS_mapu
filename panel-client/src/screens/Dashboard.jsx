@@ -5,6 +5,8 @@ function Dashboard() {
   // Datos de ejemplo
   const registeredUsers = 100;
   const createdFaculties = 5;
+  const createdCarrers = 5;
+  const createdCampus = 10;
 
   return (
     <Box p={4}>
@@ -43,7 +45,7 @@ function Dashboard() {
           }}
         >
           <StatLabel>Total de carreras</StatLabel>
-          <StatNumber color={"blue.500"}>{createdFaculties}</StatNumber>
+          <StatNumber color={"blue.500"}>{createdCarrers}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -55,7 +57,7 @@ function Dashboard() {
           }}
         >
           <StatLabel>Total de Campus</StatLabel>
-          <StatNumber color={"blue.500"}>{createdFaculties}</StatNumber>
+          <StatNumber color={"blue.500"}>{createdCampus}</StatNumber>
         </Stat>
       </SimpleGrid>
 

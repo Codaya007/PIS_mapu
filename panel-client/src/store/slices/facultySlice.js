@@ -12,7 +12,7 @@ const initialState = {
 };
 
 export const facultySlice = createSlice({
-  name: "block",
+  name: "faculty",
   initialState,
   reducers: {
     getAll: (state, action) => {
