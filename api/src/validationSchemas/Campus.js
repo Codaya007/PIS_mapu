@@ -49,6 +49,7 @@ const updateCampusSchema = Joi.object({
   address: Joi.string().optional().max(300).messages({
     "*": "El campo 'address' debe tener un largo máximo de 300 caracteres",
   }),
+
   accessPoints: Joi.array().optional().messages({
     "*": "El campo accessPoint debe ser una array",
   }),
