@@ -12,10 +12,87 @@ import {
   Checkbox,
 } from "native-base";
 import { useNavigate } from "react-router-native";
+import React, { useState } from "react";
+import axios from "axios";
+import Toast from 'react-native-toast-message';
 
 const Register = () => {
   const navigate = useNavigate();
+  const [name , setName] = useState("");
+  const [lastname , setLastName] = useState("");
+  const [email , setEmail] = useState("");
+  const [password , setPassword] = useState("");
+  const [passwordAgain, setPasswordAgain] = useState("");
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
+  const handleRegister = async () => {
+    if(!name | !lastname | !email | !password | !passwordAgain){
+      Toast.show({
+        type: 'error',
+        text1: "Campos incompletos",
+        position: 'bottom',
+      });
+      return;
+    }
+
+    if(password.length <= 8){
+      Toast.show({
+        type: 'error',
+        text1: "Contraseña muy corta",
+        position: 'bottom',
+      });
+      return;
+    }
+
+    if(password != passwordAgain){
+      Toast.show({
+        type: 'error',
+        text1: "Las contraseñas no coinciden",
+        position: 'bottom',
+      });
+      return;
+    }
+  
+    if(!termsAccepted){
+      Toast.show({
+        type: 'error',
+        text1: "Acepte los términos y condiciones",
+        text2: "para continuar",
+        position: 'bottom',
+      });
+      return;
+    }
+
+    try{
+      const response = await axios.post("http://192.168.0.103:3000/auth/register", {
+        name,
+        lastname,
+        email,
+        password,
+      });
+
+      if(response.status == 200){
+        Toast.show({
+          type: 'success',
+          text1: "Registro exitoso",
+          position: 'bottom',
+        });
+        navigate("/login");
+      }
+    }catch (error){
+      Toast.show({
+        type: 'error',
+        text1: "Error al registrar",
+        text2: "intentelo nuevamente más tarde",
+        position: 'bottom',
+      });
+    }
+  };
+
+  const handleTermsAcceptance = (value) => {
+    setTermsAccepted(value);
+  };
+  
   return (
     <Center w="100%">
       <Box safeArea p="2" w="90%" maxW="290" py="8">
@@ -43,25 +120,25 @@ const Register = () => {
         <VStack space={3} mt="5">
           <FormControl>
             <FormControl.Label>Nombre</FormControl.Label>
-            <Input />
+            <Input onChangeText={setName} value={name}/>
           </FormControl>
           <FormControl>
             <FormControl.Label>Apellido</FormControl.Label>
-            <Input />
+            <Input onChangeText={setLastName} value={lastname}/>
           </FormControl>
           <FormControl>
             <FormControl.Label>Email</FormControl.Label>
-            <Input />
+            <Input onChangeText={setEmail} value={email}/>
           </FormControl>
           <FormControl>
             <FormControl.Label>Contraseña</FormControl.Label>
-            <Input type="password" />
+            <Input type="password" onChangeText={setPassword} value={password}/>
           </FormControl>
           <FormControl>
             <FormControl.Label>Confirmar contraseña</FormControl.Label>
-            <Input type="password" />
+            <Input type="password" onChangeText={setPasswordAgain} value={passwordAgain}/>
           </FormControl>
-          <Button mt="2" colorScheme="indigo">
+          <Button mt="2" colorScheme="indigo" onPress={handleRegister}>
             Registrarse
           </Button>
           <Box display={"flex"} justifyContent={"center"}>
@@ -69,6 +146,7 @@ const Register = () => {
               //isInvalid
               value="acept"
               colorScheme="indigo"
+              onChange={handleTermsAcceptance}
             >
               <Text
                 fontSize="sm"
