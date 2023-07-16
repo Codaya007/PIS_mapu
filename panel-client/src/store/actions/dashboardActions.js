@@ -1,6 +1,6 @@
 import axios from "axios";
 import { API_BASEURL } from "../../constants";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { getAll } from "../slices/dashboardSlice";
 
 export const getInfoDashboard = () =>async (dispatch) =>{
