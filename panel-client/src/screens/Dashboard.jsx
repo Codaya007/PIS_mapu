@@ -1,16 +1,32 @@
 import { Box, SimpleGrid, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { getInfoDashboard } from "../store/actions/dashboardActions";
+import { useEffect } from "react";
 import MapContainerComponent from "../components/Map";
 
 function Dashboard() {
   // Datos de ejemplo
-  const registeredUsers = 100;
-  const createdFaculties = 5;
-  const createdCarrers = 5;
-  const createdCampus = 10;
+
+  const {
+    totalUser,
+    totalUserLastMonth,
+    totalCampus,
+    totalFaculty,
+    totalBlock,
+    totalCareer,
+    totalCategory,
+    totalSector
+  } = useSelector((state) => state.dashboardReducer);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getInfoDashboard());
+  }, []);
 
   return (
     <Box p={4}>
-      <SimpleGrid columns={{ base: 1, md: 5 }} spacing={4}>
+      <SimpleGrid columns={{ base: 2, md: 4 }} spacing={4}>
         <Stat
           p={4}
           bg="white"
@@ -21,7 +37,19 @@ function Dashboard() {
           }}
         >
           <StatLabel>Total usuarios</StatLabel>
-          <StatNumber color={"blue.500"}>{registeredUsers}</StatNumber>
+          <StatNumber color={"blue.500"}>{totalUser}</StatNumber>
+        </Stat>
+        <Stat
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="md"
+          _hover={{
+            boxShadow: "lg",
+          }}
+        >
+          <StatLabel>Usuarios ultimo mes</StatLabel>
+          <StatNumber color={"blue.500"}>{totalUserLastMonth}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -33,7 +61,7 @@ function Dashboard() {
           }}
         >
           <StatLabel>Total de facultades</StatLabel>
-          <StatNumber color={"blue.500"}>{createdFaculties}</StatNumber>
+          <StatNumber color={"blue.500"}>{totalFaculty}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -44,8 +72,46 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
+
+          <StatLabel>Total de bloques</StatLabel>
+          <StatNumber color={"blue.500"}>{totalBlock}</StatNumber>
+        </Stat>
+        <Stat
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="md"
+          _hover={{
+            boxShadow: "lg",
+          }}
+        >
+
           <StatLabel>Total de carreras</StatLabel>
-          <StatNumber color={"blue.500"}>{createdCarrers}</StatNumber>
+          <StatNumber color={"blue.500"}>{totalCareer}</StatNumber>
+        </Stat>
+        <Stat
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="md"
+          _hover={{
+            boxShadow: "lg",
+          }}
+        >
+          <StatLabel>Total de categorias</StatLabel>
+          <StatNumber color={"blue.500"}>{totalCategory}</StatNumber>
+        </Stat>
+        <Stat
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="md"
+          _hover={{
+            boxShadow: "lg",
+          }}
+        >
+          <StatLabel>Total de sectores</StatLabel>
+          <StatNumber color={"blue.500"}>{totalSector}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -57,7 +123,7 @@ function Dashboard() {
           }}
         >
           <StatLabel>Total de Campus</StatLabel>
-          <StatNumber color={"blue.500"}>{createdCampus}</StatNumber>
+          <StatNumber color={"blue.500"}>{totalCampus}</StatNumber>
         </Stat>
       </SimpleGrid>
 
