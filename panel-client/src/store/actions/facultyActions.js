@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { getFaculties } from "../../services/facultyServices";
+import { getFaculties} from "../../services/facultyServices";
 import { getAll, getSlice } from "../slices/facultySlice";
 
 export const fetchFaculties = (skip, limit) => async (dispatch) => {
