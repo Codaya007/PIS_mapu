@@ -14,6 +14,5 @@ export const loginUser = (email, password) => async (dispatch) => {
 
 export const fetchProfile = () => async (dispatch) => {
   const { data } = await axios.get(`${API_BASEURL}/me`);
-
   dispatch(updateProfile(data));
 };
