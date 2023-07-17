@@ -35,7 +35,7 @@ const validateCategory = async (value, helpers) => {
 };
 
 // Definir el esquema de validación para la creación de un Nodo de interes
-const createInterstingNodeSchema = Joi.object({
+const createRouteNodeSchema = Joi.object({
   latitude: Joi.number().required().min(-200).max(200).messages({
     "*": "El campor 'latitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
   }),
@@ -76,7 +76,7 @@ const createInterstingNodeSchema = Joi.object({
   .external(validateCategory);
 
 // Definir el esquema de validación para la actualización de un Nodo de interés
-const updateInterstingNodeSchema = Joi.object({
+const updateRouteNodeSchema = Joi.object({
   id: Joi.string().strip().messages({
     "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
   }),
@@ -118,6 +118,6 @@ const updateInterstingNodeSchema = Joi.object({
 }).external(validateCategory);
 
 module.exports = {
-  createInterstingNodeSchema,
-  updateInterstingNodeSchema,
+  createRouteNodeSchema,
+  updateRouteNodeSchema,
 };

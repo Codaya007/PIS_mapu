@@ -4,6 +4,7 @@ const NotExist = require("../errors/NotExist");
 const campusService = require("../services/campusService");
 const { isValidObjectId } = require("mongoose");
 const { LIMIT_ACCESS_POINTS_BY_CAMPUS } = require("../constants");
+const { ACCESS_NODO_TYPE } = require("../constants/index");
 
 const createNode = async (nodeData) => {
   await sameCoordenates(nodeData);
@@ -13,6 +14,51 @@ const createNode = async (nodeData) => {
   return node;
 };
 
+const createNodeAdyacencies = async (nodeData) => {
+  await sameCoordenates(nodeData);
+  if (nodeData.adyacency.length > 0) {
+    for (let i = 0; i < nodeData.adyacency.length; i++) {
+      let nodeAdyacency = await getNodeByLatitudAndLongitude(
+        nodeData.adyacency[i].latitude,
+        nodeData.adyacency[i].longitude
+      );
+      let isAdyacency = false;
+
+      for (let j = 0; j < nodeAdyacency.adyacency.length && !isAdyacency; j++) {
+        if (
+          nodeAdyacency.adyacency[j].latitude == nodeData.latitude &&
+          nodeAdyacency.adyacency[j].longitude == nodeData.longitude
+        ) {
+          isAdyacency = true;
+        }
+      }
+      if (!isAdyacency) {
+        nodeAdyacency.adyacency.push({
+          latitude: nodeData.latitude,
+          longitude: nodeData.longitude,
+          weight: nodeData.adyacency[i].weight,
+        });
+        await updateNode(nodeAdyacency.id, nodeAdyacency);
+      }
+    }
+  }
+  const node = await Node.create(nodeData);
+  return node;
+};
+
+const getNodeByLatitudAndLongitude = async (latitude, longitude) => {
+  const node = await Node.findOne({
+    latitude,
+    longitude,
+  });
+  if (!node) {
+    throw new ValidationError(
+      "No exiten coincidencias con la latitude and longitude ingresada"
+    );
+  }
+
+  return node;
+};
 const sameCoordenates = async (nodeData) => {
   const sameCoor = await Node.find({
     latitude: nodeData.latitude,
@@ -41,7 +87,7 @@ const getNodeById = async (_id) => {
 };
 
 const updateNodeById = async (_id, nodeData) => {
-  await sameCoordenates(nodeData);
+  // await sameCoordenates(nodeData);
 
   let node = await getNodeById(_id);
 
@@ -67,7 +113,7 @@ const getAccesNodeById = async (_id) => {
   }
   const accessNode = await Node.findOne({ _id });
 
-  if (accessNode.type != "Acceso") {
+  if (accessNode.type != ACCESS_NODO_TYPE) {
     throw new ValidationError("El nodo no es de tipo Acceso");
   }
 
@@ -107,7 +153,7 @@ const createAccessNode = async (node) => {
 
   campus.accessPoints.push([node.latitude, node.longitude]);
 
-  if (campus.accessPoints.length > 4) {
+  if (campus.accessPoints.length > LIMIT_ACCESS_POINTS_BY_CAMPUS) {
     throw new ValidationError(
       `El campus no puede tener más de ${LIMIT_ACCESS_POINTS_BY_CAMPUS} puntos de acceso`
     );
@@ -125,6 +171,7 @@ const createAccessNode = async (node) => {
   delete node.campus;
   const nodeModel = node;
   const nodeCreated = await Node.create(nodeModel);
+  console.log(nodeCreated);
 
   return nodeCreated;
 };
@@ -191,4 +238,5 @@ module.exports = {
   getNodes,
   updateNodeById,
   deleteNodeById,
+  createNodeAdyacencies,
 };
