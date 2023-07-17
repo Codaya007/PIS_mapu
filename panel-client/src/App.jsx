@@ -7,10 +7,15 @@ import SidebarMenu from "./components/SideBar";
 import Dashboard from "./screens/Dashboard";
 import Faculties from "./screens/Faculties";
 import FacultyForm from "./screens/FacultyForm";
+import Campuses from "./screens/Campuses";
+import Blocks from "./screens/Blocks";
+import BlockForm from "./screens/BlockForm";
 import LoginForm from "./screens/Login";
 import NotFound from "./screens/NotFound";
 import Profile from "./screens/Profile";
 import { login } from "./store/slices/authSlice";
+import CapusesForm from "./screens/CampusForm";
+import ProfileEdit from "./screens/ProfileEdit";
 
 function App() {
   const location = useLocation();
@@ -39,10 +44,17 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/login" element={<LoginForm />} />
+            <Route path="/block" element={<Blocks />} />
+            <Route path="/create-block" element={<BlockForm />} />
+            <Route path="/edit-block/:id" element={<BlockForm />} />
             <Route path="/faculty" element={<Faculties />} />
             <Route path="/create-faculty" element={<FacultyForm />} />
             <Route path="/edit-faculty/:id" element={<FacultyForm />} />
+            <Route path="/campus" element={< Campuses />} />
+            <Route path="/edit-campus/:id" element={<CapusesForm />}/>
+            <Route path="/create-campus" element={< CapusesForm/>} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/edit-profile/:id" element={<ProfileEdit />} />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </Box>

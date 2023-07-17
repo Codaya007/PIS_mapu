@@ -17,6 +17,9 @@ const createEventSchema = Joi.object({
     price: Joi.number().precision(2).required().messages({
         "*": "El campo 'price' es requerido y tiene una precisión de 2 (por ejemplo, 10.99, 5.50)",
     }),
+    img: Joi.string().optional().messages({
+        "*": "El campo 'img' debe ser una cadena string y es opcional",
+    }),
 });
 
 // Definir el esquema de validación para la actualización de un Event
@@ -38,6 +41,9 @@ const updateEventSchema = Joi.object({
     }),
     price: Joi.number().precision(2).optional().messages({
         "*": "El campo 'price' es optional y tiene una precisión de 2 (por ejemplo, 10.99, 5.50)",
+    }),
+    img: Joi.string().optional().messages({
+        "*": "El campo 'img' debe ser una cadena string y es opcional",
     }),
 });
 

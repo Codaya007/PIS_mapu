@@ -6,22 +6,23 @@ import {
   Switch,
   Text,
   VStack,
-  IconButton,
+  Editable,
+  EditableInput,
+  EditableTextarea,
+  EditablePreview,
 } from "@chakra-ui/react";
-import { LuSettings2 } from "react-icons/lu";
+
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { putProfile } from "../services/authServices";
 import { fetchProfile } from "../store/actions/authActions";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
-const Profile = () => {
+const ProfileEdit = () => {
   const { user } = useSelector((state) => state.authReducer);
-  const { name, lastname, email, avatar, role, settings } = user || {};
+  const { name, lastname, email, avatar, role, settings, password } = user || {};
   const { notification, spam } = settings || {};
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleNotificationChange = async (value) => {
     try {
@@ -45,36 +46,39 @@ const Profile = () => {
     dispatch(fetchProfile());
   }, []);
 
-
-  const handleEditProfile = async(idProfile) => {
-    try {
-      navigate(`/edit-profile/${idProfile}`)
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Algo salio mal" );
-    }
-  }
-
   return (
     <Box maxWidth="500px" mx="auto" p="4">
-      <Card p={5} bgColor={"#dcdcdc"} >
-        
+      <Card p={5} bgColor={"#dcdcdc"}>
         <VStack spacing="4" alignItems="start">
-          <IconButton
-            colorScheme="teal"
-            aria-label="Call Segun"
-            size="lg"
-            icon={<LuSettings2 />}
-            onClick={handleEditProfile}
-            // display={"flex"}
-            // justifyContent={"right"}
-            
-          />
           <Avatar size="xl" src={avatar} alt="Avatar" />
           <Heading as="h2" size="lg">
             {name} {lastname}
           </Heading>
-          <Text>Email: {email}</Text>
-          <Text>Rol: {role}</Text>
+          <Text>Nombre: </Text>
+          <Editable defaultValue= {name} backgroundColor={"white"} padding={1.5} borderRadius={5}>
+            <EditablePreview />
+            <EditableTextarea />
+          </Editable>
+          <Text>Apellido: </Text>
+          <Editable defaultValue= {lastname} backgroundColor={"white"} padding={1.5} borderRadius={5}> 
+            <EditablePreview />
+            <EditableTextarea />
+          </Editable>
+          <Text>Email: </Text>
+          <Editable defaultValue= {email} backgroundColor={"white"} padding={1.5} borderRadius={5}> 
+            <EditablePreview />
+            <EditableTextarea />
+          </Editable>
+          <Text>Password: </Text>
+          <Editable defaultValue= {password} backgroundColor={"white"} padding={1.5} borderRadius={5}> 
+            <EditablePreview />
+            <EditableTextarea />
+          </Editable>
+          {/* <Text>Avatar: </Text>
+          <Editable defaultValue= {avatar } backgroundColor={"white"} padding={1.5} borderRadius={5}> 
+            <EditablePreview />
+            <EditableTextarea />
+          </Editable> */}
           <Box>
             <Text>Activar notificaciones:</Text>
             <Switch
@@ -95,4 +99,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default ProfileEdit;
