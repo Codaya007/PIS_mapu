@@ -1,8 +1,9 @@
 const Joi = require("joi");
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const Node = require("../models/Node");
 const Type = require("../models/Type");
 const Category = require("../models/Category");
-const { isValidObjectId } = require("mongoose");
 
 const validateType = async (value, helpers) => {
   const { type } = value;
@@ -34,7 +35,7 @@ const validateCategory = async (value, helpers) => {
 };
 
 // Definir el esquema de validación para la creación de un Nodo de interes
-const createInterestingNodeSchema = Joi.object({
+const createInterstingNodeSchema = Joi.object({
   latitude: Joi.number().required().min(-200).max(200).messages({
     "*": "El campor 'latitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
   }),
@@ -50,6 +51,15 @@ const createInterestingNodeSchema = Joi.object({
   category: Joi.string().optional().messages({
     "*": "El campor 'category' es requerido",
   }),
+  adyacency: Joi.array()
+    .optional()
+    .items(
+      Joi.object({
+        latitude: Joi.number().min(-200).max(200).required(),
+        longitude: Joi.number().min(-200).max(200).required(),
+        weight: Joi.number().optional().min(1).max(400),
+      })
+    ),
   sector: Joi.string()
     .custom((value, helpers) => {
       if (!ObjectId.isValid(value)) {
@@ -66,7 +76,7 @@ const createInterestingNodeSchema = Joi.object({
   .external(validateCategory);
 
 // Definir el esquema de validación para la actualización de un Nodo de interés
-const updateInterestingNodeSchema = Joi.object({
+const updateInterstingNodeSchema = Joi.object({
   id: Joi.string().strip().messages({
     "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
   }),
@@ -79,9 +89,21 @@ const updateInterestingNodeSchema = Joi.object({
   available: Joi.boolean().optional().messages({
     "*": "El campor 'available' es requerido",
   }),
+  type: Joi.string().optional().messages({
+    "*": "El campo 'type' es opcional",
+  }),
   category: Joi.string().optional().messages({
     "*": "El campor 'category' es requerido",
   }),
+  adyacency: Joi.array()
+    .optional()
+    .items(
+      Joi.object({
+        latitude: Joi.number().min(-200).max(200).required(),
+        longitude: Joi.number().min(-200).max(200).required(),
+        weight: Joi.number().optional().min(1).max(400),
+      })
+    ),
   sector: Joi.string()
     .custom((value, helpers) => {
       if (!ObjectId.isValid(value)) {
@@ -96,6 +118,6 @@ const updateInterestingNodeSchema = Joi.object({
 }).external(validateCategory);
 
 module.exports = {
-  createInterestingNodeSchema,
-  updateInterestingNodeSchema,
+  createInterstingNodeSchema,
+  updateInterstingNodeSchema,
 };

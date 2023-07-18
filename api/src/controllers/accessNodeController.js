@@ -1,5 +1,5 @@
 const nodeService = require("../services/nodeService");
-
+const { ACCESS_NODO_TYPE } = require("../constants/index");
 module.exports = {
   getAccessNodeById: async (req, res) => {
     const { id } = req.params;
@@ -9,7 +9,7 @@ module.exports = {
 
   getAllAccessNode: async (req, res) => {
     let { skip = 0, limit = 10, ...where } = req.query;
-    where = { type: "Acceso" };
+    where = { type: ACCESS_NODO_TYPE };
 
     const totalCount = await nodeService.getCountNodes(where);
     const result = await nodeService.getAllNodes(where, skip, limit);
@@ -18,14 +18,15 @@ module.exports = {
   },
 
   createAccessNode: async (req, res) => {
-    req.body.type = "Acceso";
+    req.body.type = ACCESS_NODO_TYPE;
+
     const newAccessNode = await nodeService.createAccessNode(req.body);
-    res.json({ newAccessNode });
+    return res.json({ newAccessNode });
   },
 
   updateAccessNode: async (req, res) => {
     const { id } = req.params;
-    req.body.type = "Acceso";
+    req.body.type = ACCESS_NODO_TYPE;
     const updatedAccessNode = await nodeService.updateAccessNode(id, req.body);
     res.json({ updatedAccessNode });
   },

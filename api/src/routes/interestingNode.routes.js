@@ -2,8 +2,8 @@ const { Router } = require("express");
 const nodeController = require("../controllers/nodeController");
 const middlewares = require("../middlewares");
 const {
-  createInterestingNodeSchema,
-  updateInterestingNodeSchema,
+  createInterstingNodeSchema,
+  updateInterstingNodeSchema,
 } = require("../validationSchemas/InterestingNode");
 
 const nodeRouter = Router();
@@ -15,14 +15,11 @@ const nodeRouter = Router();
  */
 nodeRouter.post(
   "/",
-  middlewares.validateRequestBody(createInterestingNodeSchema),
+  middlewares.validateRequestBody(createInterstingNodeSchema),
   nodeController.createNode
 );
 
-nodeRouter.post(
-    "/time",
-    nodeController.timeBetween
-);
+nodeRouter.post("/time", nodeController.timeBetween);
 
 /**
  * @route GET /
@@ -45,7 +42,7 @@ nodeRouter.get("/:id", nodeController.getNode);
  */
 nodeRouter.put(
   "/:id",
-  middlewares.validateRequestBody(updateInterestingNodeSchema),
+  middlewares.validateRequestBody(updateInterstingNodeSchema),
   nodeController.updateNode
 );
 
