@@ -15,10 +15,10 @@ module.exports = {
     },
 
     getAllComments: async (req, res) => {
-        const { skip = 0, limit = 10, ...where } = req.query;
+        const { mobile = 'false', skip = 0, limit = 10, ...where } = req.query;
 
-        const totalCount = await commentService.getCountComments(where);
-        const results = await commentService.getComments(where, skip, limit);
+        const totalCount = await commentService.getCountComments(where, mobile);
+        const results = await commentService.getComments(where, skip, limit, mobile);
 
         return res.json({ totalCount, results });
     },
@@ -27,6 +27,12 @@ module.exports = {
         const newComment = await commentService.createComment(req.body);
 
         return res.json(newComment);
+    },
+
+    updateComment: async (req, res, next) => {
+        const { id } = req.params;
+        const updateComment = await commentService.updateCommentById(id, req.body);
+        return res.json(updateComment);
     },
 
     deleteComment: async (req, res, next) => {

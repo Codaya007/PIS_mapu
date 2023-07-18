@@ -16,7 +16,7 @@ const nodeSchema = new Schema({
   },
   available: {
     type: Boolean,
-    required: true,
+    required: false,
   },
   type: {
     type: String,

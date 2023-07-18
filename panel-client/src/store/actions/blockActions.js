@@ -1,10 +1,10 @@
 import { toast } from "react-toastify";
-import { getFaculties} from "../../services/facultyServices";
-import { getAll, getSlice } from "../slices/facultySlice";
+import { getBlocks } from "../../services/blockServices";
+import { getAll, getSlice } from "../slices/blockSlice";
 
-export const fetchFaculties = (skip, limit) => async (dispatch) => {
+export const fetchBlocks = (skip, limit) => async (dispatch) => {
   try {
-    const data = await getFaculties(skip, limit);
+    const data = await getBlocks(skip, limit);
 
     if (skip || limit) {
       dispatch(getSlice(data));

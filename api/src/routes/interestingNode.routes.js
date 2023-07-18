@@ -4,7 +4,7 @@ const middlewares = require("../middlewares");
 const {
   createInterstingNodeSchema,
   updateInterstingNodeSchema,
-} = require("../validationSchemas/InterstingNode");
+} = require("../validationSchemas/InterestingNode");
 
 const nodeRouter = Router();
 
@@ -18,6 +18,8 @@ nodeRouter.post(
   middlewares.validateRequestBody(createInterstingNodeSchema),
   nodeController.createNode
 );
+
+nodeRouter.post("/time", nodeController.timeBetween);
 
 /**
  * @route GET /

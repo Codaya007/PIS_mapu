@@ -28,7 +28,8 @@ nodeRouter.get("/", nodeController.getAllNodes);
 
 /**
  * @route GET /
- * @desc Obtener el nodo por id
+
+ * @desc Obtener el nodo ruta por id
  * @access Public
  */
 nodeRouter.get("/:id", nodeController.getNode);
