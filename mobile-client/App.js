@@ -1,5 +1,5 @@
 import { NativeBaseProvider } from "native-base";
-import { NativeRouter } from "react-router-native";
+// import { NativeRouter } from "react-router-native";
 import Main from "./src/screens/Main";
 import Toast from 'react-native-toast-message';
 import * as React from 'react';
@@ -39,7 +39,7 @@ export default function App() {
   // <Main />
   return (
     <NativeBaseProvider>
-      <NativeRouter>
+      {/* <NativeRouter> */}
         <NavigationContainer>
           <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={Home} />
@@ -52,7 +52,7 @@ export default function App() {
           </Drawer.Navigator>
         </NavigationContainer>
         <Toast />
-      </NativeRouter>
+      {/* </NativeRouter> */}
     </NativeBaseProvider>
   );
 }
