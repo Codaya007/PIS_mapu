@@ -12,7 +12,7 @@ import React from "react";
 import { getTimeAgo, mapISOStringToDate } from "../helpers";
 
 const Event = ({ event = {} }) => {
-  const { name, sinceDate, untilDate, description, price, image, createdAt } =
+  const { name, sinceDate, untilDate, description, price, img, createdAt } =
     event;
 
   const timeAgo = createdAt ? getTimeAgo(createdAt) : null;
@@ -47,9 +47,9 @@ const Event = ({ event = {} }) => {
           <AspectRatio w="100%" ratio={16 / 9}>
             <Image
               source={{
-                uri: image,
+                uri: img,
               }}
-              alt="image"
+              alt="img"
             />
           </AspectRatio>
           {price ? (

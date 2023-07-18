@@ -47,7 +47,7 @@ export default function Favorites() {
           Favoritos
         </Heading>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <FavoriteList />
+          {/* <FavoriteList /> */}
         </ScrollView>
       </Box>
     </Center>

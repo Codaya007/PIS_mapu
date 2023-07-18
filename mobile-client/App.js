@@ -1,11 +1,11 @@
 import { NativeBaseProvider } from "native-base";
 import { NativeRouter } from "react-router-native";
 import Main from "./src/screens/Main";
-import Toast from 'react-native-toast-message';
-import * as React from 'react';
-import { Button, View } from 'react-native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native';
+import Toast from "react-native-toast-message";
+import * as React from "react";
+import { Button, View } from "react-native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
 import Home from "./src/screens/Home";
 import Events from "./src/screens/Events";
 import LoginForm from "./src/screens/Login";
@@ -16,9 +16,9 @@ import ForgotPasswordForm from "./src/screens/ForgotPasswordForm";
 
 function HomeScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Button
-        onPress={() => navigation.navigate('Notifications')}
+        onPress={() => navigation.navigate("Notifications")}
         title="Go to notifications"
       />
     </View>
@@ -27,7 +27,7 @@ function HomeScreen({ navigation }) {
 
 function NotificationsScreen({ navigation }) {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Button onPress={() => navigation.goBack()} title="Go back home" />
     </View>
   );
@@ -43,12 +43,15 @@ export default function App() {
         <NavigationContainer>
           <Drawer.Navigator initialRouteName="Home">
             <Drawer.Screen name="Home" component={Home} />
-            <Drawer.Screen name="Events" component={Events} />
-            <Drawer.Screen name="Favorites" component={Favorites} />
-            <Drawer.Screen name="Login" component={LoginForm} />
-            <Drawer.Screen name="Register" component={Register} />
-            <Drawer.Screen name="ForgotPasswordForm" component={ForgotPasswordForm} />
-            <Drawer.Screen name="About" component={About} />
+            <Drawer.Screen name="Eventos" component={Events} />
+            <Drawer.Screen name="Favoritos" component={Favorites} />
+            <Drawer.Screen name="Iniciar sesión" component={LoginForm} />
+            <Drawer.Screen name="Registrarse" component={Register} />
+            <Drawer.Screen
+              name="Olvidé mi contraseña"
+              component={ForgotPasswordForm}
+            />
+            <Drawer.Screen name="Acerca de" component={About} />
           </Drawer.Navigator>
         </NavigationContainer>
         <Toast />
