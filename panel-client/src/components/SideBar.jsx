@@ -109,12 +109,12 @@ function SidebarMenu() {
                   <Text>Campus</Text>
                 </Flex>
               </Link>
-              <Link as={NavLink} to="/sector" onClick={toggleMenu}>
+              {/* <Link as={NavLink} to="/sector" onClick={toggleMenu}>
                 <Flex align="center">
                   <Icon as={PiPolygonFill} mr={2} />
                   <Text>Sectores</Text>
                 </Flex>
-              </Link>
+              </Link> */}
               <Link as={NavLink} to="/category" onClick={toggleMenu}>
                 <Flex align="center">
                   <Icon as={BiSolidCategory} mr={2} />
