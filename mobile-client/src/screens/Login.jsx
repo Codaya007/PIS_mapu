@@ -49,7 +49,8 @@ const Login = () => {
             <FormControl.Label>Contraseña</FormControl.Label>
             <Input type="password" />
             <LinkStyle
-              onPress={() => navigate("/forgot-password")}
+              onPress={() => navigate("/editProfile")}
+              // onPress={() => navigate("/forgot-password")}
               _text={{
                 fontSize: "xs",
                 fontWeight: "500",

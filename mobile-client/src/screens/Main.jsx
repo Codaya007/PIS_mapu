@@ -8,7 +8,9 @@ import Register from "./Register";
 import About from "./About";
 import Events from "./Events";
 import Favorites from "./Favorites";
+import EditProfile from "./EditProfile";
 import ForgotPasswordForm from "./ForgotPasswordForm";
+import ProfileChangePassword from "./ProfileChangePassword";
 
 const Main = () => {
   return (
@@ -24,6 +26,8 @@ const Main = () => {
         <Route path="/favorites" Component={Favorites} />
         <Route path="/forgot-password" Component={ForgotPasswordForm} />
         <Route path="/reset-password/:token" Component={ForgotPasswordForm} />
+        <Route path="/editProfile" Component={EditProfile} />
+        <Route path="/changePassword" Component={ProfileChangePassword} />
         <Route path="/*" Component={Home} />
       </Routes>
     </View>

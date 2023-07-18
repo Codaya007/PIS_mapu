@@ -7,7 +7,6 @@ import {
   Text,
   VStack,
   Editable,
-  EditableInput,
   EditableTextarea,
   EditablePreview,
 } from "@chakra-ui/react";
@@ -20,7 +19,7 @@ import { useEffect } from "react";
 
 const ProfileEdit = () => {
   const { user } = useSelector((state) => state.authReducer);
-  const { name, lastname, email, avatar, role, settings, password } = user || {};
+  const { name, lastname, email, avatar,  settings, password } = user || {};
   const { notification, spam } = settings || {};
   const dispatch = useDispatch();
 
