@@ -7,7 +7,7 @@ const { LIMIT_ACCESS_POINTS_BY_CAMPUS } = require("../constants");
 const { ACCESS_NODO_TYPE } = require("../constants/index");
 const { timeBetweenCoordinates } = require("../helpers/index");
 
-const applyRegex = async (type, where) => {
+const applyRegex = (type, where) => {
   if (type && typeof type === "string") {
     where.$or = [{ type: { $regex: type, $options: "i" } }];
   }
@@ -77,8 +77,11 @@ const sameCoordenates = async (nodeData) => {
 };
 
 const getNodes = async (where = {}, skip, limit, type) => {
-  await applyRegex(type, where);
-  const nodes = await Node.find(where).skip(skip).limit(limit);
+  applyRegex(type, where);
+  const nodes =
+    skip || limit
+      ? await Node.find(where).skip(skip).limit(limit)
+      : await Node.find(where);
 
   return nodes;
 };
@@ -128,14 +131,8 @@ const getAccesNodeById = async (_id) => {
   return accessNode;
 };
 
-const getAllNodes = async (where = {}, skip, limit) => {
-  const nodes = await Node.find(where).skip(skip).limit(limit);
-
-  return nodes;
-};
-
 const getCountNodes = async (where = {}, type) => {
-  await applyRegex(type, where);
+  applyRegex(type, where);
   const countNodes = await Node.count(where);
 
   return countNodes;
@@ -251,7 +248,7 @@ const timeCoordinates = async (origin, destination, speed) => {
 };
 
 module.exports = {
-  getAllNodes,
+  // getAllNodes,
   getCountNodes,
   getNodeById,
   updateNode,
