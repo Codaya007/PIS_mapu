@@ -58,11 +58,16 @@ const nodeSchema = new Schema({
   // },
   adyacency: [
     {
-      origin: { type: String, required: false, minLength: 2, maxLength: 20 },
-      destinity: { type: String, required: false, minLength: 2, maxLength: 20 },
-      weight: { type: Number, required: false, min: 1 },
+      latitude: { type: Number, required: false, min: -200, max: 200 },
+      longitude: {
+        type: Number,
+        required: false,
+        minLength: -200,
+        maxLength: 20,
+      },
+      weight: { type: Number, required: false, min: 1, max: 400 },
     },
   ],
 });
-
-module.exports = mongoose.model("Node", nodeSchema);
+const Node = mongoose.model("Node", nodeSchema);
+module.exports = Node;

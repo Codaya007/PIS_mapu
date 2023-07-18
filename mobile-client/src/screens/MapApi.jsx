@@ -58,6 +58,8 @@ export default function MapApi() {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#333',
+        marginHorizontal: 10,
+        marginVertical: 5,
     },
     map: {
         width: '100%',

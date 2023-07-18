@@ -16,6 +16,7 @@ import Profile from "./screens/Profile";
 import { login } from "./store/slices/authSlice";
 import CapusesForm from "./screens/CampusForm";
 import ProfileEdit from "./screens/ProfileEdit";
+import ProfileChangePassword from "./screens/ProfileChangePassword";
 
 function App() {
   const location = useLocation();
@@ -55,6 +56,7 @@ function App() {
             <Route path="/create-campus" element={< CapusesForm/>} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/edit-profile/:id" element={<ProfileEdit />} />
+            <Route path="/edit-pasword-profile/:id" element={<ProfileChangePassword />} />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </Box>
