@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const nomenclatureSchema = require("./Nomenclature");
 const Schema = mongoose.Schema;
 
 const detailSchema = new Schema({
@@ -24,7 +23,7 @@ const detailSchema = new Schema({
       ref: "campus", // Nombre del modelo referenciado
       required: true,
     },
-    clock: {
+    block: {
       type: Schema.Types.ObjectId, // Tipo ObjectId para referencia
       ref: "block", // Nombre del modelo referenciado
       required: true,
@@ -41,8 +40,9 @@ const detailSchema = new Schema({
       type: Number,
       required: false,
     },
-    nomenclature: {
-      type: nomenclatureSchema,
+    id: {
+      type: String,
+      ref: "Nomenclature",
       required: true,
     },
   },

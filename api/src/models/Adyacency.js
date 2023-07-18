@@ -5,19 +5,17 @@ const adyacencySchema = new Schema({
   origen: {
     type: String,
     required: true,
-    minLenght: 1,
-    maxLenght: 10,
+    ref: "Node",
   },
   detination: {
     type: String,
     required: true,
-    minLenght: 1,
-    maxLenght: 10,
+    ref: "Node",
   },
   weight: {
     type: Number,
     required: true,
-    min: 1,
+    min: 0,
   },
 });
 
