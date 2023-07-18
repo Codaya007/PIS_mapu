@@ -12,7 +12,7 @@ module.exports = {
     where = { type: ACCESS_NODO_TYPE };
 
     const totalCount = await nodeService.getCountNodes(where);
-    const result = await nodeService.getAllNodes(where, skip, limit);
+    const result = await nodeService.getNodes(where, skip, limit, type);
 
     res.json({ totalCount, result });
   },
