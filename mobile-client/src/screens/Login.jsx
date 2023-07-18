@@ -10,10 +10,13 @@ import {
   Text,
   VStack,
 } from "native-base";
-import { Link, useNavigate } from "react-router-native";
+import { useNavigation } from "@react-navigation/native";
+import ForgotPasswordForm from "./ForgotPasswordForm";
+import Register from "./Register";
 
 const Login = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const navigation  = useNavigation();
 
   return (
     <Center w="100%">
@@ -49,7 +52,8 @@ const Login = () => {
             <FormControl.Label>Contraseña</FormControl.Label>
             <Input type="password" />
             <LinkStyle
-              onPress={() => navigate("/forgot-password")}
+              // onPress={() => navigation.navigate("/forgot-password")}
+              onPress={() => navigation.navigate(ForgotPasswordForm)}
               _text={{
                 fontSize: "xs",
                 fontWeight: "500",
@@ -75,7 +79,7 @@ const Login = () => {
               Soy un usuario nuevo{" "}
             </Text>
             <LinkStyle
-              onPress={() => navigate("/sign-up")}
+              onPress={() => navigation.navigate(Register)}
               _text={{
                 color: "indigo.500",
                 fontWeight: "medium",
