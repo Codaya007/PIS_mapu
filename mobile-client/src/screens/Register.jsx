@@ -12,61 +12,61 @@ import {
   Link as LinkStyle,
   Checkbox,
 } from "native-base";
-// import { useNavigate } from "react-router-native";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import axios from "axios";
-import Toast from 'react-native-toast-message';
+import Toast from "react-native-toast-message";
 import Login from "./Login";
+import { LoginName } from "../constants";
 
 const Register = () => {
   const navigation = useNavigation();
-  const [name , setName] = useState("");
-  const [lastname , setLastName] = useState("");
-  const [email , setEmail] = useState("");
-  const [password , setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [lastname, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const handleRegister = async () => {
-    if(!name | !lastname | !email | !password | !passwordAgain){
+    if (!name || !lastname || !email || !password || !passwordAgain) {
       Toast.show({
-        type: 'error',
+        type: "error",
         text1: "Campos incompletos",
-        position: 'bottom',
+        position: "bottom",
       });
       return;
     }
 
-    if(password.length <= 8){
+    if (password.length <= 8) {
       Toast.show({
-        type: 'error',
+        type: "error",
         text1: "Contraseña muy corta",
-        position: 'bottom',
+        position: "bottom",
       });
       return;
     }
 
-    if(password != passwordAgain){
+    if (password != passwordAgain) {
       Toast.show({
-        type: 'error',
+        type: "error",
         text1: "Las contraseñas no coinciden",
-        position: 'bottom',
+        position: "bottom",
       });
       return;
     }
-  
-    if(!termsAccepted){
+
+    if (!termsAccepted) {
       Toast.show({
-        type: 'error',
+        type: "error",
         text1: "Acepte los términos y condiciones",
         text2: "para continuar",
-        position: 'bottom',
+        position: "bottom",
       });
       return;
     }
 
-    try{
+    try {
       const response = await axios.post("http://localhost:3000/auth/register", {
         name,
         lastname,
@@ -74,21 +74,21 @@ const Register = () => {
         password,
       });
 
-      if(response.status == 200){
+      if (response.status == 200) {
         Toast.show({
-          type: 'success',
+          type: "success",
           text1: "Registro exitoso",
-          position: 'bottom',
+          position: "bottom",
         });
-        navigate("/login");
+        navigate(LoginName);
       }
-    }catch (error){
+    } catch (error) {
       console.log("error", error);
       Toast.show({
-        type: 'error',
+        type: "error",
         text1: "Error al registrar",
         text2: "intentelo nuevamente más tarde",
-        position: 'bottom',
+        position: "bottom",
       });
     }
   };
@@ -96,7 +96,9 @@ const Register = () => {
   const handleTermsAcceptance = (value) => {
     setTermsAccepted(value);
   };
-  
+
+  const navigate = (to) => navigation.navigate(to);
+
   return (
     <KeyboardAvoidingView
       h={{
@@ -131,23 +133,31 @@ const Register = () => {
           <VStack space={3} mt="5">
             <FormControl>
               <FormControl.Label>Nombre</FormControl.Label>
-              <Input onChangeText={setName} value={name}/>
+              <Input onChangeText={setName} value={name} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Apellido</FormControl.Label>
-              <Input onChangeText={setLastName} value={lastname}/>
+              <Input onChangeText={setLastName} value={lastname} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Email</FormControl.Label>
-              <Input onChangeText={setEmail} value={email}/>
+              <Input onChangeText={setEmail} value={email} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Contraseña</FormControl.Label>
-              <Input type="password" onChangeText={setPassword} value={password}/>
+              <Input
+                type="password"
+                onChangeText={setPassword}
+                value={password}
+              />
             </FormControl>
             <FormControl>
               <FormControl.Label>Confirmar contraseña</FormControl.Label>
-              <Input type="password" onChangeText={setPasswordAgain} value={passwordAgain}/>
+              <Input
+                type="password"
+                onChangeText={setPasswordAgain}
+                value={passwordAgain}
+              />
             </FormControl>
             <Button mt="2" colorScheme="indigo" onPress={handleRegister}>
               Registrarse
@@ -182,7 +192,7 @@ const Register = () => {
               Ya tengo una cuenta{" "}
             </Text>
             <LinkStyle
-              onPress={() => navigation.navigate(Login)}
+              onPress={() => navigate(LoginName)}
               _text={{
                 color: "indigo.500",
                 fontWeight: "medium",

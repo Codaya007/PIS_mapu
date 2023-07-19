@@ -10,11 +10,16 @@ import {
   Text,
   VStack,
 } from "native-base";
-import { useNavigate } from "react-router-native";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { EMAIL_REGEX } from "../constants";
+import { useEffect, useState } from "react";
+import {
+  EMAIL_REGEX,
+  ForgotPasswordName,
+  HomeName,
+  RegisterName,
+} from "../constants";
 import { loginUser } from "../store/actions/authActions";
+import { useNavigation } from "@react-navigation/native";
 
 const Login = () => {
   const { user } = useSelector((state) => state.authReducer);
@@ -22,7 +27,9 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({ email: "", password: "" });
-  const navigate = useNavigate();
+  const navigation = useNavigation();
+
+  const navigate = (to) => navigation.navigate(to);
 
   const validateForm = () => {
     const errors = {};
@@ -49,7 +56,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/");
+      navigation.navigate(HomeName);
     }
   }, [user]);
 
@@ -96,7 +103,7 @@ const Login = () => {
             />
             <LinkStyle
               // onPress={() => navigation.navigate("/forgot-password")}
-              onPress={() => navigation.navigate(ForgotPasswordForm)}
+              onPress={() => navigate(ForgotPasswordName)}
               _text={{
                 fontSize: "xs",
                 fontWeight: "500",
@@ -122,7 +129,7 @@ const Login = () => {
               Soy un usuario nuevo{" "}
             </Text>
             <LinkStyle
-              onPress={() => navigation.navigate(Register)}
+              onPress={() => navigate(RegisterName)}
               _text={{
                 color: "indigo.500",
                 fontWeight: "medium",
