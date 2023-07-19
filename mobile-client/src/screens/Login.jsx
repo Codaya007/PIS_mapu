@@ -95,7 +95,8 @@ const Login = () => {
               onChangeText={(newPassword) => setPassword(newPassword)}
             />
             <LinkStyle
-              onPress={() => navigate("/forgot-password")}
+              // onPress={() => navigation.navigate("/forgot-password")}
+              onPress={() => navigation.navigate(ForgotPasswordForm)}
               _text={{
                 fontSize: "xs",
                 fontWeight: "500",
@@ -121,7 +122,7 @@ const Login = () => {
               Soy un usuario nuevo{" "}
             </Text>
             <LinkStyle
-              onPress={() => navigate("/sign-up")}
+              onPress={() => navigation.navigate(Register)}
               _text={{
                 color: "indigo.500",
                 fontWeight: "medium",

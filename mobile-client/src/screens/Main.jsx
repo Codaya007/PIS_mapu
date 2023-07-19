@@ -25,7 +25,7 @@ const Main = () => {
           <Route path="/forgot-password" Component={ForgotPasswordForm} />
           <Route path="/reset-password/:token" Component={ForgotPasswordForm} />
           <Route path="/*" Component={Home} />
-        </Routes>
+        </Routes> 
       </View>
   );
 };

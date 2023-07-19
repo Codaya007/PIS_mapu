@@ -12,13 +12,15 @@ import {
   Link as LinkStyle,
   Checkbox,
 } from "native-base";
-import { useNavigate } from "react-router-native";
+// import { useNavigate } from "react-router-native";
+import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import axios from "axios";
 import Toast from 'react-native-toast-message';
+import Login from "./Login";
 
 const Register = () => {
-  const navigate = useNavigate();
+  const navigation = useNavigation();
   const [name , setName] = useState("");
   const [lastname , setLastName] = useState("");
   const [email , setEmail] = useState("");
@@ -180,7 +182,7 @@ const Register = () => {
               Ya tengo una cuenta{" "}
             </Text>
             <LinkStyle
-              onPress={() => navigate("/login")}
+              onPress={() => navigation.navigate(Login)}
               _text={{
                 color: "indigo.500",
                 fontWeight: "medium",
