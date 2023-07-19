@@ -10,10 +10,48 @@ import {
   Text,
   VStack,
 } from "native-base";
-import { Link, useNavigate } from "react-router-native";
+import { useNavigate } from "react-router-native";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { EMAIL_REGEX } from "../constants";
+import { loginUser } from "../store/actions/authActions";
 
 const Login = () => {
+  const { user } = useSelector((state) => state.authReducer);
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({ email: "", password: "" });
   const navigate = useNavigate();
+
+  const validateForm = () => {
+    const errors = {};
+
+    if (!email) errors.email = "El campo email es requerido";
+    else if (!EMAIL_REGEX.test(email)) errors.email = "Ingrese un email válido";
+    if (!password) errors.password = "El campo password es requerido";
+
+    setErrors(errors);
+
+    return errors;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Aquí puedes realizar la lógica de autenticación
+    // utilizando los valores de email y password
+    const errors = validateForm();
+
+    if (!errors.email && !errors.password) {
+      dispatch(loginUser(email, password));
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user]);
 
   return (
     <Center w="100%">
@@ -43,11 +81,19 @@ const Login = () => {
         <VStack space={3} mt="5">
           <FormControl>
             <FormControl.Label>Email ID</FormControl.Label>
-            <Input />
+            <Input
+              type="email"
+              placeholder="john.doe@email.com"
+              onChangeText={(newEmail) => setEmail(newEmail)}
+            />
           </FormControl>
           <FormControl>
             <FormControl.Label>Contraseña</FormControl.Label>
-            <Input type="password" />
+            <Input
+              type="password"
+              placeholder="****"
+              onChangeText={(newPassword) => setPassword(newPassword)}
+            />
             <LinkStyle
               onPress={() => navigate("/forgot-password")}
               _text={{
@@ -61,7 +107,7 @@ const Login = () => {
               Olvidaste tu cotraseña?
             </LinkStyle>
           </FormControl>
-          <Button mt="2" colorScheme="indigo">
+          <Button mt="2" colorScheme="indigo" onPress={handleSubmit}>
             Continuar
           </Button>
           <HStack mt="6" justifyContent="center">
