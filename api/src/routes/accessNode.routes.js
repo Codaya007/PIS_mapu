@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const accessNodeController = require("../controllers/accessNodeController");
-const middlewares = require("../middlewares");
 const isAdmin = require("../policies/isAdmin");
 const isLoggedIn = require("../policies/isLoggedIn");
 
@@ -46,7 +45,7 @@ accessNodeRouter.put("/:id", isAdmin, accessNodeController.updateAccessNode);
 
 /**
  * @route DELETE /:id
- * @desc Eliminar nodo
+ * @desc Eliminar nodo de acceso
  * @access Admin
  */
 accessNodeRouter.delete("/:id", isAdmin, accessNodeController.deleteAccessNode);

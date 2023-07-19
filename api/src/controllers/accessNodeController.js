@@ -1,9 +1,11 @@
 const nodeService = require("../services/nodeService");
 const { ACCESS_NODO_TYPE } = require("../constants/index");
+
 module.exports = {
   getAccessNodeById: async (req, res) => {
     const { id } = req.params;
     const result = await nodeService.getAccesNodeById(id);
+
     res.json({ result });
   },
 

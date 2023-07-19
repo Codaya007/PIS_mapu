@@ -14,66 +14,42 @@ const applyRegex = (type, where) => {
 };
 
 const createNode = async (nodeData) => {
-  await sameCoordenates(nodeData);
+  await nodeAlreadyExists(nodeData);
 
   const node = await Node.create(nodeData);
 
   return node;
 };
 
-const createNodeAdyacencies = async (nodeData) => {
-  await sameCoordenates(nodeData);
-  if (nodeData.adyacency.length > 0) {
-    for (let i = 0; i < nodeData.adyacency.length; i++) {
-      let nodeAdyacency = await getNodeByLatitudAndLongitude(
-        nodeData.adyacency[i].latitude,
-        nodeData.adyacency[i].longitude
-      );
-      let isAdyacency = false;
+const createNodeAdyacencies = async (nodeData = {}) => {
+  const { latitude, longitude, adyacency = [] } = nodeData;
+  await nodeAlreadyExists(nodeData);
 
-      for (let j = 0; j < nodeAdyacency.adyacency.length && !isAdyacency; j++) {
-        if (
-          nodeAdyacency.adyacency[j].latitude == nodeData.latitude &&
-          nodeAdyacency.adyacency[j].longitude == nodeData.longitude
-        ) {
-          isAdyacency = true;
-        }
-      }
-      if (!isAdyacency) {
-        nodeAdyacency.adyacency.push({
-          latitude: nodeData.latitude,
-          longitude: nodeData.longitude,
-          weight: nodeData.adyacency[i].weight,
-        });
-        await updateNode(nodeAdyacency.id, nodeAdyacency);
-      }
+  if (adyacency.length > 0) {
+    for (let i = 0; i < adyacency.length; i++) {
+      // El nodo de adyacencia puede ser de cualquier tipo
+      let nodeAdyacency = await Node.findOne({ _id: adyacency[i] });
+
+      await adyacency;
     }
   }
+
   const node = await Node.create(nodeData);
+
   return node;
 };
 
-const getNodeByLatitudAndLongitude = async (latitude, longitude) => {
-  const node = await Node.findOne({
+const nodeAlreadyExists = async ({ latitude, longitude } = {}) => {
+  const sameCoor = await Node.find({
     latitude,
     longitude,
-  });
-  if (!node) {
-    throw new ValidationError(
-      "No exiten coincidencias con la latitude and longitude ingresada"
-    );
-  }
-
-  return node;
-};
-const sameCoordenates = async (nodeData) => {
-  const sameCoor = await Node.find({
-    latitude: nodeData.latitude,
-    longitude: nodeData.longitude,
+    deletedAt: null,
   });
 
   if (sameCoor.length)
-    throw new ValidationError("La latitud y longitud ya existen");
+    throw new ValidationError(
+      "Ya existe un nodo con la misma latitud y longitud"
+    );
 };
 
 const getNodes = async (where = {}, skip, limit, type) => {
@@ -98,7 +74,7 @@ const getNodeById = async (_id) => {
 };
 
 const updateNodeById = async (_id, nodeData) => {
-  // await sameCoordenates(nodeData);
+  // await nodeAlreadyExists(nodeData);
 
   let node = await getNodeById(_id);
 
@@ -119,10 +95,7 @@ const deleteNodeById = async (_id) => {
 };
 
 const getAccesNodeById = async (_id) => {
-  if (!isValidObjectId(_id)) {
-    throw new ValidationError("El id debe ser de tipo ObjectId");
-  }
-  const accessNode = await Node.findOne({ _id });
+  const accessNode = await getNodeById(_id);
 
   if (accessNode.type != ACCESS_NODO_TYPE) {
     throw new ValidationError("El nodo no es de tipo Acceso");

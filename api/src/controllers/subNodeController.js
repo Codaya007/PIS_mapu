@@ -1,8 +1,9 @@
-const { where } = require("../models/SubNode");
 const subNodeService = require("../services/subNodeService.js");
+
 module.exports = {
   createSubNode: async (req, res) => {
     const newSubNode = await subNodeService.createSubNode(req.body);
+
     res.json(newSubNode);
   },
 
