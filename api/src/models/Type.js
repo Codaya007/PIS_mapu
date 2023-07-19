@@ -10,6 +10,7 @@ const typeSchema = new Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
     // minLength: 2,
     maxLength: 30,
     isIn: [ROUTE_NODO_TYPE, INTEREST_NODO_TYPE, ACCESS_NODO_TYPE],

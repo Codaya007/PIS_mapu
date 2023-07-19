@@ -10,15 +10,7 @@ const qrcode = require("qrcode");
  * @param {[number, number]} coordinateB Coordenada de destino
  * @return {number} Distancia en metros
  */
-const getDistanceBetweenCoordinates = (coordinateA, coordinateB) => {
-  if (!Array.isArray(coordinateA) || !Array.isArray(coordinateB))
-    throw new ValidationError(
-      "Las coordenadas A y B debe ser un array de latitud y longitud"
-    );
-
-  const [latA, lonA] = coordinateA;
-  const [latB, lonB] = coordinateB;
-
+const getDistanceBetweenCoordinates = (latA, lonA, latB, lonB) => {
   const R = EARTH_RADIUS_M; // Radio de la Tierra en km
   const dLat = degToRad(latB - latA); // Diferencia de latitud en radianes
   const dLon = degToRad(lonB - lonA); // Diferencia de longitud en radianes
@@ -136,7 +128,7 @@ const timeBetweenCoordinates = (origin, destination, speed) => {
   const time = distance / speed;
 
   return time;
-}
+};
 
 module.exports = {
   getDistanceBetweenCoordinates,
@@ -147,5 +139,5 @@ module.exports = {
   getStartOfMonth,
   getEndOfMonth,
   generateQRcode,
-  timeBetweenCoordinates
+  timeBetweenCoordinates,
 };

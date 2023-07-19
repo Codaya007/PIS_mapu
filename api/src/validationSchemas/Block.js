@@ -7,8 +7,8 @@ const createBlockSchema = Joi.object({
   number: Joi.number().required().messages({
     "*": "El campo 'number' es requerido",
   }),
-  avaible: Joi.boolean().required().default(true).messages({
-    "*": "El campo 'avaible' es requerido y por defecto es 'true'",
+  available: Joi.boolean().required().default(true).messages({
+    "*": "El campo 'available' es requerido y por defecto es 'true'",
   }),
   faculty: Joi.string()
     .custom((value, helpers) => {
@@ -28,8 +28,8 @@ const updateBlockSchema = Joi.object({
   number: Joi.number().optional().messages({
     "*": "El campo 'number' es opcional", //? Posible error por usar una palabra reservada
   }),
-  avaible: Joi.boolean().optional().default(true).messages({
-    "*": "El campo 'avaible' es opcional y por defecto es 'true'",
+  available: Joi.boolean().optional().default(true).messages({
+    "*": "El campo 'available' es opcional y por defecto es 'true'",
   }),
   faculty: Joi.string()
     .custom((value, helpers) => {

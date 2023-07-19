@@ -7,7 +7,7 @@ const adyacencySchema = new Schema({
     required: true,
     ref: "Node",
   },
-  detination: {
+  destination: {
     type: String,
     required: true,
     ref: "Node",

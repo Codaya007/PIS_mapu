@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { nomenclatureSchema } = require("./Nomenclature");
 const Schema = mongoose.Schema;
 
 const subNodeSchema = new Schema({
@@ -22,34 +23,9 @@ const subNodeSchema = new Schema({
     required: false,
     minLength: 1,
   },
-  nomenclature: {
-    campus: {
-      type: String,
-      required: true,
-      minLength: 1,
-    },
-    floor: {
-      type: String,
-      required: true,
-      minLength: 1,
-    },
-    enviroment: {
-      type: String,
-      required: true,
-      minLength: 1,
-    },
-    subEnviroment: {
-      type: String,
-      required: false,
-      minLength: 1,
-    },
-    block: {
-      type: String,
-      required: true,
-      minLength: 1,
-    },
-  },
+  nomenclature: nomenclatureSchema,
 });
 
 const SubNode = mongoose.model("subnode", subNodeSchema);
+
 module.exports = SubNode;

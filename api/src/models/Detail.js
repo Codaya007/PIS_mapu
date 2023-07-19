@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { nomenclatureSchema } = require("./Nomenclature");
 const Schema = mongoose.Schema;
 
 const detailSchema = new Schema({
@@ -17,41 +18,7 @@ const detailSchema = new Schema({
     type: String,
     required: false,
   },
-  nomenclature: {
-    campus: {
-      type: Schema.Types.ObjectId, // Tipo ObjectId para referencia
-      ref: "campus", // Nombre del modelo referenciado
-      required: true,
-    },
-    block: {
-      type: Schema.Types.ObjectId, // Tipo ObjectId para referencia
-      ref: "block", // Nombre del modelo referenciado
-      required: true,
-    },
-    floor: {
-      type: Number,
-      required: false,
-    },
-    environment: {
-      type: Number,
-      required: false,
-    },
-    subEnvironment: {
-      type: Number,
-      required: false,
-    },
-    id: {
-      type: String,
-      ref: "Nomenclature",
-      required: true,
-    },
-  },
-  // category: {
-  //   ref: "category",
-  // },
-  // subnodes: {
-  //   type: Array,
-  // },
+  nomenclature: nomenclatureSchema,
 });
 
 const Detail = mongoose.model("Detail", detailSchema);

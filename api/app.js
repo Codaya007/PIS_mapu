@@ -40,7 +40,7 @@ app.use("/career", require("./src/routes/career.routes.js"));
 app.use("/comment", require("./src/routes/comment.routes.js"));
 app.use("/sector", require("./src/routes/sector.routes.js"));
 app.use("/suscription", require("./src/routes/suscription.routes.js"));
-
+// Todos los tipos de rutas implementados
 app.use("/interesting-node", require("./src/routes/interestingNode.routes.js"));
 app.use("/access-node", require("./src/routes/accessNode.routes.js"));
 app.use("/route-node", require("./src/routes/routeNode.routes.js"));

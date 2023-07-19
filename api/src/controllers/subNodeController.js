@@ -32,6 +32,7 @@ module.exports = {
   deleteSubNode: async (req, res) => {
     const { id } = req.params;
     const deletedUser = await subNodeService.deleteSubNode(id);
+
     res.json(deletedUser);
   },
 };

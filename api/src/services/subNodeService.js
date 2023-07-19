@@ -16,6 +16,7 @@ const getSubNodeById = async (_id) => {
 
 const getAllSubNodes = async (where = {}, skip, limit) => {
   const allSubNodes = await SubNode.find(where).skip(skip).limit(limit);
+
   return allSubNodes;
 };
 

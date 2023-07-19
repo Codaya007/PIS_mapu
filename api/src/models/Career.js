@@ -6,22 +6,23 @@ const careerSchema = new Schema({
     type: String,
     required: true,
     maxlength: 100,
-    unique: true
+    unique: true,
   },
   description: {
     type: String,
     required: false,
-    maxlength: 200
+    maxlength: 200,
   },
   manager: {
     type: String,
     required: true,
-    maxlength: 125
+    maxlength: 125,
   },
   faculty: {
     type: Schema.Types.ObjectId,
-    required: true
-  }
+    ref: "Faculty",
+    required: true,
+  },
 });
 
 const Career = mongoose.model("Career", careerSchema);

@@ -1,53 +1,54 @@
 const { Router } = require("express");
 const accessNodeController = require("../controllers/accessNodeController");
-const isAdmin = require("../policies/isAdmin");
-const isLoggedIn = require("../policies/isLoggedIn");
-
-// const { acc } = require("../validationSchemas/");
+const middlewares = require("../middlewares");
+const {
+  createInterstingNodeSchema,
+  updateInterstingNodeSchema,
+} = require("../validationSchemas/AccessNode");
 
 const accessNodeRouter = Router();
 
 /**
  * @route POST /
- * @desc Crear subnodo
- * @access Administrador
+ * @desc Crea un nuevo nodo de interes con la información pasada por body
+ * @access Admin
  */
-
 accessNodeRouter.post(
   "/",
-  isAdmin,
+  middlewares.validateRequestBody(createInterstingNodeSchema),
   accessNodeController.createAccessNode
-  // middlewares.validateRequestBody()
 );
 
 /**
  * @route GET /
- * @desc Obtener nodoDeAcceso
- * @access Administrador
- */
-
-accessNodeRouter.get("/:id", isAdmin, accessNodeController.getAccessNodeById);
-
-/**
- * @route GET /
- * @route Obtener todos los nodos de acceso
+ * @desc Obtener todos los nodos
  * @access Public
  */
-
-accessNodeRouter.get("/", isLoggedIn, accessNodeController.getAllAccessNode);
-
-/**
- * @route PUT /:id
- * @desc Actualizar nodo de entrada
- * @access Admin
- */
-accessNodeRouter.put("/:id", isAdmin, accessNodeController.updateAccessNode);
+accessNodeRouter.get("/", accessNodeController.getAllAccessNode);
 
 /**
- * @route DELETE /:id
- * @desc Eliminar nodo de acceso
+ * @route GET /:id
+ * @desc Obtener el nodo por id
+ * @access Public
+ */
+accessNodeRouter.get("/:id", accessNodeController.getAccessNodeById);
+
+/**
+ * @route PUT /
+ * @desc Actualizar un nodo con la información pasada por body
  * @access Admin
  */
-accessNodeRouter.delete("/:id", isAdmin, accessNodeController.deleteAccessNode);
+accessNodeRouter.put(
+  "/:id",
+  middlewares.validateRequestBody(updateInterstingNodeSchema),
+  accessNodeController.updateAccessNode
+);
+
+/**
+ * @route DELETE /
+ * @desc Eliminar un nodo por id
+ * @access Admin
+ */
+accessNodeRouter.delete("/:id", accessNodeController.deleteAccessNode);
 
 module.exports = accessNodeRouter;

@@ -8,74 +8,78 @@ const nameIsUnique = async (value, helpers) => {
   if (name) {
     const where = { name };
     if (id) where.id = { "!=": id };
-  
+
     const category = await Career.findOne(where);
-  
+
     if (category)
       return helpers.error("any.invalid", {
         message: "Ya existe una Carrera con este nombre",
       });
   }
-  
+
   return value;
 };
 
 const idFacultyValid = async (value, helpers) => {
-  if(value.faculty){
+  if (value.faculty) {
     const facultyId = value.faculty;
 
-    if(!isValidObjectId(facultyId)){
+    if (!isValidObjectId(facultyId)) {
       return helpers.error("any.invalid", {
         message: "El campo faculty debe ser un ObjectId",
-      })
+      });
     }
 
     const faculty = await Faculty.findById(facultyId);
 
-    if(!faculty){
+    if (!faculty) {
       return helpers.error("any.invalid", {
         message: "Facultad no encontrada",
-      })
+      });
     }
   }
-}
+};
 
 const createCareerSchema = Joi.object({
   name: Joi.string().required().max(100).messages({
     "name.external": "Ya existe una carrera con este nombre",
-    "*" : "El campo 'name' debe tener un largo máximo de 100 caracteres",
+    "*": "El campo 'name' debe tener un largo máximo de 100 caracteres",
   }),
   description: Joi.string().optional().max(200).messages({
-    "*" : "El campo 'description' debe tener un largo máximo de 200 carateres",
+    "*": "El campo 'description' debe tener un largo máximo de 200 carateres",
   }),
   manager: Joi.string().required().max(125).messages({
-    "*" : "El campo 'manager' debe tener un largo máximo de 125 carateres",
+    "*": "El campo 'manager' debe tener un largo máximo de 125 carateres",
   }),
   faculty: Joi.string().required().messages({
-    "*" : "IdFacultad no válido",
-  })
-}).external(idFacultyValid).external(nameIsUnique);
+    "*": "Id de facultad no válido",
+  }),
+})
+  .external(idFacultyValid)
+  .external(nameIsUnique);
 
 const updateCareerSchema = Joi.object({
   id: Joi.string().required().custom(isValidObjectId).messages({
-    "*" : "Id no válido",
+    "*": "Id no válido",
   }),
   name: Joi.string().optional().max(100).messages({
     "name.external": "Ya existe una carrera con este nombre",
-    "*" : "El campo 'name' debe tener un largo máximo de 100 caracteres",
+    "*": "El campo 'name' debe tener un largo máximo de 100 caracteres",
   }),
   description: Joi.string().optional().max(200).messages({
-    "*" : "El campo 'description' debe tener un largo máximo de 200 carateres",
+    "*": "El campo 'description' debe tener un largo máximo de 200 carateres",
   }),
   manager: Joi.string().optional().max(125).messages({
-    "*" : "El campo 'manager' debe tener un largo máximo de 125 carateres",
+    "*": "El campo 'manager' debe tener un largo máximo de 125 carateres",
   }),
   faculty: Joi.string().optional().messages({
-    "*" : "IdFacultad no válido",
-  })
-}).external(idFacultyValid).external(nameIsUnique);
+    "*": "Id de facultad no válido",
+  }),
+})
+  .external(idFacultyValid)
+  .external(nameIsUnique);
 
 module.exports = {
   createCareerSchema,
-  updateCareerSchema
-}
+  updateCareerSchema,
+};

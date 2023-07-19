@@ -1,47 +1,70 @@
 const Block = require("../models/Block");
 const FacultyService = require("../services/facultyService");
-const FieldExistingError = require('../errors/FieldExistingError')
-const NotExist = require('../errors/NotExist')
+const FieldExistingError = require("../errors/FieldExistingError");
+const NotExist = require("../errors/NotExist");
 
 const createBlock = async (blockData) => {
-    const existingBlock = await getBlockByNumber(blockData.number)
-    const existingFaculty = await FacultyService.getFacultyById(blockData.faculty)
-    if (existingBlock) throw new FieldExistingError(`El bloque número ${blockData.number} ya existe`)
-    if (!existingFaculty) throw new NotExist(`La facultad no existe`)
-    const block = await Block.create(blockData);
+  const existingBlock = await getBlockByNumber(blockData.number);
 
-    return block;
+  const existingFaculty = await FacultyService.getFacultyById(
+    blockData.faculty
+  );
+
+  if (!existingFaculty) throw new NotExist(`La facultad no existe`);
+
+  if (existingBlock)
+    throw new FieldExistingError(
+      `El bloque número ${blockData.number} ya existe`
+    );
+
+  const block = await Block.create(blockData);
+
+  return block;
 };
 
 const getBlocks = async (where = {}, skip, limit) => {
-    const blocks = await Block.find(where).skip(skip).limit(limit);
+  const blocks = await Block.find(where)
+    .skip(skip)
+    .limit(limit)
+    .populate("faculty");
 
-    return blocks;
+  return blocks;
 };
 
 const getBlockByNumber = async (number) => {
-    const block = await Block.findOne({ "number": number });
+  const block = await Block.findOne({ number: number }).populate("faculty");
 
-    return block;
+  return block;
 };
 
 const getCountBlocks = async (where = {}) => {
-    return await Block.count(where);
+  return await Block.count(where);
 };
 
 const updateBlockByNumber = async (number, blockData) => {
-    const existingBlock = await getBlockByNumber(number)
-    if (existingBlock == null) throw new NotExist(`El bloque número ${number} no existe`)
+  const existingBlock = await getBlockByNumber(number);
 
-    const block = await Block.findOneAndUpdate({ "number": number }, blockData, { new: true });
+  if (existingBlock == null)
+    throw new NotExist(`El bloque número ${number} no existe`);
 
-    return block;
+  const block = await Block.findOneAndUpdate({ number: number }, blockData, {
+    new: true,
+  });
+
+  return block;
 };
 
 const deleteBlockByNumber = async (number) => {
-    const block = await Block.deleteOne({ "number": number });
+  const block = await Block.deleteOne({ number: number });
 
-    return block;
+  return block;
 };
 
-module.exports = { createBlock, getBlocks, getBlockByNumber, getCountBlocks, updateBlockByNumber, deleteBlockByNumber };
+module.exports = {
+  createBlock,
+  getBlocks,
+  getBlockByNumber,
+  getCountBlocks,
+  updateBlockByNumber,
+  deleteBlockByNumber,
+};

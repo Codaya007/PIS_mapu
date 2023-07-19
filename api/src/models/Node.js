@@ -43,39 +43,26 @@ const nodeSchema = new Schema({
     required: false,
   },
   type: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: "Type",
     required: true,
   },
   campus: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: "Campus",
     required: true,
   },
   category: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: "Category",
-    required: true,
+    // required: true,
   },
-  // type: typeSchema,
-  // campus: campusSchema,
-  // category: {
-  //   type: String,
-  //   required: false,
-  // },
-  // adyacency: [
-  //   {
-  //     latitude: { type: Number, required: false, min: -200, max: 200 },
-  //     longitude: {
-  //       type: Number,
-  //       required: false,
-  //       minLength: -200,
-  //       maxLength: 20,
-  //     },
-  //     weight: { type: Number, required: false, min: 1, max: 400 },
-  //   },
-  // ],
+  detail: {
+    type: Schema.Types.ObjectId,
+    ref: "Detail",
+  },
 });
+
 const Node = mongoose.model("Node", nodeSchema);
 
 module.exports = Node;

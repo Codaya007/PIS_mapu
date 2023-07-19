@@ -1,55 +1,54 @@
 const { Router } = require("express");
-const nodeController = require("../controllers/nodeController");
+const routeNodeController = require("../controllers/routeNodeController");
 const middlewares = require("../middlewares");
 const {
-  createRouteNodeSchema,
-  updateRouteNodeSchema,
-} = require("../validationSchemas/routeNode");
+  createInterstingNodeSchema,
+  updateInterstingNodeSchema,
+} = require("../validationSchemas/RouteNode");
 
-const nodeRouter = Router();
+const routeNodeRouter = Router();
 
 /**
  * @route POST /
  * @desc Crea un nuevo nodo de interes con la información pasada por body
- * @access Admin
+ * @route Admin
  */
-nodeRouter.post(
+routeNodeRouter.post(
   "/",
-  middlewares.validateRequestBody(createRouteNodeSchema),
-  nodeController.createNode
+  middlewares.validateRequestBody(createInterstingNodeSchema),
+  routeNodeController.createRouteNode
 );
 
 /**
  * @route GET /
  * @desc Obtener todos los nodos
- * @access Public
+ * @route Public
  */
-nodeRouter.get("/", nodeController.getAllNodes);
+routeNodeRouter.get("/", routeNodeController.getAllRouteNode);
 
 /**
- * @route GET /
-
- * @desc Obtener el nodo ruta por id
- * @access Public
+ * @route GET /:id
+ * @desc Obtener el nodo por id
+ * @route Public
  */
-nodeRouter.get("/:id", nodeController.getNode);
+routeNodeRouter.get("/:id", routeNodeController.getRouteNodeById);
 
 /**
  * @route PUT /
  * @desc Actualizar un nodo con la información pasada por body
- * @access Admin
+ * @route Admin
  */
-nodeRouter.put(
+routeNodeRouter.put(
   "/:id",
-  middlewares.validateRequestBody(updateRouteNodeSchema),
-  nodeController.updateNode
+  middlewares.validateRequestBody(updateInterstingNodeSchema),
+  routeNodeController.updateRouteNode
 );
 
 /**
  * @route DELETE /
  * @desc Eliminar un nodo por id
- * @access Admin
+ * @route Admin
  */
-nodeRouter.delete("/:id", nodeController.deleteNode);
+routeNodeRouter.delete("/:id", routeNodeController.deleteRouteNode);
 
-module.exports = nodeRouter;
+module.exports = routeNodeRouter;

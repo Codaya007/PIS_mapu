@@ -1,40 +1,36 @@
 const Joi = require("joi");
 // const mongoose = require("mongoose");
 // const ObjectId = mongoose.Types.ObjectId;
-const Campus = require("../models/Campus");
+const Type = require("../models/Type");
 const Category = require("../models/Category");
 
-const validateCampus = async (value, helpers) => {
-  const { campus } = value;
-
-  if (campus) {
-    const result = await Campus.findOne({ _id: campus });
-
-    console.log({ campus, result });
-
-    if (!result) {
-      return helpers.error("any.invalid", {
-        message: "El campus no existe",
-      });
-    }
+const validateType = async (value, helpers) => {
+  const { type } = value;
+  let result;
+  if (type) {
+    result = await Type.findOne({ name: type });
   }
 
+  if (!result) {
+    return helpers.error("any.invalid", {
+      message: "El tipo de nodo no existe",
+    });
+  }
   return value;
 };
 
 const validateCategory = async (value, helpers) => {
   const { category } = value;
-
+  let result;
   if (category) {
-    const result = await Category.findOne({ _id: category });
-
-    if (!result) {
-      return helpers.error("any.invalid", {
-        message: "La categoria no existe",
-      });
-    }
+    result = await Category.findOne({ name: category });
   }
 
+  if (!result) {
+    return helpers.error("any.invalid", {
+      message: "La categoria no existe",
+    });
+  }
   return value;
 };
 
@@ -52,9 +48,6 @@ const createInterstingNodeSchema = Joi.object({
   category: Joi.string().optional().messages({
     "*": "El campo 'category' es requerido",
   }),
-  campus: Joi.string().required().messages({
-    "*": "El campo 'campus' es requerido",
-  }),
   adyacency: Joi.array()
     .optional()
     .items(
@@ -64,8 +57,19 @@ const createInterstingNodeSchema = Joi.object({
         // weight: Joi.number().optional().min(1).max(400),
       })
     ),
+  // sector: Joi.string()
+  //   .custom((value, helpers) => {
+  //     if (!ObjectId.isValid(value)) {
+  //       return helpers.error("any.invalid");
+  //     }
+  //     return value;
+  //   })
+  //   .optional() //TODO: CAMBIAR A REQUIERED CUANDO SE ARREGLE LO DE SECTOR
+  //   .messages({
+  //     "*": "El campo 'sector' es requerido y debe ser un ID válido",
+  //   }),
 })
-  .external(validateCampus)
+  .external(validateType)
   .external(validateCategory);
 
 // Definir el esquema de validación para la actualización de un Nodo de interés
@@ -82,9 +86,6 @@ const updateInterstingNodeSchema = Joi.object({
   available: Joi.boolean().optional().messages({
     "*": "El campo 'available' es requerido",
   }),
-  campus: Joi.string().optional().messages({
-    "*": "El campo 'campus' es requerido",
-  }),
   category: Joi.string().optional().messages({
     "*": "El campo 'category' es requerido",
   }),
@@ -97,9 +98,18 @@ const updateInterstingNodeSchema = Joi.object({
         // weight: Joi.number().optional().min(1).max(400),
       })
     ),
-})
-  .external(validateCategory)
-  .external(validateCampus);
+  // sector: Joi.string()
+  //   .custom((value, helpers) => {
+  //     if (!ObjectId.isValid(value)) {
+  //       return helpers.error("any.invalid");
+  //     }
+  //     return value;
+  //   })
+  //   .optional()
+  //   .messages({
+  //     "*": "El campo 'sector' es requerido y debe ser un ID válido",
+  //   }),
+}).external(validateCategory);
 
 module.exports = {
   createInterstingNodeSchema,

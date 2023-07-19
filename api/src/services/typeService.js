@@ -21,6 +21,7 @@ const getCountTypes = async (where = {}) => {
   const numberTypes = await Type.count(where);
   return numberTypes;
 };
+
 const getTypeById = async (_id) => {
   if (!isValidObjectId(_id))
     throw new ValidationError("El id debe ser un ObjectId");
@@ -29,6 +30,17 @@ const getTypeById = async (_id) => {
   if (!type) {
     throw new ValidationError("Tipo de nodo no encontrado");
   }
+
+  return type;
+};
+
+const getOneType = async (where = {}) => {
+  const type = await Type.findOne(where);
+
+  if (!type) {
+    throw new ValidationError("Tipo de nodo no encontrado");
+  }
+
   return type;
 };
 
@@ -56,4 +68,5 @@ module.exports = {
   getTypeById,
   updateTypeById,
   deleteTypeById,
+  getOneType,
 };
