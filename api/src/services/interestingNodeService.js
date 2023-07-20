@@ -1,58 +1,37 @@
-const Node = require("../models/Node");
-const Type = require("../models/Type");
-const ValidationError = require("../errors/ValidationError");
 const NotExist = require("../errors/NotExist");
 const typeService = require("./typeService");
 const nodeService = require("./nodeService");
-const detailService = require("./detailService");
-const { isValidObjectId } = require("mongoose");
 const { INTEREST_NODO_TYPE } = require("../constants/index");
 
+const getInterestingNodeTypeId = async () => {
+  const accessType = await typeService.getOneType({
+    name: INTEREST_NODO_TYPE,
+    deletedAt: null,
+  });
+
+  return accessType._id;
+};
+
 const createInterestingNode = async (newNode) => {
-  const { detail, ...node } = newNode;
-  const interestingNode = await Type.findOne({ name: INTEREST_NODO_TYPE });
+  newNode.type = await getInterestingNodeTypeId();
 
-  node.type = interestingNode.id;
-
-  let createdNode = await nodeService.createNode(node);
-  const detailDB = detailService.createDetail(detail);
-  await nodeService.updateNodeById(createdNode.id, { detail: detailDB.id });
+  const createdNode = await nodeService.createNodeWithDetail(newNode);
 
   return createdNode;
 };
 
 const getInterestingNodes = async (where = {}, skip, limit) => {
-  const interestingNode = await Type.findOne({ name: INTEREST_NODO_TYPE });
+  where.type = await getInterestingNodeTypeId();
 
-  where.type = interestingNode.id;
-
-  const nodes =
-    skip || limit
-      ? await Node.find(where)
-          .skip(skip)
-          .limit(limit)
-          .populate("type")
-          .populate("campus")
-          .populate("category")
-          .populate("detail")
-      : await Node.find(where)
-          .populate("type")
-          .populate("campus")
-          .populate("category")
-          .populate("detail");
+  const nodes = await nodeService.getNodes(where, skip, limit);
 
   return nodes;
 };
 
 const getCountInterestingNodes = async (where = {}) => {
-  const interestingType = await typeService.getOneType({
-    name: INTEREST_NODO_TYPE,
-    deletedAt: null,
-  });
+  where.type = await getInterestingNodeTypeId();
 
-  where.type = interestingType.id;
-
-  const countNodes = await Node.count(where);
+  const countNodes = await nodeService.getCountNodes(where);
 
   return countNodes;
 };
@@ -60,12 +39,9 @@ const getCountInterestingNodes = async (where = {}) => {
 const getInterestingNodeById = async (id) => {
   const node = await nodeService.getNodeById(id);
 
-  const interestingType = await typeService.getOneType({
-    name: INTEREST_NODO_TYPE,
-    deletedAt: null,
-  });
+  const interestingTypeID = await getInterestingNodeTypeId();
 
-  if (node.type !== interestingType.id)
+  if (node.type?._id?.toString() !== interestingTypeID.toString())
     throw new NotExist("Nodo de interés no encontrado");
 
   return node;
@@ -74,18 +50,15 @@ const getInterestingNodeById = async (id) => {
 const updateInterestingNodeById = async (id, nodeData) => {
   let node = await getInterestingNodeById(id);
 
-  node = await Node.updateOne({ id }, nodeData);
+  node = await nodeService.updateNodeWithDetailById(id, nodeData);
 
   return node;
 };
 
 const deleteInterestingNodeById = async (id) => {
-  if (!isValidObjectId(id))
-    throw new ValidationError("El id debe ser un ObjectId");
+  await getInterestingNodeById(id);
 
-  const deletedNode = await Node.findByIdAndRemove(id);
-
-  if (!deletedNode) throw new ValidationError("Nodo no encontrado");
+  const deletedNode = await nodeService.deleteNodeById(id);
 
   return deletedNode;
 };

@@ -2,9 +2,9 @@ const { Router } = require("express");
 const accessNodeController = require("../controllers/accessNodeController");
 const middlewares = require("../middlewares");
 const {
-  createInterstingNodeSchema,
-  updateInterstingNodeSchema,
-} = require("../validationSchemas/AccessNode");
+  createNodeWithDetailSchema,
+  updateNodeWithDetailSchema,
+} = require("../validationSchemas/NodeWithDetail");
 
 const accessNodeRouter = Router();
 
@@ -15,7 +15,7 @@ const accessNodeRouter = Router();
  */
 accessNodeRouter.post(
   "/",
-  middlewares.validateRequestBody(createInterstingNodeSchema),
+  middlewares.validateRequestBody(createNodeWithDetailSchema),
   accessNodeController.createAccessNode
 );
 
@@ -40,7 +40,7 @@ accessNodeRouter.get("/:id", accessNodeController.getAccessNodeById);
  */
 accessNodeRouter.put(
   "/:id",
-  middlewares.validateRequestBody(updateInterstingNodeSchema),
+  middlewares.validateRequestBody(updateNodeWithDetailSchema),
   accessNodeController.updateAccessNode
 );
 

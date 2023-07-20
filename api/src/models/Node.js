@@ -41,6 +41,7 @@ const nodeSchema = new Schema({
   available: {
     type: Boolean,
     required: false,
+    default: true,
   },
   type: {
     type: Schema.Types.ObjectId,
@@ -57,9 +58,15 @@ const nodeSchema = new Schema({
     ref: "Category",
     // required: true,
   },
+  block: {
+    type: Schema.Types.ObjectId,
+    ref: "Block",
+    default: null,
+  },
   detail: {
     type: Schema.Types.ObjectId,
     ref: "Detail",
+    default: null,
   },
 });
 

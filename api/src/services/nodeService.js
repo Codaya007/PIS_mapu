@@ -1,10 +1,9 @@
 const Node = require("../models/Node");
+const Adyacency = require("../models/Adyacency");
 const ValidationError = require("../errors/ValidationError");
 const NotExist = require("../errors/NotExist");
-const campusService = require("../services/campusService");
+const detailService = require("../services/detailService");
 const { isValidObjectId } = require("mongoose");
-const { LIMIT_ACCESS_POINTS_BY_CAMPUS } = require("../constants");
-const { ACCESS_NODO_TYPE } = require("../constants/index");
 const {
   timeBetweenCoordinates,
   getDistanceBetweenCoordinates,
@@ -24,6 +23,7 @@ const nodeAlreadyExists = async (latitude, longitude) => {
 };
 
 const createNode = async (nodeData = {}) => {
+  // adyacency debe ser un array de ids de nodos (de cualquier tipo)
   const { latitude, longitude, adyacency = [], ...restData } = nodeData;
   const createdAdyacencies = [];
   await nodeAlreadyExists(latitude, longitude);
@@ -32,27 +32,19 @@ const createNode = async (nodeData = {}) => {
 
   if (adyacency.length > 0) {
     for (let i = 0; i < adyacency.length; i++) {
-      // Busco el nodo por si ya está creado
+      // Busco el documento del nodo creado
       let nodeAdyacency = await Node.findOne({
         latitude: adyacency[i].latitude,
         longitude: adyacency[i].longitude,
         deletedAt: null,
       });
 
-      // Si no existe, la creo
-      if (!nodeAdyacency) {
-        nodeAdyacency = await Node.create({
-          latitude: adyacency[i].latitude,
-          longitude: adyacency[i].longitude,
-        });
-      }
-
       // Hallo la distancia entre los dos nodos
       const weight = getDistanceBetweenCoordinates(
         latitude,
         longitude,
-        adyacency[i].latitude,
-        adyacency[i].longitude
+        nodeAdyacency.latitude,
+        nodeAdyacency.longitude
       );
 
       const adyacency = await Adyacency.create({
@@ -70,21 +62,37 @@ const createNode = async (nodeData = {}) => {
   return node;
 };
 
+const createNodeWithDetail = async (newNode) => {
+  const { detail = {}, ...node } = newNode;
+
+  let createdNode = await createNode(node);
+  const detailDB = await detailService.createDetail(detail);
+
+  createdNode.detail = detailDB._id;
+  await updateNodeById(createdNode._id, { detail: detailDB._id });
+
+  return createdNode;
+};
+
 const getNodes = async (where = {}, skip, limit) => {
   const nodes =
     skip || limit
       ? await Node.find(where)
-          .skip(skip)
-          .limit(limit)
+          .skip(skip ?? 0)
+          .limit(limit ?? 10)
           .populate("type")
           .populate("campus")
           .populate("category")
+          .populate("block")
           .populate("detail")
+          .sort({ createdAt: -1 })
       : await Node.find(where)
           .populate("type")
           .populate("campus")
           .populate("category")
-          .populate("detail");
+          .populate("block")
+          .populate("detail")
+          .sort({ createdAt: -1 });
 
   return nodes;
 };
@@ -103,6 +111,7 @@ const getNodeById = async (_id) => {
     .populate("type")
     .populate("campus")
     .populate("category")
+    .populate("block")
     .populate("detail");
 
   if (!node) throw new NotExist("Nodo no encontrado");
@@ -113,7 +122,19 @@ const getNodeById = async (_id) => {
 const updateNodeById = async (_id, nodeData) => {
   let node = await getNodeById(_id);
 
-  node = await Node.updateOne({ _id }, nodeData);
+  node = await Node.findByIdAndUpdate(_id, nodeData);
+
+  return node;
+};
+
+const updateNodeWithDetailById = async (_id, nodeData) => {
+  let node = await getNodeById(_id);
+
+  const { detail, ...newData } = nodeData;
+  node = await Node.findByIdAndUpdate(_id, newData);
+
+  const { _id: detailId, ...newDetail } = detail;
+  node.detail = await detailService.updateDetailById(detailId, newDetail);
 
   return node;
 };
@@ -149,6 +170,8 @@ const timeCoordinates = async (origin, destination, speed) => {
 module.exports = {
   nodeAlreadyExists,
   createNode,
+  createNodeWithDetail,
+  updateNodeWithDetailById,
   getNodes,
   getCountNodes,
   getNodeById,
