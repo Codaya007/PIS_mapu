@@ -17,6 +17,16 @@ const blockSchema = new Schema({
     ref: "Faculty", // Nombre del modelo referenciado
     required: true,
   },
+  campus: {
+    type: Schema.Types.ObjectId,
+    ref: "Campus",
+    required: true,
+  },
+  node: {
+    type: Schema.Types.ObjectId,
+    ref: "Node",
+    required: true,
+  },
 });
 
 const Block = mongoose.model("Block", blockSchema);

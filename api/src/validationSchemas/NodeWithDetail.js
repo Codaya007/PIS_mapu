@@ -5,6 +5,7 @@ const {
   validateCategory,
   updateNodeSchema,
 } = require("./Node");
+const { createSubNodeSchema, updateSubNodeSchema } = require("./SubNode");
 
 const createDetailSchema = Joi.object({
   title: Joi.string().required().max(50).messages({
@@ -13,8 +14,11 @@ const createDetailSchema = Joi.object({
   description: Joi.string().required().max(150).messages({
     "*": "El campo 'description' es requerido y debe tener hasta 150 caracteres",
   }),
-  img: Joi.string().required().uri().messages({
-    "*": "El campo 'img' es requerido y debe ser una url válida",
+  img: Joi.string().optional().uri().allow(null).messages({
+    "*": "El campo 'img' debe ser una url válida o null",
+  }),
+  subnodes: Joi.array().optional().items(createSubNodeSchema).messages({
+    "*": "El campo detail.subnodes debe ser un array de subnodos",
   }),
 });
 
@@ -28,15 +32,18 @@ const updateDetailSchema = Joi.object({
   description: Joi.string().optional().max(150).messages({
     "*": "El campo 'description' debe tener hasta 150 caracteres",
   }),
-  img: Joi.string().optional().uri().messages({
-    "*": "El campo 'img' debe ser una url válida",
+  img: Joi.string().optional().uri().allow(null).messages({
+    "*": "El campo 'img' debe ser una url válida o null",
   }),
+  subnodes: Joi.array().optional().items(updateSubNodeSchema),
 });
 
 // Definir el esquema de validación para la creación de un Nodo de interes
 const createNodeWithDetailSchema = createNodeSchema
   .keys({
-    detail: createDetailSchema.required(),
+    detail: createDetailSchema
+      .required()
+      .messages({ "*": "El campo node.detail es requerido" }),
   })
   .external(validateCampus)
   .external(validateCategory);

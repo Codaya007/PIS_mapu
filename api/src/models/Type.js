@@ -3,6 +3,7 @@ const {
   ROUTE_NODO_TYPE,
   INTEREST_NODO_TYPE,
   ACCESS_NODO_TYPE,
+  BLOCK_NODO_TYPE,
 } = require("../constants");
 const Schema = mongoose.Schema;
 
@@ -13,7 +14,12 @@ const typeSchema = new Schema({
     unique: true,
     // minLength: 2,
     maxLength: 30,
-    isIn: [ROUTE_NODO_TYPE, INTEREST_NODO_TYPE, ACCESS_NODO_TYPE],
+    isIn: [
+      ROUTE_NODO_TYPE,
+      INTEREST_NODO_TYPE,
+      ACCESS_NODO_TYPE,
+      BLOCK_NODO_TYPE,
+    ],
   },
   desc: {
     type: String,
@@ -24,4 +30,5 @@ const typeSchema = new Schema({
 });
 
 const Type = mongoose.model("Type", typeSchema);
+
 module.exports = Type;

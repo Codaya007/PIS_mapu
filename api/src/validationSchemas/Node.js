@@ -50,20 +50,20 @@ const createNodeSchema = Joi.object({
     .min(MIN_LON)
     .max(MAX_LON)
     .messages({
-      "*": `El campo 'latitude' es requerido y debe ser una longitud geográfica válida (De ${MIN_LON} y ${MAX_LON})`,
+      "*": `El campo 'longitude' es requerido y debe ser una longitud geográfica válida (De ${MIN_LON} y ${MAX_LON})`,
     }),
-  available: Joi.boolean().required().messages({
+  available: Joi.boolean().optional().default(true).messages({
     "*": "El campo 'available' es requerido",
   }),
   category: Joi.string().allow(null).optional().messages({
     "*": "El campo 'category' debe ser un id válido",
   }),
   campus: Joi.string().required().messages({
-    "*": "El campo 'campus' es requerido y debe ser un id válido o null",
+    "*": "El campo 'campus' es requerido y debe ser un id válido",
   }),
-  block: Joi.string().optional().allow(null).messages({
-    "*": "El campo 'block' debe ser un id válido",
-  }),
+  // block: Joi.string().optional().allow(null).messages({
+  //   "*": "El campo 'block' debe ser un id válido",
+  // }),
   adyacency: Joi.array().optional().items(Joi.string()),
 })
   .external(validateCampus)
@@ -86,7 +86,7 @@ const updateNodeSchema = Joi.object({
     .min(MIN_LON)
     .max(MAX_LON)
     .messages({
-      "*": `El campo 'latitude' es requerido y debe ser una longitud geográfica válida (De ${MIN_LON} y ${MAX_LON})`,
+      "*": `El campo 'longitude' es requerido y debe ser una longitud geográfica válida (De ${MIN_LON} y ${MAX_LON})`,
     }),
   available: Joi.boolean().optional().messages({
     "*": "El campo 'available' es requerido",
@@ -94,9 +94,9 @@ const updateNodeSchema = Joi.object({
   campus: Joi.string().optional().messages({
     "*": "El campo 'campus' debe ser un id válido",
   }),
-  block: Joi.string().optional().allow(null).messages({
-    "*": "El campo 'block' debe ser un id válido",
-  }),
+  // block: Joi.string().optional().allow(null).messages({
+  //   "*": "El campo 'block' debe ser un id válido",
+  // }),
   category: Joi.string().allow(null).optional().messages({
     "*": "El campo 'category' debe ser un id válido o null",
   }),

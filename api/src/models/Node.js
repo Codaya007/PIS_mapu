@@ -58,11 +58,11 @@ const nodeSchema = new Schema({
     ref: "Category",
     // required: true,
   },
-  block: {
-    type: Schema.Types.ObjectId,
-    ref: "Block",
-    default: null,
-  },
+  // block: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: "Block",
+  //   default: null,
+  // },
   detail: {
     type: Schema.Types.ObjectId,
     ref: "Detail",
