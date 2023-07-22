@@ -23,6 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const Login = () => {
   const { user } = useSelector((state) => state.authReducer);
+  const { name } = user || {};
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,6 +53,7 @@ const Login = () => {
     if (!errors.email && !errors.password) {
       dispatch(loginUser(email, password));
     }
+    // console.log(typeof(user._id))
   };
 
   useEffect(() => {
@@ -95,7 +97,7 @@ const Login = () => {
             />
           </FormControl>
           <FormControl>
-            <FormControl.Label>Contraseña</FormControl.Label>
+            <FormControl.Label>Contraseña { name }</FormControl.Label>
             <Input
               type="password"
               placeholder="****"

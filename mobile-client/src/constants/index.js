@@ -1,4 +1,4 @@
-export const API_BASEURL = "http://192.168.16.100:3000";
+export const API_BASEURL = "http://192.168.100.6:3000";
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -9,3 +9,4 @@ export const LoginName = "Iniciar sesión";
 export const RegisterName = "Registrarse";
 export const ForgotPasswordName = "Olvidé mi contraseña";
 export const AboutName = "Acerca de";
+export const CommentName = "Comentar ";
