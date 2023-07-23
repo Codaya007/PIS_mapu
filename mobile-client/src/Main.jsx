@@ -17,7 +17,9 @@ import {
   HomeName,
   LoginName,
   RegisterName,
+  ReportLostPointName,
 } from "./constants";
+import ReportLostPoint from "./screens/ReportLostPoint";
 import Comment from "./screens/Comment";
 
 const Drawer = createDrawerNavigator();
@@ -51,8 +53,8 @@ const Main = () => {
             name={ForgotPasswordName}
             component={ForgotPasswordForm}
           />
+          <Drawer.Screen name={ReportLostPointName} component={ReportLostPoint} />
           <Drawer.Screen name={CommentName} component={Comment} />
-
         </Drawer.Navigator>
       </NavigationContainer>
     </>
