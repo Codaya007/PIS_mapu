@@ -6,6 +6,7 @@ const campusSchema = new Schema({
     type: String,
     required: true,
     maxlength: 20,
+    unique: true,
   },
   description: {
     type: String,

@@ -58,7 +58,7 @@ const createNode = async (nodeData = {}) => {
       );
 
       const adyacency = await Adyacency.create({
-        origen: node.id,
+        origin: node.id,
         destination: nodeAdyacency.id,
         weight,
       });

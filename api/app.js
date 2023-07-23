@@ -24,6 +24,7 @@ app.use(cors());
 app.use("/", require("./src/routes/example.routes.js"));
 app.use("/dashboard", require("./src/routes/dashboard.routes.js"));
 app.use("/auth", require("./src/routes/auth.routes.js"));
+app.use("/adyacency", require("./src/routes/adyacency.routes.js"));
 app.use("/user", require("./src/routes/user.routes.js"));
 app.use("/me", require("./src/routes/me.routes.js"));
 app.use("/role", require("./src/routes/role.routes.js"));
@@ -45,6 +46,8 @@ app.use("/interesting-node", require("./src/routes/interestingNode.routes.js"));
 app.use("/access-node", require("./src/routes/accessNode.routes.js"));
 app.use("/route-node", require("./src/routes/routeNode.routes.js"));
 app.use("/block-node", require("./src/routes/blockNode.routes.js"));
+//! Ruta
+app.use("/route", require("./src/routes/route.routes.js"));
 
 // errorhandlers
 app.use("*", errorNotFound);

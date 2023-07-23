@@ -1,5 +1,4 @@
 const { EARTH_RADIUS_M } = require("../constants");
-const ValidationError = require("../errors/ValidationError");
 const { Types } = require("mongoose");
 const crypto = require("crypto");
 const qrcode = require("qrcode");

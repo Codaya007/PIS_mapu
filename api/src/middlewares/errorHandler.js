@@ -1,7 +1,7 @@
 const FailedRequest = require("../models/FailedRequest");
 
 const errorHandler = async (error, req, res, next) => {
-  console.log({ error });
+  // console.log({ error });
 
   const status = error.status || 500;
   const message = error.message || "Ocurrió un error en el servidor";

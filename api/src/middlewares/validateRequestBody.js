@@ -8,7 +8,7 @@ const validateRequestBody = (validationSchema) => async (req, res, next) => {
 
     return next();
   } catch (error) {
-    console.log({ error });
+    // console.log({ error });
 
     if (error) {
       const errorsMessages = error.details
