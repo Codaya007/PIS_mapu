@@ -3,6 +3,8 @@ const FieldExistingError = require("../errors/FieldExistingError");
 const NotExist = require("../errors/NotExist");
 const blockNodeServices = require("./blockNodeService");
 const { isValidObjectId } = require("mongoose");
+const validateBlocksExcelFile = require("../helpers/validateBlocksFile");
+const { uploadImageToS3 } = require("../helpers/s3Helpers");
 
 const populateNode = async (block) => {
   const formated = block.toJSON();
@@ -14,8 +16,35 @@ const populateNode = async (block) => {
   return formated;
 };
 
+const blockNumberAlreadyExists = async (number) => {
+  const existingBlock = await Block.findOne({ number });
+
+  return !!existingBlock;
+};
+
+const mapBlock = (row) => {
+  const result = {};
+
+  result.number = row.NUMERO;
+  result.faculty = row.FACULTAD;
+  result.campus = row.CAMPUS;
+  result.node = {
+    latitude: row.LATITUD,
+    longitude: row.LONGITUD,
+    campus: row.CAMPUS,
+    detail: {
+      title: `Bloque ${row.NUMERO}`,
+      description: null,
+      img: row.IMAGEN || null,
+      category: row.CATEGORIA,
+    },
+  };
+
+  return result;
+};
+
 const createBlock = async (blockData) => {
-  const existingBlock = await Block.findOne({ number: blockData.number });
+  const existingBlock = await blockNumberAlreadyExists(blockData.number);
 
   if (existingBlock)
     throw new FieldExistingError(
@@ -92,6 +121,31 @@ const deleteBlockById = async (id) => {
   return block;
 };
 
+const masiveUpload = async (file) => {
+  const { valid, errorsFile, rows } = await validateBlocksExcelFile(file);
+
+  // Si el archivo es válido, creo los bloques
+  if (valid) {
+    const results = await Promise.all(
+      rows.map(async (row) => {
+        return await createBlock(mapBlock(row));
+      })
+    );
+
+    return { valid, results };
+  } else {
+    // Sino devuelvo el error
+    const { Location: errorsURL } = await uploadImageToS3(
+      errorsFile,
+      "xlsx",
+      "validations",
+      true
+    );
+
+    return { valid, errorsURL };
+  }
+};
+
 module.exports = {
   createBlock,
   getBlocks,
@@ -100,4 +154,6 @@ module.exports = {
   updateBlockById,
   deleteBlockById,
   getBlockById,
+  masiveUpload,
+  blockNumberAlreadyExists,
 };

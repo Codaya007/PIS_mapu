@@ -5,6 +5,8 @@ const {
   createBlockSchema,
   updateBlockSchema,
 } = require("../validationSchemas/Block");
+const isAdmin = require("../policies/isAdmin");
+const { upload } = require("../configs/multerConfig");
 
 const blockRouter = Router();
 
@@ -15,8 +17,20 @@ const blockRouter = Router();
  */
 blockRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(createBlockSchema),
   blockController.createBlock
+);
+
+/**
+ * @route POST /upload
+ * @access Admin
+ */
+blockRouter.post(
+  "/upload",
+  isAdmin,
+  upload.single("file"),
+  blockController.masiveUpload
 );
 
 /**
@@ -40,6 +54,7 @@ blockRouter.get("/:id", blockController.getBlock);
  */
 blockRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(updateBlockSchema),
   blockController.updateBlock
 );
@@ -49,6 +64,6 @@ blockRouter.put(
  * @desc Eliminar un bloque mediante su numero de bloque
  * @access Admin
  */
-blockRouter.delete("/:id", blockController.deleteBlock);
+blockRouter.delete("/:id", isAdmin, blockController.deleteBlock);
 
 module.exports = blockRouter;

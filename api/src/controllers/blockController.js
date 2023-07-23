@@ -31,6 +31,18 @@ module.exports = {
     return res.json(updateBlock);
   },
 
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await blockServices.masiveUpload(
+      req.file
+    );
+
+    if (valid) return res.json({ success: true, results });
+
+    // res.set("Content-Disposition", 'attachment; filename="Errores.xlsx"');
+    // res.send(buffer);
+    return res.json({ success: false, results: errorsURL });
+  },
+
   deleteBlock: async (req, res, next) => {
     const { id } = req.params;
 

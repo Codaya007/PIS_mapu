@@ -8,14 +8,14 @@ const s3 = new AWS.S3({
   secretAccessKey: SECRET_ACCESS_KEY,
 });
 
-function uploadImageToS3(file) {
-  const fileExtension = path.extname(file.originalname);
+function uploadImageToS3(file, ext, folder, buffer = false) {
+  const fileExtension = ext ? `.${ext}` : path.extname(file.originalname);
   const fileName = `${Date.now().toString()}_${new Types.ObjectId()}${fileExtension}`;
 
   const uploadParams = {
     Bucket: BUCKET_NAME,
-    Key: fileName,
-    Body: file.buffer,
+    Key: folder ? `${folder}/${fileName}` : fileName,
+    Body: buffer ? file : file.buffer,
     ContentType: file.mimetype,
     ACL: "public-read",
   };
