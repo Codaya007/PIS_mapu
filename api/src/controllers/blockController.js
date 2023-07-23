@@ -2,10 +2,10 @@ const blockServices = require("../services/blockService.js");
 
 module.exports = {
   getBlock: async (req, res) => {
-    const { number } = req.params;
-    const results = await blockServices.getBlockByNumber(number);
+    const { id } = req.params;
+    const result = await blockServices.getBlockById(id);
 
-    return res.json(results);
+    return res.json(result);
   },
 
   getAllBlocks: async (req, res) => {
@@ -24,20 +24,17 @@ module.exports = {
   },
 
   updateBlock: async (req, res, next) => {
-    const { number } = req.params;
+    const { id } = req.params;
 
-    const updateBlock = await blockServices.updateBlockByNumber(
-      number,
-      req.body
-    );
+    const updateBlock = await blockServices.updateBlockById(id, req.body);
 
     return res.json(updateBlock);
   },
 
   deleteBlock: async (req, res, next) => {
-    const { number } = req.params;
+    const { id } = req.params;
 
-    const deleteBlock = await blockServices.deleteBlockByNumber(number);
+    const deleteBlock = await blockServices.deleteBlockById(id);
 
     return res.json(deleteBlock);
   },

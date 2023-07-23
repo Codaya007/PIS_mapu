@@ -12,7 +12,6 @@ export const loginUser = (email, password) => async (dispatch) => {
 
   await AsyncStorage.setItem("user", JSON.stringify(data?.user));
   await AsyncStorage.setItem("token", JSON.stringify(data?.token));
-
   dispatch(login(data));
 };
 

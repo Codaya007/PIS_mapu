@@ -1,80 +1,79 @@
 const Joi = require("joi");
-const Type = require("../models/Type");
-const constants = require("../constants");
-const mongoose = require("mongoose");
-const ObjectId = mongoose.Types.ObjectId;
+const Campus = require("../models/Campus");
+const { MIN_LAT, MAX_LAT, MIN_LON, MAX_LON } = require("../constants");
 
-const validateType = async (value, helpers) => {
-  const { type } = value;
-  let result;
-  if (type) {
-    result = await Type.findOne({ name: type });
-  }
+const validateCampus = async (value, helpers) => {
+  const { campus } = value;
 
-  if (!result) {
-    return helpers.error("any.invalid", {
-      message: "El tipo de nodo no existe",
-    });
-  }
+  if (campus) {
+    const result = await Campus.findOne({ _id: campus });
 
-  if (type != constants.ROUTE_NODO_TYPE) {
-    return helpers.error("any.invalid", {
-      message: "El tipo de nodo debe ser ROUTE",
-    });
+    if (!result) {
+      return helpers.error("any.invalid", {
+        message: "El campus no existe",
+      });
+    }
   }
 
   return value;
 };
 
-// Definir el esquema de validación para la creación de un Nodo de ruta
-const createRouteNodeSchema = Joi.object({
-  latitude: Joi.number().required().min(-200).max(200).messages({
-    "*": "El campo 'latitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
-  }),
-  longitude: Joi.number().required().min(-200).max(200).messages({
-    "*": "El campo 'longitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
-  }),
-  type: Joi.string().required().messages({
-    "*": "El campo 'type' es requerido",
-  }),
-  sector: Joi.string()
-    .custom((value, helpers) => {
-      if (!ObjectId.isValid(value)) {
-        return helpers.error("any.invalid");
-      }
-      return value;
-    })
-    .optional() //TODO: CAMBIAR A REQUIERED CUANDO SE ARREGLE LO DE SECTOR
+// Definir el esquema de validación para la creación de un Nodo de interes
+const createNodeSchema = Joi.object({
+  latitude: Joi.number()
+    .required()
+    .min(MIN_LAT)
+    .max(MAX_LAT)
     .messages({
-      "*": "El campo 'sector' es requerido y debe ser un ID válido",
+      "*": `El campo 'latitude' es requerido y debe ser una latitud geográfica válida (De ${MIN_LAT} y ${MAX_LAT})`,
     }),
-}).external(validateType);
+  longitude: Joi.number()
+    .required()
+    .min(MIN_LON)
+    .max(MAX_LON)
+    .messages({
+      "*": `El campo 'latitude' es requerido y debe ser una longitud geográfica válida (De ${MIN_LON} y ${MAX_LON})`,
+    }),
+  available: Joi.boolean().required().messages({
+    "*": "El campo 'available' es requerido",
+  }),
 
-// Definir el esquema de validación para la actualización de un Nodo de ruta
-const updateRouteNodeSchema = Joi.object({
+  campus: Joi.string().required().messages({
+    "*": "El campo 'campus' es requerido y debe ser un id válido o null",
+  }),
+  adyacency: Joi.array().optional().items(Joi.string()),
+}).external(validateCampus);
+
+// Definir el esquema de validación para la actualización de un Nodo de interés
+const updateNodeSchema = Joi.object({
   id: Joi.string().strip().messages({
-    "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
+    "*": "El campo 'id' presente en la ruta de la petición",
   }),
-  latitude: Joi.number().optional().min(-200).max(200).messages({
-    "*": "El campo 'latitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
-  }),
-  longitude: Joi.number().optional().min(-200).max(200).messages({
-    "*": "El campo 'longitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
-  }),
-  sector: Joi.string()
-    .custom((value, helpers) => {
-      if (!ObjectId.isValid(value)) {
-        return helpers.error("any.invalid");
-      }
-      return value;
-    })
+  latitude: Joi.number()
     .optional()
+    .min(MIN_LAT)
+    .max(MAX_LAT)
     .messages({
-      "*": "El campo 'sector' es requerido y debe ser un ID válido",
+      "*": `El campo 'latitude' es requerido y debe ser una latitud geográfica válida (De ${MIN_LAT} y ${MAX_LAT})`,
     }),
-});
+  longitude: Joi.number()
+    .optional()
+    .min(MIN_LON)
+    .max(MAX_LON)
+    .messages({
+      "*": `El campo 'latitude' es requerido y debe ser una longitud geográfica válida (De ${MIN_LON} y ${MAX_LON})`,
+    }),
+  available: Joi.boolean().optional().messages({
+    "*": "El campo 'available' es requerido",
+  }),
+  campus: Joi.string().optional().messages({
+    "*": "El campo 'campus' debe ser un id válido",
+  }),
+  adyacency: Joi.array().optional().items(Joi.string()),
+}).external(validateCampus);
 
 module.exports = {
-  createRouteNodeSchema,
-  updateRouteNodeSchema,
+  createNodeSchema,
+  updateNodeSchema,
+  validateCampus,
 };

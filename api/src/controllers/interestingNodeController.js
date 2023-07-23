@@ -1,11 +1,10 @@
 const interestingnodeService = require("../services/interestingNodeService.js");
-const nodeService = require("../services/nodeService.js");
 
 module.exports = {
   getInterestingNode: async (req, res) => {
     const { id } = req.params;
 
-    const results = await nodeService.getNodeById(id);
+    const results = await interestingnodeService.getInterestingNodeById(id);
 
     return res.json(results);
   },

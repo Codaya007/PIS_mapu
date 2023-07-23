@@ -23,7 +23,39 @@ const subNodeSchema = new Schema({
     required: false,
     minLength: 1,
   },
-  nomenclature: nomenclatureSchema,
+  detail: {
+    type: Schema.Types.ObjectId,
+    ref: "Detail",
+    required: true,
+  },
+  img: {
+    type: String,
+    required: false,
+    default: null,
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+  },
+  nomenclature: {
+    type: new Schema({
+      floor: {
+        type: Number,
+        required: false,
+        default: 1,
+      },
+      environment: {
+        type: Number,
+        required: false,
+        default: null,
+      },
+      subEnvironment: {
+        type: Number,
+        required: false,
+        default: null,
+      },
+    }),
+  },
 });
 
 const SubNode = mongoose.model("subnode", subNodeSchema);

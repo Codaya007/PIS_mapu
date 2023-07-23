@@ -1,41 +1,44 @@
-const nodeService = require("../services/nodeService");
-const { ROUTE_NODO_TYPE } = require("../constants/index");
+const routeNodeService = require("../services/routeNodeService");
 
 module.exports = {
   getRouteNodeById: async (req, res) => {
     const { id } = req.params;
-    const result = await nodeService.getAccesNodeById(id);
+    const result = await routeNodeService.getRouteNodeById(id);
 
-    res.json({ result });
+    res.json(result);
   },
 
   getAllRouteNode: async (req, res) => {
-    let { skip = 0, limit = 10, ...where } = req.query;
-    where = { type: ROUTE_NODO_TYPE };
+    let { skip, limit, ...where } = req.query;
 
-    const totalCount = await nodeService.getCountNodes(where);
-    const result = await nodeService.getNodes(where, skip, limit, type);
+    const totalCount = await routeNodeService.getCountRouteNodes(where);
+    const result = await routeNodeService.getRouteNodes(where, skip, limit);
 
     res.json({ totalCount, result });
   },
 
   createRouteNode: async (req, res) => {
-    req.body.type = ROUTE_NODO_TYPE;
+    const newRouteNode = await routeNodeService.createRouteNode(req.body);
 
-    const newRouteNode = await nodeService.createRouteNode(req.body);
-    return res.json({ newRouteNode });
+    return res.json(newRouteNode);
   },
 
   updateRouteNode: async (req, res) => {
     const { id } = req.params;
-    req.body.type = ROUTE_NODO_TYPE;
-    const updatedRouteNode = await nodeService.updateRouteNode(id, req.body);
-    res.json({ updatedRouteNode });
+
+    const updatedRouteNode = await routeNodeService.updateRouteNodeById(
+      id,
+      req.body
+    );
+
+    res.json(updatedRouteNode);
   },
 
   deleteRouteNode: async (req, res) => {
     const { id } = req.params;
-    const deletedRouteNode = await nodeService.deleteRouteNode(id);
-    res.json({ deletedRouteNode });
+
+    const deletedRouteNode = await routeNodeService.deleteRouteNodeById(id);
+
+    res.json(deletedRouteNode);
   },
 };

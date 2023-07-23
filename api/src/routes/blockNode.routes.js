@@ -1,47 +1,47 @@
 const { Router } = require("express");
-const accessNodeController = require("../controllers/accessNodeController");
+const blockNodeController = require("../controllers/blockNodeController");
 const middlewares = require("../middlewares");
 const {
   createNodeWithDetailSchema,
   updateNodeWithDetailSchema,
 } = require("../validationSchemas/NodeWithDetail");
 
-const accessNodeRouter = Router();
+const blockNodeRouter = Router();
 
 /**
  * @route POST /
  * @desc Crea un nuevo nodo de interes con la información pasada por body
  * @access Admin
  */
-accessNodeRouter.post(
-  "/",
-  middlewares.validateRequestBody(createNodeWithDetailSchema),
-  accessNodeController.createAccessNode
-);
+// blockNodeRouter.post(
+//   "/",
+//   middlewares.validateRequestBody(createNodeWithDetailSchema),
+//   blockNodeController.createBlockNode
+// );
 
 /**
  * @route GET /
  * @desc Obtener todos los nodos
  * @access Public
  */
-accessNodeRouter.get("/", accessNodeController.getAllAccessNode);
+blockNodeRouter.get("/", blockNodeController.getAllBlockNodes);
 
 /**
  * @route GET /:id
  * @desc Obtener el nodo por id
  * @access Public
  */
-accessNodeRouter.get("/:id", accessNodeController.getAccessNodeById);
+blockNodeRouter.get("/:id", blockNodeController.getBlockNode);
 
 /**
  * @route PUT /
  * @desc Actualizar un nodo con la información pasada por body
  * @access Admin
  */
-accessNodeRouter.put(
+blockNodeRouter.put(
   "/:id",
   middlewares.validateRequestBody(updateNodeWithDetailSchema),
-  accessNodeController.updateAccessNode
+  blockNodeController.updateBlockNode
 );
 
 /**
@@ -49,6 +49,6 @@ accessNodeRouter.put(
  * @desc Eliminar un nodo por id
  * @access Admin
  */
-accessNodeRouter.delete("/:id", accessNodeController.deleteAccessNode);
+// blockNodeRouter.delete("/:id", blockNodeController.deleteBlockNode);
 
-module.exports = accessNodeRouter;
+module.exports = blockNodeRouter;

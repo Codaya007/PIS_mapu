@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { nomenclatureSchema } = require("./Nomenclature");
+// const { nomenclatureSchema } = require("./Nomenclature");
 const Schema = mongoose.Schema;
 
 const detailSchema = new Schema({
@@ -17,8 +17,10 @@ const detailSchema = new Schema({
   img: {
     type: String,
     required: false,
+    default: null,
   },
-  nomenclature: nomenclatureSchema,
+  // subnodes: [{ type: Schema.Types.ObjectId, ref: "SubNode" }],
+  // nomenclature: { type: nomenclatureSchema },
 });
 
 const Detail = mongoose.model("Detail", detailSchema);

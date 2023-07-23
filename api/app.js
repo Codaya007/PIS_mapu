@@ -34,16 +34,17 @@ app.use("/type", require("./src/routes/type.routes.js"));
 app.use("/category", require("./src/routes/category.routes.js"));
 app.use("/event", require("./src/routes/event.routes.js"));
 app.use("/image", require("./src/routes/images.routes.js"));
-app.use("/subnode", require("./src/routes/subNode.routes.js"));
 app.use("/report", require("./src/routes/report.routes.js"));
 app.use("/career", require("./src/routes/career.routes.js"));
 app.use("/comment", require("./src/routes/comment.routes.js"));
-app.use("/sector", require("./src/routes/sector.routes.js"));
+// app.use("/sector", require("./src/routes/sector.routes.js"));
 app.use("/suscription", require("./src/routes/suscription.routes.js"));
+app.use("/subnode", require("./src/routes/subNode.routes.js"));
 // Todos los tipos de rutas implementados
 app.use("/interesting-node", require("./src/routes/interestingNode.routes.js"));
 app.use("/access-node", require("./src/routes/accessNode.routes.js"));
 app.use("/route-node", require("./src/routes/routeNode.routes.js"));
+app.use("/block-node", require("./src/routes/blockNode.routes.js"));
 
 // errorhandlers
 app.use("*", errorNotFound);

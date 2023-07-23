@@ -1,20 +1,18 @@
 const Joi = require("joi");
-// const mongoose = require("mongoose");
-// const ObjectId = mongoose.Types.ObjectId;
-const Campus = require("../models/Campus");
+const Block = require("../models/Block");
 const Category = require("../models/Category");
+const { MIN_LAT, MAX_LAT, MIN_LON, MAX_LON } = require("../constants");
+const { validateCampus } = require("./RouteNode");
 
-const validateCampus = async (value, helpers) => {
-  const { campus } = value;
+const validateBlock = async (value, helpers) => {
+  const { block } = value;
 
-  if (campus) {
-    const result = await Campus.findOne({ _id: campus });
-
-    console.log({ campus, result });
+  if (block) {
+    const result = await Block.findOne({ _id: block });
 
     if (!result) {
       return helpers.error("any.invalid", {
-        message: "El campus no existe",
+        message: "El bloque no existe",
       });
     }
   }
@@ -39,69 +37,78 @@ const validateCategory = async (value, helpers) => {
 };
 
 // Definir el esquema de validación para la creación de un Nodo de interes
-const createInterstingNodeSchema = Joi.object({
-  latitude: Joi.number().required().min(-200).max(200).messages({
-    "*": "El campo 'latitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
-  }),
-  longitude: Joi.number().required().min(-200).max(200).messages({
-    "*": "El campo 'longitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
-  }),
-  available: Joi.boolean().required().messages({
+const createNodeSchema = Joi.object({
+  latitude: Joi.number()
+    .required()
+    .min(MIN_LAT)
+    .max(MAX_LAT)
+    .messages({
+      "*": `El campo 'latitude' es requerido y debe ser una latitud geográfica válida (De ${MIN_LAT} y ${MAX_LAT})`,
+    }),
+  longitude: Joi.number()
+    .required()
+    .min(MIN_LON)
+    .max(MAX_LON)
+    .messages({
+      "*": `El campo 'longitude' es requerido y debe ser una longitud geográfica válida (De ${MIN_LON} y ${MAX_LON})`,
+    }),
+  available: Joi.boolean().optional().default(true).messages({
     "*": "El campo 'available' es requerido",
   }),
-  category: Joi.string().optional().messages({
-    "*": "El campo 'category' es requerido",
+  category: Joi.string().allow(null).optional().messages({
+    "*": "El campo 'category' debe ser un id válido",
   }),
   campus: Joi.string().required().messages({
-    "*": "El campo 'campus' es requerido",
+    "*": "El campo 'campus' es requerido y debe ser un id válido",
   }),
-  adyacency: Joi.array()
-    .optional()
-    .items(
-      Joi.object({
-        latitude: Joi.number().min(-200).max(200).required(),
-        longitude: Joi.number().min(-200).max(200).required(),
-        // weight: Joi.number().optional().min(1).max(400),
-      })
-    ),
+  // block: Joi.string().optional().allow(null).messages({
+  //   "*": "El campo 'block' debe ser un id válido",
+  // }),
+  adyacency: Joi.array().optional().items(Joi.string()),
 })
   .external(validateCampus)
   .external(validateCategory);
 
 // Definir el esquema de validación para la actualización de un Nodo de interés
-const updateInterstingNodeSchema = Joi.object({
+const updateNodeSchema = Joi.object({
   id: Joi.string().strip().messages({
-    "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
+    "*": "El campo 'id' presente en la ruta de la petición",
   }),
-  latitude: Joi.number().optional().min(-200).max(200).messages({
-    "*": "El campo 'latitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
-  }),
-  longitude: Joi.number().optional().min(-200).max(200).messages({
-    "*": "El campo 'longitude' es requerido y debe ser de tipo number con un valor entre -200 y 200",
-  }),
+  latitude: Joi.number()
+    .optional()
+    .min(MIN_LAT)
+    .max(MAX_LAT)
+    .messages({
+      "*": `El campo 'latitude' es requerido y debe ser una latitud geográfica válida (De ${MIN_LAT} y ${MAX_LAT})`,
+    }),
+  longitude: Joi.number()
+    .optional()
+    .min(MIN_LON)
+    .max(MAX_LON)
+    .messages({
+      "*": `El campo 'longitude' es requerido y debe ser una longitud geográfica válida (De ${MIN_LON} y ${MAX_LON})`,
+    }),
   available: Joi.boolean().optional().messages({
     "*": "El campo 'available' es requerido",
   }),
   campus: Joi.string().optional().messages({
-    "*": "El campo 'campus' es requerido",
+    "*": "El campo 'campus' debe ser un id válido",
   }),
-  category: Joi.string().optional().messages({
-    "*": "El campo 'category' es requerido",
+  // block: Joi.string().optional().allow(null).messages({
+  //   "*": "El campo 'block' debe ser un id válido",
+  // }),
+  category: Joi.string().allow(null).optional().messages({
+    "*": "El campo 'category' debe ser un id válido o null",
   }),
-  adyacency: Joi.array()
-    .optional()
-    .items(
-      Joi.object({
-        latitude: Joi.number().min(-200).max(200).required(),
-        longitude: Joi.number().min(-200).max(200).required(),
-        // weight: Joi.number().optional().min(1).max(400),
-      })
-    ),
+  adyacency: Joi.array().optional().items(Joi.string()),
 })
   .external(validateCategory)
+  .external(validateBlock)
   .external(validateCampus);
 
 module.exports = {
-  createInterstingNodeSchema,
-  updateInterstingNodeSchema,
+  createNodeSchema,
+  updateNodeSchema,
+  validateCategory,
+  validateCampus,
 };

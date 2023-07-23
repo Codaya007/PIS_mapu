@@ -10,3 +10,4 @@ export const RegisterName = "Registrarse";
 export const ForgotPasswordName = "Olvidé mi contraseña";
 export const AboutName = "Acerca de";
 export const ReportLostPointName = "Reportar punto perdido";
+export const CommentName = "Comentar ";
