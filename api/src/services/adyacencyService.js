@@ -1,6 +1,8 @@
 const nodeService = require("./nodeService");
 const helpers = require("../helpers/index");
 const Adyacency = require("../models/Adyacency");
+const validateAdyacenciesExcelFile = require("../helpers/validateAdyacenciesFile");
+const { uploadImageToS3 } = require("../helpers/s3Helpers");
 
 const createAdyacencies = async (nodes) => {
   const results = [];
@@ -98,6 +100,31 @@ const deleteAdyacencies = async (adyacencies) => {
   return deleted;
 };
 
+const masiveUpload = async (file) => {
+  const { valid, errorsFile, rows } = await validateAdyacenciesExcelFile(file);
+
+  // Si el archivo es válido, creo los bloques
+  if (valid) {
+    const results = await Promise.all(
+      rows.map(async (row) => {
+        return await createAdyacency(row.ORIGEN, row.DESTINO);
+      })
+    );
+
+    return { valid, results };
+  } else {
+    // Sino devuelvo el error
+    const { Location: errorsURL } = await uploadImageToS3(
+      errorsFile,
+      "xlsx",
+      "validations",
+      true
+    );
+
+    return { valid, errorsURL };
+  }
+};
+
 module.exports = {
   createAdyacencies,
   createAdyacency,
@@ -106,4 +133,5 @@ module.exports = {
   getNodeAdyacenciesCount,
   getAllAdyacenciesCount,
   deleteAdyacencies,
+  masiveUpload,
 };

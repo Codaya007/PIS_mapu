@@ -6,6 +6,7 @@ const {
   deleteAdyacenciesSchema,
 } = require("../validationSchemas/Adyacency");
 const isAdmin = require("../policies/isAdmin");
+const { upload } = require("../configs/multerConfig");
 
 const adyacencyRouter = Router();
 
@@ -19,6 +20,17 @@ adyacencyRouter.post(
   isAdmin,
   middlewares.validateRequestBody(createAdyacencySchema),
   adyacencyController.createAdyacency
+);
+
+/**
+ * @route POST /upload
+ * @access Admin
+ */
+adyacencyRouter.post(
+  "/upload",
+  isAdmin,
+  upload.single("file"),
+  adyacencyController.masiveUpload
 );
 
 /**

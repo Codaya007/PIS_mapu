@@ -61,4 +61,14 @@ module.exports = {
 
     res.json(deletedAdyacencies);
   },
+
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await adyacencyService.masiveUpload(
+      req.file
+    );
+
+    if (valid) return res.json({ success: true, results });
+
+    return res.json({ success: false, results: errorsURL });
+  },
 };

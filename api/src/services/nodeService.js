@@ -147,8 +147,10 @@ const updateNodeWithDetailById = async (_id, nodeData) => {
   const { detail, ...newData } = nodeData;
   node = await Node.findByIdAndUpdate(_id, newData);
 
-  const { _id: detailId, ...newDetail } = detail;
-  node.detail = await detailService.updateDetailById(detailId, newDetail);
+  if (detail) {
+    const { _id: detailId, ...newDetail } = detail;
+    node.detail = await detailService.updateDetailById(detailId, newDetail);
+  }
 
   return node;
 };
