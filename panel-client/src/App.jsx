@@ -17,6 +17,7 @@ import { login } from "./store/slices/authSlice";
 import CapusesForm from "./screens/CampusForm";
 import ProfileEdit from "./screens/ProfileEdit";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
+import Categories from "./screens/Categories";
 
 function App() {
   const location = useLocation();
@@ -51,12 +52,18 @@ function App() {
             <Route path="/faculty" element={<Faculties />} />
             <Route path="/create-faculty" element={<FacultyForm />} />
             <Route path="/edit-faculty/:id" element={<FacultyForm />} />
-            <Route path="/campus" element={< Campuses />} />
-            <Route path="/edit-campus/:id" element={<CapusesForm />}/>
-            <Route path="/create-campus" element={< CapusesForm/>} />
+            <Route path="/campus" element={<Campuses />} />
+            <Route path="/edit-campus/:id" element={<CapusesForm />} />
+            <Route path="/create-campus" element={<CapusesForm />} />
+            <Route path="/category" element={<Categories />} />
+            <Route path="/edit-category/:id" element={<Categories />} />
+            <Route path="/create-category" element={<Categories />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/edit-profile/:id" element={<ProfileEdit />} />
-            <Route path="/edit-pasword-profile/:id" element={<ProfileChangePassword />} />
+            <Route
+              path="/edit-pasword-profile/:id"
+              element={<ProfileChangePassword />}
+            />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </Box>

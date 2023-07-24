@@ -19,17 +19,27 @@ function FacultyTable({ blocks, handleEdit, handleDelete }) {
     <Table p={3} variant="simple">
       <Thead>
         <Tr>
-          <Th>Número</Th>
+          <Th>Número de bloque</Th>
           <Th>Disponible</Th>
+          <Th>Campus</Th>
           <Th>Facultad</Th>
+          <Th>Coordenadas</Th>
+          <Th>Descripción</Th>
+          <Th>Subnodos</Th>
         </Tr>
       </Thead>
       <Tbody>
         {blocks.map((block) => (
           <Tr key={block._id}>
             <Td>{block.number}</Td>
-            <Td>{block.avaible ? "Disponible" : "No disponible"}</Td>
-            <Td>{block.faculty}</Td>
+            <Td>{block.available ? "Disponible" : "No disponible"}</Td>
+            <Td>{block.campus?.name}</Td>
+            <Td>{block.faculty?.name}</Td>
+            <Td>
+              {block.node?.latitude}, {block.node.longitude}
+            </Td>
+            <Td>{block.node?.detail?.description || "-"}</Td>
+            <Td>{block.node?.detail?.subnodes?.length}</Td>
             <Td>
               <Menu>
                 <MenuButton
