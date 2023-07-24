@@ -5,6 +5,7 @@ import Register from "./screens/Register";
 import About from "./screens/About";
 import Events from "./screens/Events";
 import Favorites from "./screens/Favorites";
+import Filter from "./screens/Filter";
 import ForgotPasswordForm from "./screens/ForgotPasswordForm";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
@@ -16,6 +17,7 @@ import {
   HomeName,
   LoginName,
   RegisterName,
+  FilterName
 } from "./constants";
 
 const Drawer = createDrawerNavigator();
@@ -45,6 +47,10 @@ const Main = () => {
           <Drawer.Screen name={AboutName} component={About} />
           <Drawer.Screen name={EventsName} component={Events} />
           <Drawer.Screen name={FavoritesName} component={Favorites} />
+          <Drawer.Screen name={FilterName} component={Filter} options={{
+            drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+            drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+          }} />
           <Drawer.Screen
             name={ForgotPasswordName}
             component={ForgotPasswordForm}
