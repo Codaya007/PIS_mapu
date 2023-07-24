@@ -2,6 +2,24 @@ const NotExist = require("../errors/NotExist");
 const typeService = require("./typeService");
 const nodeService = require("./nodeService");
 const { ACCESS_NODO_TYPE } = require("../constants/index");
+const validateAccessNodesExcelFile = require("../helpers/validateAccessFile");
+const { uploadImageToS3 } = require("../helpers/s3Helpers");
+
+const mapAccessNode = (row) => {
+  const result = {};
+
+  result.latitude = row.LATITUD;
+  result.longitude = row.LONGITUD;
+  result.campus = row.CAMPUS;
+  result.detail = {
+    title: row.TITULO,
+    description: null,
+    img: row.IMAGEN || null,
+    category: row.CATEGORIA,
+  };
+
+  return result;
+};
 
 const getAccessNodeTypeId = async () => {
   const accessType = await typeService.getOneType({
@@ -64,6 +82,31 @@ const deleteAccessNodeById = async (id) => {
   return deletedNode;
 };
 
+const masiveUpload = async (file) => {
+  const { valid, errorsFile, rows } = await validateAccessNodesExcelFile(file);
+
+  // Si el archivo es válido, creo los bloques
+  if (valid) {
+    const results = await Promise.all(
+      rows.map(async (row) => {
+        return await createAccessNode(mapAccessNode(row));
+      })
+    );
+
+    return { valid, results };
+  } else {
+    // Sino devuelvo el error
+    const { Location: errorsURL } = await uploadImageToS3(
+      errorsFile,
+      "xlsx",
+      "validations",
+      true
+    );
+
+    return { valid, errorsURL };
+  }
+};
+
 module.exports = {
   createAccessNode,
   getAccessNodes,
@@ -71,4 +114,5 @@ module.exports = {
   getAccessNodeById,
   updateAccessNodeById,
   deleteAccessNodeById,
+  masiveUpload,
 };

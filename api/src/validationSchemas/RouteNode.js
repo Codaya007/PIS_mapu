@@ -2,13 +2,19 @@ const Joi = require("joi");
 const Campus = require("../models/Campus");
 const { MIN_LAT, MAX_LAT, MIN_LON, MAX_LON } = require("../constants");
 
+const campusIsValid = async (campus) => {
+  const result = await Campus.findOne({ _id: campus });
+
+  return !!result;
+};
+
 const validateCampus = async (value, helpers) => {
   const { campus } = value;
 
   if (campus) {
-    const result = await Campus.findOne({ _id: campus });
+    const isValid = await campusIsValid(campus);
 
-    if (!result) {
+    if (!isValid) {
       return helpers.error("any.invalid", {
         message: "El campus no existe",
       });
@@ -76,4 +82,5 @@ module.exports = {
   createNodeSchema,
   updateNodeSchema,
   validateCampus,
+  campusIsValid,
 };

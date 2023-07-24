@@ -8,6 +8,16 @@ const {
   timeBetweenCoordinates,
   getDistanceBetweenCoordinates,
 } = require("../helpers/index");
+const SubNode = require("../models/SubNode");
+
+const populateDetail = async (node) => {
+  const formated = node.toJSON();
+
+  if (node.detail)
+    formated.detail = await detailService.getDetailById(node.detail);
+
+  return formated;
+};
 
 const nodeAlreadyExists = async (latitude, longitude) => {
   const sameCoor = await Node.find({
@@ -48,7 +58,7 @@ const createNode = async (nodeData = {}) => {
       );
 
       const adyacency = await Adyacency.create({
-        origen: node.id,
+        origin: node.id,
         destination: nodeAdyacency.id,
         weight,
       });
@@ -74,25 +84,35 @@ const createNodeWithDetail = async (newNode) => {
   return createdNode;
 };
 
-const getNodes = async (where = {}, skip, limit) => {
-  const nodes =
-    skip || limit
+const getNodes = async (where = {}, skip, limit, populate = true) => {
+  let nodes = [];
+
+  if (skip || limit)
+    nodes = populate
       ? await Node.find(where)
           .skip(skip ?? 0)
           .limit(limit ?? 10)
           .populate("type")
           .populate("campus")
           .populate("category")
-          .populate("block")
-          .populate("detail")
           .sort({ createdAt: -1 })
       : await Node.find(where)
+          .skip(skip ?? 0)
+          .limit(limit ?? 10)
+          .sort({ createdAt: -1 });
+  else {
+    nodes = populate
+      ? await Node.find(where)
           .populate("type")
           .populate("campus")
           .populate("category")
-          .populate("block")
-          .populate("detail")
-          .sort({ createdAt: -1 });
+          // .populate("block")
+          // .populate("detail")
+          .sort({ createdAt: -1 })
+      : await Node.find(where).sort({ createdAt: -1 });
+  }
+
+  if (populate) nodes = await Promise.all(nodes.map(populateDetail));
 
   return nodes;
 };
@@ -107,14 +127,16 @@ const getNodeById = async (_id) => {
   if (!isValidObjectId(_id))
     throw new ValidationError("El id debe ser un ObjectId");
 
-  const node = await Node.findOne({ _id })
+  let node = await Node.findOne({ _id })
     .populate("type")
     .populate("campus")
-    .populate("category")
-    .populate("block")
-    .populate("detail");
+    .populate("category");
+  // .populate("block")
+  // .populate("detail");
 
   if (!node) throw new NotExist("Nodo no encontrado");
+
+  node = await populateDetail(node);
 
   return node;
 };
@@ -133,15 +155,23 @@ const updateNodeWithDetailById = async (_id, nodeData) => {
   const { detail, ...newData } = nodeData;
   node = await Node.findByIdAndUpdate(_id, newData);
 
-  const { _id: detailId, ...newDetail } = detail;
-  node.detail = await detailService.updateDetailById(detailId, newDetail);
+  if (detail) {
+    const { _id: detailId, ...newDetail } = detail;
+    node.detail = await detailService.updateDetailById(detailId, newDetail);
+  }
 
   return node;
 };
 
 const deleteNodeById = async (_id) => {
-  if (!isValidObjectId(_id))
-    throw new ValidationError("El id debe ser un ObjectId");
+  const toDelete = await getNodeById(_id);
+  const detail = toDelete.detail?._id;
+
+  // Elimino los detalles y subnodos que tiene una relación fuerte
+  if (detail) {
+    await detailService.deleteDetailById(detail);
+    await SubNode.deleteMany({ detail });
+  }
 
   const deletedNode = await Node.findByIdAndRemove(_id);
 

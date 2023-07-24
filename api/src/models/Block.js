@@ -6,6 +6,7 @@ const blockSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    min: 1,
   },
   available: {
     type: Boolean,
@@ -16,6 +17,17 @@ const blockSchema = new Schema({
     type: Schema.Types.ObjectId, // Tipo ObjectId para referencia
     ref: "Faculty", // Nombre del modelo referenciado
     required: true,
+  },
+  campus: {
+    type: Schema.Types.ObjectId,
+    ref: "Campus",
+    required: true,
+  },
+  node: {
+    type: Schema.Types.ObjectId,
+    ref: "Node",
+    required: true,
+    unique: true,
   },
 });
 

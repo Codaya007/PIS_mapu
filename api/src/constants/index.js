@@ -27,14 +27,17 @@ const SUBNODE = "SUBNODE";
 
 const LOSTPOINT = "LOSTPOINT";
 
+const OBJECT_ID_REGEX = /^[0-9a-fA-F]{24}$/;
+
+//! Tipos de nodo
+// Ya no se usan
+const ENTRANCE_NODO_TYPE = "ENTRANCE";
 const VIA_NODO_TYPE = "VIA";
+// Se usan
 const ROUTE_NODO_TYPE = "ROUTE";
 const INTEREST_NODO_TYPE = "INTEREST";
-const ENTRANCE_NODO_TYPE = "ENTRANCE";
 const ACCESS_NODO_TYPE = "ACCESS";
-
-const CLASSROOM_CATEGORY = "CLASSROOM";
-const BATHROOM_CATEGORY = "BATHROOM";
+const BLOCK_NODO_TYPE = "BLOCK";
 
 module.exports = {
   EARTH_RADIUS_M,
@@ -43,9 +46,8 @@ module.exports = {
   NODE,
   SUBNODE,
   LOSTPOINT,
-  BATHROOM_CATEGORY,
-  CLASSROOM_CATEGORY,
   ACCESS_NODO_TYPE,
+  BLOCK_NODO_TYPE,
   ENTRANCE_NODO_TYPE,
   INTEREST_NODO_TYPE,
   ROUTE_NODO_TYPE,
@@ -55,4 +57,5 @@ module.exports = {
   MAX_LAT,
   MIN_LON,
   MAX_LON,
+  OBJECT_ID_REGEX,
 };

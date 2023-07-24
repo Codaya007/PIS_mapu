@@ -1,7 +1,12 @@
 const { Router } = require("express");
 const blockController = require("../controllers/blockController");
 const middlewares = require("../middlewares");
-const { createBlockSchema, updateBlockSchema } = require("../validationSchemas/Block");
+const {
+  createBlockSchema,
+  updateBlockSchema,
+} = require("../validationSchemas/Block");
+const isAdmin = require("../policies/isAdmin");
+const { upload } = require("../configs/multerConfig");
 
 const blockRouter = Router();
 
@@ -11,9 +16,21 @@ const blockRouter = Router();
  * @access Admin
  */
 blockRouter.post(
-    "/",
-    middlewares.validateRequestBody(createBlockSchema),
-    blockController.createBlock
+  "/",
+  isAdmin,
+  middlewares.validateRequestBody(createBlockSchema),
+  blockController.createBlock
+);
+
+/**
+ * @route POST /upload
+ * @access Admin
+ */
+blockRouter.post(
+  "/upload",
+  isAdmin,
+  upload.single("file"),
+  blockController.masiveUpload
 );
 
 /**
@@ -28,17 +45,18 @@ blockRouter.get("/", blockController.getAllBlocks);
  * @desc Obtener el bloque por el numero
  * @access Public
  */
-blockRouter.get("/:number", blockController.getBlock);
+blockRouter.get("/:id", blockController.getBlock);
 
 /**
  * @route PUT /
  * @desc Actualizar un bloque con la información pasada por body
  * @access Admin
  */
-blockRouter.put( 
-    "/:number",
-    middlewares.validateRequestBody(updateBlockSchema),
-    blockController.updateBlock
+blockRouter.put(
+  "/:id",
+  isAdmin,
+  middlewares.validateRequestBody(updateBlockSchema),
+  blockController.updateBlock
 );
 
 /**
@@ -46,9 +64,6 @@ blockRouter.put(
  * @desc Eliminar un bloque mediante su numero de bloque
  * @access Admin
  */
-blockRouter.delete( 
-    "/:number",
-    blockController.deleteBlock
-);
+blockRouter.delete("/:id", isAdmin, blockController.deleteBlock);
 
 module.exports = blockRouter;

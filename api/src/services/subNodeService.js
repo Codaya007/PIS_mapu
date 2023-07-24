@@ -6,7 +6,9 @@ const getSubNodeById = async (_id) => {
   if (!isValidObjectId(_id)) {
     throw new ValidationError("El id debe ser un ObjectId");
   }
-  const subNode = await SubNode.findOne({ _id });
+
+  const subNode = await SubNode.findOne({ _id }).populate("category");
+
   if (!subNode) {
     throw new ValidationError("SubNode no encontrado");
   }
@@ -15,7 +17,10 @@ const getSubNodeById = async (_id) => {
 };
 
 const getAllSubNodes = async (where = {}, skip, limit) => {
-  const allSubNodes = await SubNode.find(where).skip(skip).limit(limit);
+  const allSubNodes =
+    skip || limit
+      ? await SubNode.find(where).skip(skip).limit(limit).populate("category")
+      : await SubNode.find(where).populate("category");
 
   return allSubNodes;
 };
@@ -26,6 +31,7 @@ const getCountSubNodes = async (where = {}) => {
 
 const createSubNode = async (subNode) => {
   const subNodeCreated = await SubNode.create(subNode);
+
   return subNodeCreated;
 };
 

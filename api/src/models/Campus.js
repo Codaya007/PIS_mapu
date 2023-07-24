@@ -2,10 +2,17 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const campusSchema = new Schema({
+  symbol: {
+    type: String,
+    required: true,
+    maxlength: 2,
+    unique: true,
+  },
   name: {
     type: String,
     required: true,
     maxlength: 20,
+    unique: true,
   },
   description: {
     type: String,

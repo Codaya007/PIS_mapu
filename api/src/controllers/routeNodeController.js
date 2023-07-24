@@ -34,6 +34,18 @@ module.exports = {
     res.json(updatedRouteNode);
   },
 
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await routeNodeService.masiveUpload(
+      req.file
+    );
+
+    if (valid) return res.json({ success: true, results });
+
+    // res.set("Content-Disposition", 'attachment; filename="Errores.xlsx"');
+    // res.send(buffer);
+    return res.json({ success: false, results: errorsURL });
+  },
+
   deleteRouteNode: async (req, res) => {
     const { id } = req.params;
 

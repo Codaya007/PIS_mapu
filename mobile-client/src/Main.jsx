@@ -11,6 +11,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   AboutName,
+  CommentName,
   EventsName,
   FavoritesName,
   ForgotPasswordName,
@@ -18,7 +19,10 @@ import {
   LoginName,
   RegisterName,
   FilterName
+  ReportLostPointName,
 } from "./constants";
+import ReportLostPoint from "./screens/ReportLostPoint";
+import Comment from "./screens/Comment";
 
 const Drawer = createDrawerNavigator();
 
@@ -55,6 +59,8 @@ const Main = () => {
             name={ForgotPasswordName}
             component={ForgotPasswordForm}
           />
+          <Drawer.Screen name={ReportLostPointName} component={ReportLostPoint} />
+          <Drawer.Screen name={CommentName} component={Comment} />
         </Drawer.Navigator>
       </NavigationContainer>
     </>

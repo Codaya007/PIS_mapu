@@ -2,10 +2,10 @@ const blockServices = require("../services/blockService.js");
 
 module.exports = {
   getBlock: async (req, res) => {
-    const { number } = req.params;
-    const results = await blockServices.getBlockByNumber(number);
+    const { id } = req.params;
+    const result = await blockServices.getBlockById(id);
 
-    return res.json(results);
+    return res.json(result);
   },
 
   getAllBlocks: async (req, res) => {
@@ -24,20 +24,29 @@ module.exports = {
   },
 
   updateBlock: async (req, res, next) => {
-    const { number } = req.params;
+    const { id } = req.params;
 
-    const updateBlock = await blockServices.updateBlockByNumber(
-      number,
-      req.body
-    );
+    const updateBlock = await blockServices.updateBlockById(id, req.body);
 
     return res.json(updateBlock);
   },
 
-  deleteBlock: async (req, res, next) => {
-    const { number } = req.params;
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await blockServices.masiveUpload(
+      req.file
+    );
 
-    const deleteBlock = await blockServices.deleteBlockByNumber(number);
+    if (valid) return res.json({ success: true, results });
+
+    // res.set("Content-Disposition", 'attachment; filename="Errores.xlsx"');
+    // res.send(buffer);
+    return res.json({ success: false, results: errorsURL });
+  },
+
+  deleteBlock: async (req, res, next) => {
+    const { id } = req.params;
+
+    const deleteBlock = await blockServices.deleteBlockById(id);
 
     return res.json(deleteBlock);
   },
