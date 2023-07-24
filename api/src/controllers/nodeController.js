@@ -9,10 +9,24 @@ module.exports = {
   },
 
   getAllNodes: async (req, res) => {
-    const { type, skip, limit, ...where } = req.query;
+    const {
+      // type,
+      skip,
+      limit,
+      populate,
+      ...where
+    } = req.query;
 
-    const totalCount = await nodeService.getCountNodes(where, type);
-    const results = await nodeService.getNodes(where, skip, limit, type);
+    const totalCount = await nodeService.getCountNodes(
+      where //type
+    );
+    const results = await nodeService.getNodes(
+      where,
+      skip,
+      limit,
+      // type,
+      populate === "true"
+    );
 
     return res.json({ totalCount, results });
   },

@@ -42,6 +42,7 @@ app.use("/comment", require("./src/routes/comment.routes.js"));
 app.use("/suscription", require("./src/routes/suscription.routes.js"));
 app.use("/subnode", require("./src/routes/subNode.routes.js"));
 // Todos los tipos de rutas implementados
+app.use("/node", require("./src/routes/node.routes.js"));
 app.use("/interesting-node", require("./src/routes/interestingNode.routes.js"));
 app.use("/access-node", require("./src/routes/accessNode.routes.js"));
 app.use("/route-node", require("./src/routes/routeNode.routes.js"));
