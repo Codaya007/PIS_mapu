@@ -70,6 +70,12 @@ const nodeSchema = new Schema({
   },
 });
 
+nodeSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    ret.coordinate = [ret.latitude, ret.longitude];
+  },
+});
+
 const Node = mongoose.model("Node", nodeSchema);
 
 module.exports = Node;

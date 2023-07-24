@@ -4,17 +4,14 @@ module.exports = {
   findNearestRoute: async (req, res) => {
     let { type, origin, destination, nomenclature } = req.body;
 
-    const {
-      additionalMessage,
-      shortestRoute: route,
-      additionalNode,
-    } = await routeService.findShortestRoute(
-      type,
-      origin,
-      destination,
-      nomenclature
-    );
+    const { additionalMessage, additionalNode, result } =
+      await routeService.findShortestRoute(
+        type,
+        origin,
+        destination,
+        nomenclature
+      );
 
-    res.json({ additionalMessage, route, additionalNode });
+    res.json({ additionalMessage, additionalNode, result });
   },
 };
