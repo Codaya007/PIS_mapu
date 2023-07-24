@@ -4,18 +4,11 @@ const generateExcel = require("./generateExcelFile");
 const { campusIsValid } = require("../validationSchemas/RouteNode");
 
 // Función para validar un archivo Excel y generar el archivo con errores
-async function validateAccessNodesExcelFile(file) {
+async function validateRouteNodesExcelFile(file) {
   try {
     const jsonData = readExcelFile(file);
 
-    const headers = [
-      "CAMPUS",
-      "LATITUD",
-      "LONGITUD",
-      "TITULO",
-      "DESCRIPCION",
-      "IMAGEN",
-    ];
+    const headers = ["CAMPUS", "LATITUD", "LONGITUD"];
     const errors = [];
     let isValid = true;
 
@@ -65,23 +58,6 @@ async function validateAccessNodesExcelFile(file) {
         );
       }
 
-      // Validar DESCRIPCION con máximo 200 caracteres (opcional)
-      if (row.DESCRIPCION && row.DESCRIPCION.length > 200) {
-        errorRow.ERRORES.push(
-          "El campo DESCRIPCION no debe tener más de 200 caracteres."
-        );
-      }
-
-      // Validar IMAGEN como URL (opcional)
-      if (row.IMAGEN && !/^https?:\/\/\S+$/.test(row.IMAGEN)) {
-        errorRow.ERRORES.push("El campo IMAGEN debe ser una URL válida.");
-      }
-
-      // Validar títuLO
-      if (!row.TITULO) {
-        errorRow.ERRORES.push("El campo TITULO es requerido.");
-      }
-
       if (errorRow.ERRORES.length > 0) {
         isValid = false;
         errorRow.ERRORES = `Se han encontrado algunos errores: ${errorRow.ERRORES.join(
@@ -114,4 +90,4 @@ async function validateAccessNodesExcelFile(file) {
   }
 }
 
-module.exports = validateAccessNodesExcelFile;
+module.exports = validateRouteNodesExcelFile;
