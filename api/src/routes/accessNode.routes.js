@@ -5,6 +5,8 @@ const {
   createNodeWithDetailSchema,
   updateNodeWithDetailSchema,
 } = require("../validationSchemas/NodeWithDetail");
+const isAdmin = require("../policies/isAdmin");
+const { upload } = require("../configs/multerConfig");
 
 const accessNodeRouter = Router();
 
@@ -15,8 +17,20 @@ const accessNodeRouter = Router();
  */
 accessNodeRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(createNodeWithDetailSchema),
   accessNodeController.createAccessNode
+);
+
+/**
+ * @route POST /upload
+ * @access Admin
+ */
+accessNodeRouter.post(
+  "/upload",
+  isAdmin,
+  upload.single("file"),
+  accessNodeController.masiveUpload
 );
 
 /**
@@ -40,6 +54,7 @@ accessNodeRouter.get("/:id", accessNodeController.getAccessNodeById);
  */
 accessNodeRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(updateNodeWithDetailSchema),
   accessNodeController.updateAccessNode
 );
@@ -49,6 +64,6 @@ accessNodeRouter.put(
  * @desc Eliminar un nodo por id
  * @access Admin
  */
-accessNodeRouter.delete("/:id", accessNodeController.deleteAccessNode);
+accessNodeRouter.delete("/:id", isAdmin, accessNodeController.deleteAccessNode);
 
 module.exports = accessNodeRouter;

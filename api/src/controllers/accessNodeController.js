@@ -33,6 +33,16 @@ module.exports = {
     res.json(updatedAccessNode);
   },
 
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await accessNodeService.masiveUpload(
+      req.file
+    );
+
+    if (valid) return res.json({ success: true, results });
+
+    return res.json({ success: false, results: errorsURL });
+  },
+
   deleteAccessNode: async (req, res) => {
     const { id } = req.params;
     const deletedAccessNode = await accessNodeService.deleteAccessNodeById(id);
