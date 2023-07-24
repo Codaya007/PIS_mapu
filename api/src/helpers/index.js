@@ -1,8 +1,12 @@
 const { EARTH_RADIUS_M } = require("../constants");
-const ValidationError = require("../errors/ValidationError");
 const { Types } = require("mongoose");
 const crypto = require("crypto");
 const qrcode = require("qrcode");
+
+// Función para convertir grados a radianes
+function degreesToRadians(degrees) {
+  return degrees * (Math.PI / 180);
+}
 
 /**
  * Calcula la distancia en metros entre dos coordenadas [latitud, longitud] usando la fórmula de Haversine
@@ -10,29 +14,31 @@ const qrcode = require("qrcode");
  * @param {[number, number]} coordinateB Coordenada de destino
  * @return {number} Distancia en metros
  */
+
+// Función para calcular la distancia entre dos coordenadas geográficas en metros
 const getDistanceBetweenCoordinates = (latA, lonA, latB, lonB) => {
-  const R = EARTH_RADIUS_M; // Radio de la Tierra en km
-  const dLat = degToRad(latB - latA); // Diferencia de latitud en radianes
-  const dLon = degToRad(lonB - lonA); // Diferencia de longitud en radianes
+  const earthRadius = 6371000; // Radio de la Tierra en metros
+
+  const latARad = degreesToRadians(latA);
+  const lonARad = degreesToRadians(lonA);
+  const latBRad = degreesToRadians(latB);
+  const lonBRad = degreesToRadians(lonB);
+
+  const dLat = latBRad - latARad;
+  const dLon = lonBRad - lonARad;
+
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(degToRad(latA)) *
-      Math.cos(degToRad(latB)) *
+    Math.cos(latARad) *
+      Math.cos(latBRad) *
       Math.sin(dLon / 2) *
       Math.sin(dLon / 2);
+
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const d = R * c; // Distancia en km
 
-  return d;
-};
+  const distance = earthRadius * c;
 
-/**
- * Convierte de grados a radianes
- * @param {number} deg Grados decimales
- * @return {number} Equivalencia en radianes
- */
-const degToRad = (deg) => {
-  return deg * (Math.PI / 180);
+  return distance;
 };
 
 /**
@@ -132,7 +138,7 @@ const timeBetweenCoordinates = (origin, destination, speed) => {
 
 module.exports = {
   getDistanceBetweenCoordinates,
-  degToRad,
+  degreesToRadians,
   isValidPolygon,
   isValidObjectId,
   generateUrlFriendlyToken,

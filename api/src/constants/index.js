@@ -27,6 +27,8 @@ const SUBNODE = "SUBNODE";
 
 const LOSTPOINT = "LOSTPOINT";
 
+const OBJECT_ID_REGEX = /^[0-9a-fA-F]{24}$/;
+
 //! Tipos de nodo
 // Ya no se usan
 const ENTRANCE_NODO_TYPE = "ENTRANCE";
@@ -55,4 +57,5 @@ module.exports = {
   MAX_LAT,
   MIN_LON,
   MAX_LON,
+  OBJECT_ID_REGEX,
 };

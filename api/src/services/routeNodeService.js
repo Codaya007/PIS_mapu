@@ -2,6 +2,8 @@ const NotExist = require("../errors/NotExist");
 const typeService = require("./typeService");
 const nodeService = require("./nodeService");
 const { ROUTE_NODO_TYPE } = require("../constants/index");
+const validateRouteNodesExcelFile = require("../helpers/validateRouteNodeFile");
+const { uploadImageToS3 } = require("../helpers/s3Helpers");
 
 const getRouteNodeTypeId = async () => {
   const routeType = await typeService.getOneType({
@@ -63,6 +65,41 @@ const deleteRouteNodeById = async (id) => {
   return deletedNode;
 };
 
+const mapRouteNode = (row) => {
+  const result = {};
+
+  result.latitude = row.LATITUD;
+  result.longitude = row.LONGITUD;
+  result.campus = row.CAMPUS;
+
+  return result;
+};
+
+const masiveUpload = async (file) => {
+  const { valid, errorsFile, rows } = await validateRouteNodesExcelFile(file);
+
+  // Si el archivo es válido, creo los bloques
+  if (valid) {
+    const results = await Promise.all(
+      rows.map(async (row) => {
+        return await createRouteNode(mapRouteNode(row));
+      })
+    );
+
+    return { valid, results };
+  } else {
+    // Sino devuelvo el error
+    const { Location: errorsURL } = await uploadImageToS3(
+      errorsFile,
+      "xlsx",
+      "validations",
+      true
+    );
+
+    return { valid, errorsURL };
+  }
+};
+
 module.exports = {
   createRouteNode,
   getRouteNodes,
@@ -70,4 +107,5 @@ module.exports = {
   getRouteNodeById,
   updateRouteNodeById,
   deleteRouteNodeById,
+  masiveUpload,
 };

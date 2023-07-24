@@ -58,7 +58,7 @@ const createNode = async (nodeData = {}) => {
       );
 
       const adyacency = await Adyacency.create({
-        origen: node.id,
+        origin: node.id,
         destination: nodeAdyacency.id,
         weight,
       });
@@ -84,27 +84,35 @@ const createNodeWithDetail = async (newNode) => {
   return createdNode;
 };
 
-const getNodes = async (where = {}, skip, limit) => {
-  let nodes =
-    skip || limit
+const getNodes = async (where = {}, skip, limit, populate = true) => {
+  let nodes = [];
+
+  if (skip || limit)
+    nodes = populate
       ? await Node.find(where)
           .skip(skip ?? 0)
           .limit(limit ?? 10)
           .populate("type")
           .populate("campus")
           .populate("category")
-          // .populate("block")
-          // .populate("detail")
           .sort({ createdAt: -1 })
       : await Node.find(where)
+          .skip(skip ?? 0)
+          .limit(limit ?? 10)
+          .sort({ createdAt: -1 });
+  else {
+    nodes = populate
+      ? await Node.find(where)
           .populate("type")
           .populate("campus")
           .populate("category")
           // .populate("block")
           // .populate("detail")
-          .sort({ createdAt: -1 });
+          .sort({ createdAt: -1 })
+      : await Node.find(where).sort({ createdAt: -1 });
+  }
 
-  nodes = await Promise.all(nodes.map(populateDetail));
+  if (populate) nodes = await Promise.all(nodes.map(populateDetail));
 
   return nodes;
 };
@@ -147,8 +155,10 @@ const updateNodeWithDetailById = async (_id, nodeData) => {
   const { detail, ...newData } = nodeData;
   node = await Node.findByIdAndUpdate(_id, newData);
 
-  const { _id: detailId, ...newDetail } = detail;
-  node.detail = await detailService.updateDetailById(detailId, newDetail);
+  if (detail) {
+    const { _id: detailId, ...newDetail } = detail;
+    node.detail = await detailService.updateDetailById(detailId, newDetail);
+  }
 
   return node;
 };

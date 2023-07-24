@@ -5,6 +5,8 @@ const {
   createNodeSchema,
   updateNodeSchema,
 } = require("../validationSchemas/RouteNode");
+const isAdmin = require("../policies/isAdmin");
+const { upload } = require("../configs/multerConfig");
 
 const routeNodeRouter = Router();
 
@@ -17,6 +19,17 @@ routeNodeRouter.post(
   "/",
   middlewares.validateRequestBody(createNodeSchema),
   routeNodeController.createRouteNode
+);
+
+/**
+ * @route POST /upload
+ * @access Admin
+ */
+routeNodeRouter.post(
+  "/upload",
+  isAdmin,
+  upload.single("file"),
+  routeNodeController.masiveUpload
 );
 
 /**

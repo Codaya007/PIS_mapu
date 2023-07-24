@@ -6,6 +6,7 @@ const blockSchema = new Schema({
     type: String,
     required: true,
     unique: true,
+    min: 1,
   },
   available: {
     type: Boolean,
@@ -26,6 +27,7 @@ const blockSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Node",
     required: true,
+    unique: true,
   },
 });
 
