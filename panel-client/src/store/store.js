@@ -5,6 +5,7 @@ import campusReducer from "./slices/campusSlice";
 import dashboardReducer from "./slices/dashboardSlice";
 import blockReducer from "./slices/blockSlice";
 import categoryReducer from "./slices/categorySlice";
+import careerReducer from "./slices/careerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     blockReducer,
     dashboardReducer,
     categoryReducer,
+    careerReducer,
   },
 });

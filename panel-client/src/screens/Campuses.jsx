@@ -9,93 +9,93 @@ import { Box, Button, Heading } from "@chakra-ui/react";
 import CampusTable from "../components/CampusTable";
 
 function Campuses() {
-    const {
+  const {
     pages: totalPages,
     currentPage: page,
     limit,
     skip,
     currentSliceCampus: campuses,
     fetched,
-    } = useSelector( (state) => state.campusReducer);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  } = useSelector((state) => state.campusReducer);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    useEffect( () => {
-        if(!fetched){
-            console.log(fetchCampuses());
-            dispatch( fetchCampuses() );}
-    }, []);
+  useEffect(() => {
+    if (!fetched) {
+      console.log(fetchCampuses());
+      dispatch(fetchCampuses());
+    }
+  }, []);
 
-    useEffect( () => {
-        if(totalPages < page) dispatch(setPage( page - 1));
-    }, [totalPages]);
+  useEffect(() => {
+    if (totalPages < page) dispatch(setPage(page - 1));
+  }, [totalPages]);
 
-    useEffect( () => {
-        if(fetched){
-            dispatch(getWithoutFetchSlice());
-        }else{
-            dispatch(fetchCampuses());
-        }
-    }, [page]);
+  useEffect(() => {
+    if (fetched) {
+      dispatch(getWithoutFetchSlice());
+    } else {
+      dispatch(fetchCampuses());
+    }
+  }, [page]);
 
-    const handlePageChange = (newPage) => {
-        dispatch(setPage(newPage));
-    };
+  const handlePageChange = (newPage) => {
+    dispatch(setPage(newPage));
+  };
 
-    const handleEdit = (campusId) => {
-        navigate(`/edit-campus/${campusId}`);
-    };
+  const handleEdit = (campusId) => {
+    navigate(`/edit-campus/${campusId}`);
+  };
 
-    const handleDelete = async (campusId) => {
-        try {
-            await deleteCampusById(campusId);
-            dispatch(fetchCampuses());
-            toast.success("Eliminación exitosa");
-        } catch (error) {
-            toast.error(error?.response?.data?.message || "Algo salio mal");
-        }
-    };
+  const handleDelete = async (campusId) => {
+    try {
+      await deleteCampusById(campusId);
+      dispatch(fetchCampuses());
+      toast.success("Eliminación exitosa");
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Algo salio mal");
+    }
+  };
 
-    const handleCreate = () => {
-        navigate("/create-campus");
-    };
+  const handleCreate = () => {
+    navigate("/create-campus");
+  };
 
-    return(
-        <Box mx={4} my={8}>
-            <Heading as="h1" size="lg" mb={4}>
-                Campus
-            </Heading>
-            <Box display="flex" justifyContent="flex-end" mb={4}>
-                <Button
-                    colorScheme="blue"
-                    onClick={handleCreate}
-                    mb={4}
-                    alignSelf={"flex-end"}
-                >
-                    Crear campus
-                </Button>
-            </Box>
-            <CampusTable 
-                campuses={campuses}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
-            />
-            <Box mt={4}>
-                {Array.from( {length: totalPages}, (_, index) => (
-                    <Button
-                        key={index+1}
-                        colorScheme={index + 1 === page ? "blue":"gray"}
-                        size="sm"
-                        mr={2}
-                        onClick={ () => handlePageChange(index + 1)}
-                    >
-                        {index + 1}
-                    </Button>
-                ))}
-            </Box>
-        </Box>
-        
-    );
+  return (
+    <Box mx={4} my={8}>
+      <Heading as="h1" size="lg" mb={4}>
+        Campuses UNL
+      </Heading>
+      <Box display="flex" justifyContent="flex-end" mb={4}>
+        <Button
+          colorScheme="blue"
+          onClick={handleCreate}
+          mb={4}
+          alignSelf={"flex-end"}
+        >
+          Crear campus
+        </Button>
+      </Box>
+      <CampusTable
+        campuses={campuses}
+        handleEdit={handleEdit}
+        handleDelete={handleDelete}
+      />
+      <Box mt={4}>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <Button
+            key={index + 1}
+            colorScheme={index + 1 === page ? "blue" : "gray"}
+            size="sm"
+            mr={2}
+            onClick={() => handlePageChange(index + 1)}
+          >
+            {index + 1}
+          </Button>
+        ))}
+      </Box>
+    </Box>
+  );
 }
 
 export default Campuses;

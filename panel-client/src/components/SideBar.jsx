@@ -12,7 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { BiSolidCategory, BiSolidHome } from "react-icons/bi";
+import { BiSolidCategory, BiSolidDoorOpen, BiSolidHome } from "react-icons/bi";
 import { BsFillCalendarEventFill } from "react-icons/bs";
 import {
   FaBuilding,
@@ -97,6 +97,12 @@ function SidebarMenu() {
                   <Text>Facultades</Text>
                 </Flex>
               </Link>
+              <Link as={NavLink} to="/career" onClick={toggleMenu}>
+                <Flex align="center">
+                  <Icon as={FaGraduationCap} mr={2} />
+                  <Text>Carreras</Text>
+                </Flex>
+              </Link>
               <Link as={NavLink} to="/block" onClick={toggleMenu}>
                 <Flex align="center">
                   <Icon as={FaBuilding} mr={2} />
@@ -109,6 +115,7 @@ function SidebarMenu() {
                   <Text>Campus</Text>
                 </Flex>
               </Link>
+
               {/* <Link as={NavLink} to="/sector" onClick={toggleMenu}>
                 <Flex align="center">
                   <Icon as={PiPolygonFill} mr={2} />
@@ -121,16 +128,10 @@ function SidebarMenu() {
                   <Text>Categorías</Text>
                 </Flex>
               </Link>
-              <Link as={NavLink} to="/interes-point" onClick={toggleMenu}>
+              <Link as={NavLink} to="/user" onClick={toggleMenu}>
                 <Flex align="center">
-                  <Icon as={FaMapMarkerAlt} mr={2} />
-                  <Text>Puntos de interés y ruta</Text>
-                </Flex>
-              </Link>
-              <Link as={NavLink} to="/node" onClick={toggleMenu}>
-                <Flex align="center">
-                  <Icon as={FaHashnode} mr={2} />
-                  <Text>Nodos</Text>
+                  <Icon as={FaUsers} mr={2} />
+                  <Text>Usuarios</Text>
                 </Flex>
               </Link>
               <Link as={NavLink} to="/comment" onClick={toggleMenu}>
@@ -145,10 +146,22 @@ function SidebarMenu() {
                   <Text>Eventos</Text>
                 </Flex>
               </Link>
-              <Link as={NavLink} to="/career" onClick={toggleMenu}>
+              <Link as={NavLink} to="/interes-node" onClick={toggleMenu}>
                 <Flex align="center">
-                  <Icon as={FaGraduationCap} mr={2} />
-                  <Text>Carreras</Text>
+                  <Icon as={FaMapMarkerAlt} mr={2} />
+                  <Text>Nodos de interés</Text>
+                </Flex>
+              </Link>
+              <Link as={NavLink} to="/route-node" onClick={toggleMenu}>
+                <Flex align="center">
+                  <Icon as={FaHashnode} mr={2} />
+                  <Text>Nodos de ruta</Text>
+                </Flex>
+              </Link>
+              <Link as={NavLink} to="/access-node" onClick={toggleMenu}>
+                <Flex align="center">
+                  <Icon as={BiSolidDoorOpen} mr={2} />
+                  <Text>Nodos de acceso</Text>
                 </Flex>
               </Link>
               <Link as={NavLink} to="/report" onClick={toggleMenu}>
@@ -163,12 +176,7 @@ function SidebarMenu() {
                   <Text>Puntos perdidos</Text>
                 </Flex>
               </Link>
-              <Link as={NavLink} to="/user" onClick={toggleMenu}>
-                <Flex align="center">
-                  <Icon as={FaUsers} mr={2} />
-                  <Text>Usuarios</Text>
-                </Flex>
-              </Link>
+
               {user ? (
                 <Button variant="link" onClick={handleLogout}>
                   <Flex align="center">

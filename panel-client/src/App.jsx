@@ -18,6 +18,7 @@ import CapusesForm from "./screens/CampusForm";
 import ProfileEdit from "./screens/ProfileEdit";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
 import Categories from "./screens/Categories";
+import Careers from "./screens/Career";
 
 function App() {
   const location = useLocation();
@@ -49,15 +50,23 @@ function App() {
             <Route path="/block" element={<Blocks />} />
             <Route path="/create-block" element={<BlockForm />} />
             <Route path="/edit-block/:id" element={<BlockForm />} />
+            {/* Facultad */}
             <Route path="/faculty" element={<Faculties />} />
             <Route path="/create-faculty" element={<FacultyForm />} />
             <Route path="/edit-faculty/:id" element={<FacultyForm />} />
+            {/* Campus */}
             <Route path="/campus" element={<Campuses />} />
             <Route path="/edit-campus/:id" element={<CapusesForm />} />
             <Route path="/create-campus" element={<CapusesForm />} />
+            {/* Categoría */}
             <Route path="/category" element={<Categories />} />
             <Route path="/edit-category/:id" element={<Categories />} />
             <Route path="/create-category" element={<Categories />} />
+            {/* Carrera */}
+            <Route path="/career" element={<Careers />} />
+            <Route path="/edit-career/:id" element={<Careers />} />
+            <Route path="/create-career" element={<Careers />} />
+            {/* Profile */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/edit-profile/:id" element={<ProfileEdit />} />
             <Route

@@ -1,29 +1,29 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteCategoryById } from "../services/categoryServices";
-import { getWithoutFetchSlice, setPage } from "../store/slices/categorySlice";
-import { fetchCategories } from "../store/actions/categoryActions";
+import { deleteCareerById } from "../services/careerServices";
+import { getWithoutFetchSlice, setPage } from "../store/slices/careerSlice";
+import { fetchCareers } from "../store/actions/careerActions";
 import { toast } from "react-toastify";
 import { Box, Button, Heading } from "@chakra-ui/react";
-import CategoryTable from "../components/CategoryTable";
+import CareerTable from "../components/CareerTable";
 
-function Categories() {
+function Careers() {
   const {
     pages: totalPages,
     currentPage: page,
     limit,
     skip,
-    currentSliceCategory: categories,
+    currentSliceCareer: careers,
     fetched,
-  } = useSelector((state) => state.categoryReducer);
+  } = useSelector((state) => state.careerReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!fetched) {
-      console.log(fetchCategories());
-      dispatch(fetchCategories());
+      console.log(fetchCareers());
+      dispatch(fetchCareers());
     }
   }, []);
 
@@ -35,7 +35,7 @@ function Categories() {
     if (fetched) {
       dispatch(getWithoutFetchSlice());
     } else {
-      dispatch(fetchCategories());
+      dispatch(fetchCareers());
     }
   }, [page]);
 
@@ -43,14 +43,14 @@ function Categories() {
     dispatch(setPage(newPage));
   };
 
-  const handleEdit = (categoryId) => {
-    navigate(`/edit-category/${categoryId}`);
+  const handleEdit = (careerId) => {
+    navigate(`/edit-career/${careerId}`);
   };
 
-  const handleDelete = async (categoryId) => {
+  const handleDelete = async (careerId) => {
     try {
-      await deleteCategoryById(categoryId);
-      dispatch(fetchCategories());
+      await deleteCareerById(careerId);
+      dispatch(fetchCareers());
       toast.success("Eliminación exitosa");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Algo salio mal");
@@ -58,13 +58,13 @@ function Categories() {
   };
 
   const handleCreate = () => {
-    navigate("/create-category");
+    navigate("/create-career");
   };
 
   return (
     <Box mx={4} my={8}>
       <Heading as="h1" size="lg" mb={4}>
-        Categorías de puntos de interés
+        Carreras UNL
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button
@@ -73,11 +73,11 @@ function Categories() {
           mb={4}
           alignSelf={"flex-end"}
         >
-          Crear categoría
+          Crear carrera
         </Button>
       </Box>
-      <CategoryTable
-        categories={categories}
+      <CareerTable
+        careers={careers}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
       />
@@ -98,4 +98,4 @@ function Categories() {
   );
 }
 
-export default Categories;
+export default Careers;
