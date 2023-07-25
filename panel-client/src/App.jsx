@@ -19,6 +19,9 @@ import ProfileEdit from "./screens/ProfileEdit";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
 import Categories from "./screens/Categories";
 import Careers from "./screens/Career";
+import Users from "./screens/Users";
+import Comments from "./screens/Comments";
+import Events from "./screens/Events";
 
 function App() {
   const location = useLocation();
@@ -66,6 +69,14 @@ function App() {
             <Route path="/career" element={<Careers />} />
             <Route path="/edit-career/:id" element={<Careers />} />
             <Route path="/create-career" element={<Careers />} />
+            {/* Evento */}
+            <Route path="/event" element={<Events />} />
+            <Route path="/edit-event/:id" element={<Events />} />
+            <Route path="/create-event" element={<Events />} />
+            {/* Usuarios */}
+            <Route path="/user" element={<Users />} />
+            {/* Commentarios */}
+            <Route path="/comment" element={<Comments />} />
             {/* Profile */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/edit-profile/:id" element={<ProfileEdit />} />
