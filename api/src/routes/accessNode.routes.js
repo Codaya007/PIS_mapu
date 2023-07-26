@@ -1,52 +1,67 @@
 const { Router } = require("express");
 const accessNodeController = require("../controllers/accessNodeController");
 const middlewares = require("../middlewares");
+const {
+  createNodeWithDetailSchema,
+  updateNodeWithDetailSchema,
+} = require("../validationSchemas/NodeWithDetail");
 const isAdmin = require("../policies/isAdmin");
-const isLoggedIn = require("../policies/isLoggedIn");
-
-// const { acc } = require("../validationSchemas/");
+const { upload } = require("../configs/multerConfig");
 
 const accessNodeRouter = Router();
 
 /**
  * @route POST /
- * @desc Crear subnodo
- * @access Administrador
+ * @desc Crea un nuevo nodo de interes con la información pasada por body
+ * @access Admin
  */
-
 accessNodeRouter.post(
   "/",
   isAdmin,
+  middlewares.validateRequestBody(createNodeWithDetailSchema),
   accessNodeController.createAccessNode
-  // middlewares.validateRequestBody()
+);
+
+/**
+ * @route POST /upload
+ * @access Admin
+ */
+accessNodeRouter.post(
+  "/upload",
+  isAdmin,
+  upload.single("file"),
+  accessNodeController.masiveUpload
 );
 
 /**
  * @route GET /
- * @desc Obtener nodoDeAcceso
- * @access Administrador
- */
-
-accessNodeRouter.get("/:id", isAdmin, accessNodeController.getAccessNodeById);
-
-/**
- * @route GET /
- * @route Obtener todos los nodos de acceso
+ * @desc Obtener todos los nodos
  * @access Public
  */
-
-accessNodeRouter.get("/", isLoggedIn, accessNodeController.getAllAccessNode);
+accessNodeRouter.get("/", accessNodeController.getAllAccessNode);
 
 /**
- * @route PUT /:id
- * @desc Actualizar nodo de entrada
+ * @route GET /:id
+ * @desc Obtener el nodo por id
+ * @access Public
+ */
+accessNodeRouter.get("/:id", accessNodeController.getAccessNodeById);
+
+/**
+ * @route PUT /
+ * @desc Actualizar un nodo con la información pasada por body
  * @access Admin
  */
-accessNodeRouter.put("/:id", isAdmin, accessNodeController.updateAccessNode);
+accessNodeRouter.put(
+  "/:id",
+  isAdmin,
+  middlewares.validateRequestBody(updateNodeWithDetailSchema),
+  accessNodeController.updateAccessNode
+);
 
 /**
- * @route DELETE /:id
- * @desc Eliminar nodo
+ * @route DELETE /
+ * @desc Eliminar un nodo por id
  * @access Admin
  */
 accessNodeRouter.delete("/:id", isAdmin, accessNodeController.deleteAccessNode);

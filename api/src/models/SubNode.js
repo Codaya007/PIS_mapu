@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { nomenclatureSchema } = require("./Nomenclature");
 const Schema = mongoose.Schema;
 
 const subNodeSchema = new Schema({
@@ -22,34 +23,41 @@ const subNodeSchema = new Schema({
     required: false,
     minLength: 1,
   },
+  detail: {
+    type: Schema.Types.ObjectId,
+    ref: "Detail",
+    required: true,
+  },
+  img: {
+    type: String,
+    required: false,
+    default: null,
+  },
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+  },
   nomenclature: {
-    campus: {
-      type: String,
-      required: true,
-      minLength: 1,
-    },
-    floor: {
-      type: String,
-      required: true,
-      minLength: 1,
-    },
-    enviroment: {
-      type: String,
-      required: true,
-      minLength: 1,
-    },
-    subEnviroment: {
-      type: String,
-      required: false,
-      minLength: 1,
-    },
-    block: {
-      type: String,
-      required: true,
-      minLength: 1,
-    },
+    type: new Schema({
+      floor: {
+        type: Number,
+        required: false,
+        default: 1,
+      },
+      environment: {
+        type: Number,
+        required: false,
+        default: null,
+      },
+      subEnvironment: {
+        type: Number,
+        required: false,
+        default: null,
+      },
+    }),
   },
 });
 
 const SubNode = mongoose.model("subnode", subNodeSchema);
+
 module.exports = SubNode;

@@ -1,40 +1,51 @@
 const eventService = require("../services/eventService.js");
-const NotExist = require('../errors/NotExist')
+const NotExist = require("../errors/NotExist");
 
 module.exports = {
+  getEventById: async (req, res) => {
+    const { id } = req.params;
+    const result = await eventService.getEventById(id);
 
-    getEventById: async (req, res) => {
-        const { id } = req.params;
-        const result = await eventService.getEventById(id);
+    return res.json(result);
+  },
 
-        return res.json(result);
-    },
+  getAllEvents: async (req, res) => {
+    const {
+      mobile = "false",
+      search,
+      skip = 0,
+      limit = 10,
+      ...where
+    } = req.query;
 
-    getAllEvents: async (req, res) => {
-        const { mobile = 'false', search, skip = 0, limit = 10, ...where } = req.query;
+    const totalCount = await eventService.getCountEvents(mobile, search, where);
 
-        const totalCount = await eventService.getCountEvents(mobile, search, where);
+    const results = await eventService.getEvents(
+      mobile,
+      search,
+      where,
+      skip,
+      limit
+    );
 
-        const results = await eventService.getEvents(mobile, search, where, skip, limit);
+    return res.json({ totalCount, results });
+  },
 
-        return res.json({ totalCount, results });
-    },
+  createEvent: async (req, res, next) => {
+    const newEvent = await eventService.createEvent(req.body);
+    return res.json(newEvent);
+  },
 
-    createEvent: async (req, res, next) => {
-        const newEvent = await eventService.createEvent(req.body);
-        return res.json(newEvent);
-    },
+  updateEvent: async (req, res, next) => {
+    const { id } = req.params;
+    const updateBlock = await eventService.updateEventById(id, req.body);
+    return res.json(updateBlock);
+  },
 
-    updateEvent: async (req, res, next) => {
-        const { id } = req.params;
-        const updateBlock = await eventService.updateEventById(id, req.body);
-        return res.json(updateBlock);
-    },
+  deleteEvent: async (req, res, next) => {
+    const { id } = req.params;
+    const deleteBlock = await eventService.deleteEventById(id);
 
-    deleteEvent: async (req, res, next) => {
-        const { id } = req.params;
-        const deleteBlock = await eventService.deleteEventById(id);
-
-        return res.json(deleteBlock);
-    },
+    return res.json(deleteBlock);
+  },
 };

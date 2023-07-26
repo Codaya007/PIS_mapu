@@ -1,38 +1,52 @@
-const nodeService = require("../services/nodeService");
+const accessNodeService = require("../services/accessNodeService");
 
 module.exports = {
   getAccessNodeById: async (req, res) => {
     const { id } = req.params;
-    const result = await nodeService.getAccesNodeById(id);
-    res.json({ result });
+    const result = await accessNodeService.getAccessNodeById(id);
+
+    res.json(result);
   },
 
   getAllAccessNode: async (req, res) => {
-    let { skip = 0, limit = 10, ...where } = req.query;
-    where = { type: "Acceso" };
+    let { skip, limit, ...where } = req.query;
 
-    const totalCount = await nodeService.getCountNodes(where);
-    const result = await nodeService.getAllNodes(where, skip, limit);
+    const totalCount = await accessNodeService.getCountAccessNodes(where);
+    const result = await accessNodeService.getAccessNodes(where, skip, limit);
 
     res.json({ totalCount, result });
   },
 
   createAccessNode: async (req, res) => {
-    req.body.type = "Acceso";
-    const newAccessNode = await nodeService.createAccessNode(req.body);
-    res.json({ newAccessNode });
+    const newAccessNode = await accessNodeService.createAccessNode(req.body);
+
+    return res.json(newAccessNode);
   },
 
   updateAccessNode: async (req, res) => {
     const { id } = req.params;
-    req.body.type = "Acceso";
-    const updatedAccessNode = await nodeService.updateAccessNode(id, req.body);
-    res.json({ updatedAccessNode });
+
+    const updatedAccessNode = await accessNodeService.updateAccessNodeById(
+      id,
+      req.body
+    );
+    res.json(updatedAccessNode);
+  },
+
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await accessNodeService.masiveUpload(
+      req.file
+    );
+
+    if (valid) return res.json({ success: true, results });
+
+    return res.json({ success: false, results: errorsURL });
   },
 
   deleteAccessNode: async (req, res) => {
     const { id } = req.params;
-    const deletedAccessNode = await nodeService.deleteAccessNode(id);
-    res.json({ deletedAccessNode });
+    const deletedAccessNode = await accessNodeService.deleteAccessNodeById(id);
+
+    res.json(deletedAccessNode);
   },
 };

@@ -19,6 +19,24 @@ const nameIsUnique = async (value, helpers) => {
   return value;
 };
 
+const symbolIsUnique = async (value, helpers) => {
+  const { symbol, id } = value;
+
+  if (symbol) {
+    const where = { symbol };
+    if (id) where.id = { "!=": id };
+
+    const campus = await Campus.findOne(where);
+
+    if (campus)
+      return helpers.error("any.invalid", {
+        message: "Ya existe un Campus con este símbolo",
+      });
+  }
+
+  return value;
+};
+
 const createCampusSchema = Joi.object({
   name: Joi.string().required().max(20).messages({
     "string.external": "Ya existe un Campus con ese nombre",
@@ -30,10 +48,12 @@ const createCampusSchema = Joi.object({
   address: Joi.string().required().max(300).messages({
     "*": "El campo 'address' es requerido y debe tener un largo máximo de 300 caracteres",
   }),
-  accessPoints: Joi.array().optional().messages({
-    "*": "El campo accessPoint debe ser una array",
-  }),
-}).external(nameIsUnique);
+  // accessPoints: Joi.array().required().messages({
+  //   "*": "El campo accessPoint debe ser un array de coordenadas",
+  // }),
+})
+  .external(nameIsUnique)
+  .external(symbolIsUnique);
 
 const updateCampusSchema = Joi.object({
   id: Joi.string().required().custom(isValidObjectId).messages({
@@ -43,6 +63,10 @@ const updateCampusSchema = Joi.object({
     "name.external": "Ya existe un campus con este nombre",
     "*": "El campo 'name' debe tener un largo máximo de 20 caracteres",
   }),
+  symbol: Joi.string().optional().max(2).external(nameIsUnique).messages({
+    "name.external": "Ya existe un campus con este símbolo",
+    "*": "El campo 'symbol' debe tener un largo máximo de 2 caracteres",
+  }),
   description: Joi.string().optional().max(200).messages({
     "*": "El campo 'description' debe tener un largo máximo de 200 caracteres",
   }),
@@ -50,10 +74,12 @@ const updateCampusSchema = Joi.object({
     "*": "El campo 'address' debe tener un largo máximo de 300 caracteres",
   }),
 
-  accessPoints: Joi.array().optional().messages({
-    "*": "El campo accessPoint debe ser una array",
-  }),
-}).external(nameIsUnique);
+  // accessPoints: Joi.array().optional().messages({
+  //   "*": "El campo accessPoint debe ser un array",
+  // }),
+})
+  .external(nameIsUnique)
+  .external(symbolIsUnique);
 
 module.exports = {
   createCampusSchema,

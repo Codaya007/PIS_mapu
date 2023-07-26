@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node app.js",
+    "test": "nodemon ./src/helpers/findNearestRoute.js",
     "dev": "nodemon app.js"
   },
   "keywords": [],
@@ -28,7 +29,8 @@
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.6.0",
     "qr-image": "^3.2.0",
-    "qrcode": "^1.5.3"
+    "qrcode": "^1.5.3",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

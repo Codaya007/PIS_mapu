@@ -2,10 +2,17 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const campusSchema = new Schema({
+  symbol: {
+    type: String,
+    required: true,
+    maxlength: 2,
+    unique: true,
+  },
   name: {
     type: String,
     required: true,
     maxlength: 20,
+    unique: true,
   },
   description: {
     type: String,
@@ -18,17 +25,15 @@ const campusSchema = new Schema({
     required: true,
     maxlength: 300,
   },
-  accessPoints: {
-    type: [[String]],
+  polygon: {
+    // Cada array representa un polígono geográfico, cada polígono geográfico está compuesto de arrays del coordenadas del tipo [latitud, longitud]
+    type: [[Number, Number]],
     required: true,
-    // validate: {
-    //   validator: function (arr) {
-    //     return arr.length === 1 && arr[0].length === 2;
-    //   },
-    //   message:
-    //     "accessPoints must be an array of a single array with 2 elements.",
-    // },
   },
+  // accessPoints: {
+  //   type: [[String]],
+  //   required: true,
+  // },
 });
 
 const Campus = mongoose.model("Campus", campusSchema);

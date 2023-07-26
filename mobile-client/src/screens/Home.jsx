@@ -1,14 +1,12 @@
 import { Text, View } from "react-native";
-import React, { Component } from "react";
-import MapApi from './MapApi';
+import React from "react";
+import MapApi from "../components/MapApi";
 
-export default class Home extends Component {
-  render() {
-    return (
-      <View>
-        <Text>M A P U</Text>
-        <MapApi/>
-      </View>
-    );
-  }
+export default function Home() {
+  return (
+    <View>
+      <Text>M A P U</Text>
+      <MapApi />
+    </View>
+  );
 }

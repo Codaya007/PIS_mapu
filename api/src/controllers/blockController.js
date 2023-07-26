@@ -1,38 +1,53 @@
 const blockServices = require("../services/blockService.js");
 
 module.exports = {
+  getBlock: async (req, res) => {
+    const { id } = req.params;
+    const result = await blockServices.getBlockById(id);
 
-    getBlock: async (req, res) => {
-        const number = req.params.number;
-        const results = await blockServices.getBlockByNumber(number);
+    return res.json(result);
+  },
 
-        return res.json(results);
-    },
+  getAllBlocks: async (req, res) => {
+    const { skip, limit, ...where } = req.query;
 
-    getAllBlocks: async (req, res) => {
-        const { skip = 0, limit = 10, ...where } = req.query;
+    const totalCount = await blockServices.getCountBlocks(where);
+    const results = await blockServices.getBlocks(where, skip, limit);
 
-        const totalCount = await blockServices.getCountBlocks(where);
-        const results = await blockServices.getBlocks(where, skip, limit);
+    return res.json({ totalCount, results });
+  },
 
-        return res.json({ totalCount, results });
-    },
+  createBlock: async (req, res, next) => {
+    const newBlock = await blockServices.createBlock(req.body);
 
-    createBlock: async (req, res, next) => {
-        const newBlock = await blockServices.createBlock(req.body);
-        return res.json(newBlock);
-    },
+    return res.json(newBlock);
+  },
 
-    updateBlock: async (req, res, next) => {
-        const number = req.params.number;
-        const updateBlock = await blockServices.updateBlockByNumber(number, req.body);
-        return res.json(updateBlock);
-    },
+  updateBlock: async (req, res, next) => {
+    const { id } = req.params;
 
-    deleteBlock: async (req, res, next) => {
-        const number = req.params.number;
-        const deleteBlock = await blockServices.deleteBlockByNumber(number);
+    const updateBlock = await blockServices.updateBlockById(id, req.body);
 
-        return res.json(deleteBlock);
-    },
+    return res.json(updateBlock);
+  },
+
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await blockServices.masiveUpload(
+      req.file
+    );
+
+    if (valid) return res.json({ success: true, results });
+
+    // res.set("Content-Disposition", 'attachment; filename="Errores.xlsx"');
+    // res.send(buffer);
+    return res.json({ success: false, results: errorsURL });
+  },
+
+  deleteBlock: async (req, res, next) => {
+    const { id } = req.params;
+
+    const deleteBlock = await blockServices.deleteBlockById(id);
+
+    return res.json(deleteBlock);
+  },
 };

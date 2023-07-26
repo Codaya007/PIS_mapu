@@ -14,9 +14,9 @@ function Blocks() {
     currentPage: page,
     limit,
     skip,
-    currentSliceFaculties: blocks,
+    currentSliceBlocks: blocks,
     fetched,
-  } = useSelector((state) => state.facultyReducer);
+  } = useSelector((state) => state.blockReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -58,11 +58,10 @@ function Blocks() {
     navigate("/create-block");
   };
 
-
   return (
     <Box mx={4} my={8}>
       <Heading as="h1" size="lg" mb={4}>
-        Bloques
+        Bloques/Edificios
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button

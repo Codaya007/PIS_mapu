@@ -29,6 +29,6 @@ const nomenclatureSchema = new Schema({
   },
 });
 
-// const Nomenclature = mongoose.model("Nomenclature", nomenclatureSchema);
+const Nomenclature = mongoose.model("Nomenclature", nomenclatureSchema);
 
-module.exports = nomenclatureSchema;
+module.exports = { nomenclatureSchema, Nomenclature };

@@ -3,26 +3,20 @@ import {
   Button,
   Center,
   FormControl,
-  HStack,
   Heading,
   Input,
-  Text,
   VStack,
   KeyboardAvoidingView,
-  Link as LinkStyle,
-  Switch,
 } from "native-base";
-import { useNavigate } from "react-router-native";
 import React, { useState } from "react";
 import Toast from "react-native-toast-message";
 
 const initialState = {
   newPassword: "",
-  newPasswordInput: ""
+  newPasswordInput: "",
 };
 
 const ProfileChangePassword = () => {
-  const navigate = useNavigate();
   const [userPassword, setUserPassword] = useState(initialState);
   const handleEdit = async (e) => {
     const { name, value } = e.target;
@@ -63,19 +57,7 @@ const ProfileChangePassword = () => {
           >
             Cambiar Contraseña
           </Heading>
-          <Heading
-            mt="1"
-            color="coolGray.600"
-            _dark={{
-              color: "warmGray.200",
-            }}
-            fontWeight="medium"
-            size="xs"
-          >
-            Registrate para continuar!
-          </Heading>
           <VStack space={3} mt="5">
-
             <FormControl>
               <FormControl.Label>Nueva contraseña</FormControl.Label>
               <Input name="newPassword" onChangeText={handleEdit} />
@@ -85,7 +67,7 @@ const ProfileChangePassword = () => {
               <Input name="newPasswordInput" onChangeText={handleEdit} />
             </FormControl>
 
-            <Button mt="2" colorScheme="indigo" onPress={saveChange}>
+            <Button mt="2" bgColor="indigo.500" onPress={saveChange}>
               Guardar
             </Button>
           </VStack>

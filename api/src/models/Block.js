@@ -5,17 +5,29 @@ const blockSchema = new Schema({
   number: {
     type: String,
     required: true,
-    unique: true
-  },  
-  avaible: {
+    unique: true,
+    min: 1,
+  },
+  available: {
     type: Boolean,
     required: true,
-    default: true
+    default: true,
   },
   faculty: {
-    type: Schema.Types.ObjectId,  // Tipo ObjectId para referencia
-    ref: 'Faculty',  // Nombre del modelo referenciado
-    required: true
+    type: Schema.Types.ObjectId, // Tipo ObjectId para referencia
+    ref: "Faculty", // Nombre del modelo referenciado
+    required: true,
+  },
+  campus: {
+    type: Schema.Types.ObjectId,
+    ref: "Campus",
+    required: true,
+  },
+  node: {
+    type: Schema.Types.ObjectId,
+    ref: "Node",
+    required: true,
+    unique: true,
   },
 });
 

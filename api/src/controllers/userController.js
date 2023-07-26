@@ -4,10 +4,10 @@ module.exports = {
   getAllUsers: async (req, res) => {
     const { skip = 0, limit = 10, ...where } = req.query;
 
-    const result = await userService.getAllUser(where, skip, limit);
+    const results = await userService.getAllUser(where, skip, limit);
     const totalCount = await userService.getCountUser(where);
 
-    return res.json({ totalCount, result });
+    return res.json({ totalCount, results });
   },
 
   getUserById: async (req, res, next) => {

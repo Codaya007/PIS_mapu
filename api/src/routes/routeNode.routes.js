@@ -1,54 +1,67 @@
 const { Router } = require("express");
-const nodeController = require("../controllers/nodeController");
+const routeNodeController = require("../controllers/routeNodeController");
 const middlewares = require("../middlewares");
-const { createRouteNodeSchema, updateRouteNodeSchema} = require("../validationSchemas/RouteNode");
+const {
+  createNodeSchema,
+  updateNodeSchema,
+} = require("../validationSchemas/RouteNode");
+const isAdmin = require("../policies/isAdmin");
+const { upload } = require("../configs/multerConfig");
 
-const nodeRouter = Router();
+const routeNodeRouter = Router();
 
 /**
  * @route POST /
- * @desc Crea un nuevo nodo de ruta con la información pasada por body
+ * @desc Crea un nuevo nodo de interes con la información pasada por body
+ * @route Admin
+ */
+routeNodeRouter.post(
+  "/",
+  middlewares.validateRequestBody(createNodeSchema),
+  routeNodeController.createRouteNode
+);
+
+/**
+ * @route POST /upload
  * @access Admin
  */
-nodeRouter.post(
-    "/",
-    middlewares.validateRequestBody(createRouteNodeSchema),
-    nodeController.createNode
+routeNodeRouter.post(
+  "/upload",
+  isAdmin,
+  upload.single("file"),
+  routeNodeController.masiveUpload
 );
 
 /**
  * @route GET /
  * @desc Obtener todos los nodos
- * @access Public
+ * @route Public
  */
-nodeRouter.get("/", nodeController.getAllNodes);
+routeNodeRouter.get("/", routeNodeController.getAllRouteNode);
 
 /**
- * @route GET /
- * @desc Obtener el nodo ruta por id
- * @access Public
+ * @route GET /:id
+ * @desc Obtener el nodo por id
+ * @route Public
  */
-nodeRouter.get("/:id", nodeController.getNode);
+routeNodeRouter.get("/:id", routeNodeController.getRouteNodeById);
 
 /**
  * @route PUT /
- * @desc Actualizar un nodo ruta con la información pasada por body
- * @access Admin
+ * @desc Actualizar un nodo con la información pasada por body
+ * @route Admin
  */
-nodeRouter.put( 
-    "/:id",
-    middlewares.validateRequestBody(updateRouteNodeSchema),
-    nodeController.updateNode
+routeNodeRouter.put(
+  "/:id",
+  middlewares.validateRequestBody(updateNodeSchema),
+  routeNodeController.updateRouteNode
 );
 
 /**
  * @route DELETE /
- * @desc Eliminar un nodo ruta por id
- * @access Admin
+ * @desc Eliminar un nodo por id
+ * @route Admin
  */
-nodeRouter.delete( 
-    "/:id",
-    nodeController.deleteNode
-);
+routeNodeRouter.delete("/:id", routeNodeController.deleteRouteNode);
 
-module.exports = nodeRouter;
+module.exports = routeNodeRouter;

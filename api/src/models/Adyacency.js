@@ -2,22 +2,20 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const adyacencySchema = new Schema({
-  origen: {
+  origin: {
     type: String,
     required: true,
-    minLenght: 1,
-    maxLenght: 10,
+    ref: "Node",
   },
-  detination: {
+  destination: {
     type: String,
     required: true,
-    minLenght: 1,
-    maxLenght: 10,
+    ref: "Node",
   },
   weight: {
     type: Number,
     required: true,
-    min: 1,
+    min: 0,
   },
 });
 

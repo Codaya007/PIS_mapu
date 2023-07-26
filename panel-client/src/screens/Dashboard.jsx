@@ -5,8 +5,6 @@ import { useEffect } from "react";
 import MapContainerComponent from "../components/Map";
 
 function Dashboard() {
-  // Datos de ejemplo
-
   const {
     totalUser,
     totalUserLastMonth,
@@ -15,7 +13,7 @@ function Dashboard() {
     totalBlock,
     totalCareer,
     totalCategory,
-    totalSector
+    totalSector,
   } = useSelector((state) => state.dashboardReducer);
 
   const dispatch = useDispatch();
@@ -48,7 +46,7 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-          <StatLabel>Usuarios ultimo mes</StatLabel>
+          <StatLabel>Usuarios registrados en el último mes</StatLabel>
           <StatNumber color={"blue.500"}>{totalUserLastMonth}</StatNumber>
         </Stat>
         <Stat
@@ -72,7 +70,6 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-
           <StatLabel>Total de bloques</StatLabel>
           <StatNumber color={"blue.500"}>{totalBlock}</StatNumber>
         </Stat>
@@ -85,7 +82,6 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-
           <StatLabel>Total de carreras</StatLabel>
           <StatNumber color={"blue.500"}>{totalCareer}</StatNumber>
         </Stat>

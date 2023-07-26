@@ -1,27 +1,22 @@
 const { Router } = require("express");
-const nodeController = require("../controllers/nodeController");
+const interestingNodeController = require("../controllers/interestingNodeController");
 const middlewares = require("../middlewares");
 const {
-  createInterestingNodeSchema,
-  updateInterestingNodeSchema,
-} = require("../validationSchemas/InterestingNode");
+  createNodeWithDetailSchema,
+  updateNodeWithDetailSchema,
+} = require("../validationSchemas/NodeWithDetail");
 
-const nodeRouter = Router();
+const interestingNodeRouter = Router();
 
 /**
  * @route POST /
  * @desc Crea un nuevo nodo de interes con la información pasada por body
  * @access Admin
  */
-nodeRouter.post(
+interestingNodeRouter.post(
   "/",
-  middlewares.validateRequestBody(createInterestingNodeSchema),
-  nodeController.createNode
-);
-
-nodeRouter.post(
-    "/time",
-    nodeController.timeBetween
+  middlewares.validateRequestBody(createNodeWithDetailSchema),
+  interestingNodeController.createInterestingNode
 );
 
 /**
@@ -29,24 +24,27 @@ nodeRouter.post(
  * @desc Obtener todos los nodos
  * @access Public
  */
-nodeRouter.get("/", nodeController.getAllNodes);
+interestingNodeRouter.get(
+  "/",
+  interestingNodeController.getAllInterestingNodes
+);
 
 /**
- * @route GET /
+ * @route GET /:id
  * @desc Obtener el nodo por id
  * @access Public
  */
-nodeRouter.get("/:id", nodeController.getNode);
+interestingNodeRouter.get("/:id", interestingNodeController.getInterestingNode);
 
 /**
  * @route PUT /
  * @desc Actualizar un nodo con la información pasada por body
  * @access Admin
  */
-nodeRouter.put(
+interestingNodeRouter.put(
   "/:id",
-  middlewares.validateRequestBody(updateInterestingNodeSchema),
-  nodeController.updateNode
+  middlewares.validateRequestBody(updateNodeWithDetailSchema),
+  interestingNodeController.updateInterestingNode
 );
 
 /**
@@ -54,6 +52,9 @@ nodeRouter.put(
  * @desc Eliminar un nodo por id
  * @access Admin
  */
-nodeRouter.delete("/:id", nodeController.deleteNode);
+interestingNodeRouter.delete(
+  "/:id",
+  interestingNodeController.deleteInterestingNode
+);
 
-module.exports = nodeRouter;
+module.exports = interestingNodeRouter;

@@ -1,15 +1,19 @@
 import { NativeBaseProvider } from "native-base";
-import { NativeRouter } from "react-router-native";
-import Main from "./src/screens/Main";
 import Toast from "react-native-toast-message";
+import * as React from "react";
+import { Provider } from "react-redux";
+import { store } from "./src/store/store.js";
+import Main from "./src/Main";
 
 export default function App() {
   return (
-    <NativeBaseProvider>
-      <NativeRouter>
+    <Provider store={store}>
+      <NativeBaseProvider>
+        {/* <NativeRouter> */}
         <Main />
-      </NativeRouter>
-      <Toast />
-    </NativeBaseProvider>
+        <Toast />
+        {/* </NativeRouter> */}
+      </NativeBaseProvider>
+    </Provider>
   );
 }

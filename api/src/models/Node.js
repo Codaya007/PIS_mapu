@@ -1,48 +1,81 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+// const typeSchema = new Schema({
+//   name: {
+//     type: String,
+//     required: true,
+//   },
+//   _id: {
+//     type: String,
+//     ref: "type",
+//     required: true,
+//   },
+// });
+
+// const campusSchema = new Schema({
+//   name: {
+//     type: String,
+//     required: true,
+//   },
+//   _id: {
+//     type: String,
+//     ref: "type",
+//     required: true,
+//   },
+// });
+
 const nodeSchema = new Schema({
   latitude: {
     type: Number,
     required: true,
     min: -200,
-    max: 200
+    max: 200,
   },
   longitude: {
     type: Number,
     required: true,
     min: -200,
-    max: 200
+    max: 200,
   },
   available: {
     type: Boolean,
     required: false,
+    default: true,
   },
   type: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "Type",
     required: true,
-    minLength: 2,
-    maxLength: 20,
+  },
+  campus: {
+    type: Schema.Types.ObjectId,
+    ref: "Campus",
+    required: true,
   },
   category: {
-    type: String,
-    required: false,
-    minLength: 2,
-    maxLength: 30,
+    type: Schema.Types.ObjectId,
+    ref: "Category",
+    // required: true,
   },
-  sector: {
-    type: String,
-    required: false,
-    // minLength: 2,
-    // maxLength: 30,
+  // block: {
+  //   type: Schema.Types.ObjectId,
+  //   ref: "Block",
+  //   default: null,
+  // },
+  detail: {
+    type: Schema.Types.ObjectId,
+    ref: "Detail",
+    default: null,
   },
-  adyacency: [
-    {
-      origin: { type: String, required: false, minLength: 2, maxLength: 20 },
-      destinity: { type: String, required: false, minLength: 2, maxLength: 20 },
-      weight: { type: Number, required: false, min: 1 },
-    },
-  ],
 });
 
-module.exports = mongoose.model("Node", nodeSchema);
+nodeSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    ret.coordinate = [ret.latitude, ret.longitude];
+  },
+});
+
+const Node = mongoose.model("Node", nodeSchema);
+
+module.exports = Node;

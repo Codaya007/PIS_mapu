@@ -1,8 +1,9 @@
-const { where } = require("../models/SubNode");
 const subNodeService = require("../services/subNodeService.js");
+
 module.exports = {
   createSubNode: async (req, res) => {
     const newSubNode = await subNodeService.createSubNode(req.body);
+
     res.json(newSubNode);
   },
 
@@ -31,6 +32,7 @@ module.exports = {
   deleteSubNode: async (req, res) => {
     const { id } = req.params;
     const deletedUser = await subNodeService.deleteSubNode(id);
+
     res.json(deletedUser);
   },
 };
