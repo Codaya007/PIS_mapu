@@ -1,5 +1,6 @@
 const NotExist = require("../errors/NotExist");
 const typeService = require("./typeService");
+const detailService = require("./detailService");
 const nodeService = require("./nodeService");
 const { INTEREST_NODO_TYPE } = require("../constants/index");
 
@@ -20,16 +21,35 @@ const createInterestingNode = async (newNode) => {
   return createdNode;
 };
 
-const getInterestingNodes = async (where = {}, skip, limit) => {
+const getInterestingNodes = async (where = {}, skip, limit, search) => {
   where.type = await getInterestingNodeTypeId();
+
+  await applyRegex(where, search);
 
   const nodes = await nodeService.getNodes(where, skip, limit);
 
   return nodes;
 };
 
-const getCountInterestingNodes = async (where = {}) => {
+const applyRegex = async (where, search) => {
+  if (search) {
+    // Escapar caracteres especiales para evitar problemas con la búsqueda regex
+    const escapedSearch = search.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
+
+    // Crear una expresión regular para buscar el término con ignorar mayúsculas y minúsculas
+    const regex = new RegExp(escapedSearch, 'i');
+    const matchedDetails = await detailService.getDetailes({ title: { $regex: regex } });
+
+    // Obtener los IDs de los detalles encontrados
+    const matchedDetailIds = matchedDetails.map(detail => detail._id);
+    where['detail'] = { $in: matchedDetailIds };
+  }
+}
+
+const getCountInterestingNodes = async (where = {}, search) => {
   where.type = await getInterestingNodeTypeId();
+
+  await applyRegex(where, search);
 
   const countNodes = await nodeService.getCountNodes(where);
 

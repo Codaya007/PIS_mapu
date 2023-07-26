@@ -10,6 +10,7 @@ import {
     Text,
     VStack,
     useColorModeValue,
+    ScrollView,
 } from "native-base";
 
 //----------
@@ -21,56 +22,68 @@ import { CloseIcon } from "native-base";
 
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Register } from "../screens/Register";
 
 import {
-    EMAIL_REGEX,
-    ForgotPasswordName,
     HomeName,
-    RegisterName,
+    MapName
 } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 
-const Filter = () => {
-    const { user } = useSelector((state) => state.authReducer);
+const ResultSearch = ({ route }) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
 
     const navigate = (to) => navigation.navigate(to);
 
+    const { nodes } = route.params;
 
-    useEffect(() => {
-        if (user) {
-            navigation.navigate(HomeName);
-        }
-    }, [user]);
+    const handleNodePress = (node) => {
+        navigation.navigate(MapName, { selectedNode: node });
+    };
 
     const pressedColor = useColorModeValue("#EAEAEA");
+    const colorLink = useColorModeValue("#FAFAFA");
 
     return (
-        <Center w="100%">
-            <Box safeArea p="1" py="0" w="100%">
-                <VStack space={1} mt="5">
-                    <Button onPress={() => navigate(HomeName)} justifyContent="flex-start" w="100%" maxW="500" bg="#EEE" _pressed={{ bg: pressedColor }}>
-                        <Text fontSize="16" fontWeight="bold"> Laboratorio de parasitología </Text>
-                        <Text fontSize="13" fontWeight="light" textAlign="left" marginLeft={3}>Aula de laboratorio para estudiantes de la facultad de recursos naturales </Text>
-                        {/* <Text fontSize="12">Argelia </Text> */}
-                        {/* <Text fontSize="12">Bloque 2 </Text> */}
-                        <Text fontSize="12" fontWeight="light" fontStyle="italic" marginLeft={3} marginTop={1}>Facultad de energía, industrias y recursos naturales renovables </Text>
-                        {/* Debe darme coordenadas */}
-                    </Button>
-                    <Button onPress={() => navigate(HomeName)} justifyContent="flex-start" w="100%" maxW="500" bg="#EEE" _pressed={{ bg: pressedColor }}>
-                        <Text fontSize="16" fontWeight="bold"> Laboratorio de parasitología </Text>
-                        <Text fontSize="13" fontWeight="light" textAlign="left" marginLeft={3}>Aula de laboratorio para estudiantes de la facultad de recursos naturales </Text>
-                        {/* <Text fontSize="12">Argelia </Text> */}
-                        {/* <Text fontSize="12">Bloque 2 </Text> */}
-                        <Text fontSize="12" fontWeight="light" fontStyle="italic" marginLeft={3} marginTop={1}>Facultad de energía, industrias y recursos naturales renovables </Text>
-                        {/* Debe darme coordenadas */}
-                    </Button>
-                </VStack>
-            </Box>
-        </Center>
+        <VStack w="100%" h="100%">
+            <ScrollView w="100%">
+                <Box safeArea p="1" py="0" w="100%">
+                    <VStack space={1} mt="5">
+                        {nodes.map((node) => (
+                            <Button
+                                key={node.id} // Asegúrate de tener una clave única para cada componente
+                                onPress={() => handleNodePress(node)} // Agrega un evento onPress para el botón
+                                justifyContent="flex-start"
+                                w="100%"
+                                maxW="500"
+                                bg="#EEE"
+                                _pressed={{ bg: pressedColor }}
+                            >
+                                <Text fontSize="16" fontWeight="bold">{node.detail.title} </Text>
+                                <Text fontSize="13" fontWeight="light" textAlign="left" marginLeft={3}>{node.detail.description}</Text>
+                                <Text fontSize="12" marginLeft={3}>{node.campus.name}</Text>
+                            </Button>
+                        ))}
+                    </VStack>
+                </Box>
+            </ScrollView>
+            <VStack alignItems="flex-start" mb="4" ml="2">
+                <LinkStyle
+                    onPress={() => navigate(FilterName)}
+                    _text={{
+                        fontSize: "sm",
+                        fontWeight: "400",
+                        color: { colorLink }
+                    }}
+                    alignSelf="flex-start"
+                    mt="1"
+                >
+                    {/* TODO poner la Búsqueda avanzada dentro del cuadro de resultados */}
+                    Búsqueda avanzada
+                </LinkStyle>
+            </VStack>
+        </VStack>
     );
 };
 
-export default Filter;
+export default ResultSearch;
