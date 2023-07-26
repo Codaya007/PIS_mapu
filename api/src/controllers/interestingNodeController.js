@@ -10,15 +10,17 @@ module.exports = {
   },
 
   getAllInterestingNodes: async (req, res) => {
-    const { skip, limit, ...where } = req.query;
+    const { skip, limit, search, ...where } = req.query;
 
     const totalCount = await interestingnodeService.getCountInterestingNodes(
-      where
+      where,
+      search
     );
     const results = await interestingnodeService.getInterestingNodes(
       where,
       skip,
-      limit
+      limit,
+      search
     );
 
     return res.json({ totalCount, results });
