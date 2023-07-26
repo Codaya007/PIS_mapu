@@ -37,20 +37,6 @@ const Drawer = createDrawerNavigator();
 const Main = () => {
   return (
     <>
-      {/* <View style={{ flex: 1 }}>
-        <Sidebar />
-        <Routes>
-          <Route exact path="/" Component={Home} />
-          <Route path="/login" Component={LoginForm} />
-          <Route path="/sign-up" Component={Register} />
-          <Route path="/about" Component={About} />
-          <Route path="/events" Component={Events} />
-          <Route path="/favorites" Component={Favorites} />
-          <Route path="/forgot-password" Component={ForgotPasswordForm} />
-          <Route path="/reset-password/:token" Component={ForgotPasswordForm} />
-          <Route path="/*" Component={Home} />
-        </Routes>
-      </View> */}
       <NavigationContainer>
         <Drawer.Navigator initialRouteName="Home">
           <Drawer.Screen name={HomeName} component={Home} />
@@ -59,10 +45,14 @@ const Main = () => {
           <Drawer.Screen name={AboutName} component={About} />
           <Drawer.Screen name={EventsName} component={Events} />
           <Drawer.Screen name={FavoritesName} component={Favorites} />
-          <Drawer.Screen name={FilterName} component={Filter} options={{
-            drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
-            drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
-          }} />
+          <Drawer.Screen
+            name={FilterName}
+            component={Filter}
+            // options={{
+            //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+            //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+            // }}
+          />
           <Drawer.Screen name={EditProfileName} component={EditProfile} />
           <Drawer.Screen
             name={ChangePasswordName}
@@ -72,15 +62,22 @@ const Main = () => {
             name={ForgotPasswordName}
             component={ForgotPasswordForm}
           />
-          <Drawer.Screen name={ResultSearchName} component={ResultSearch} options={{
-            drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
-            drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
-          }} />
-          <Drawer.Screen name={MapName} component={MapApi} options={{
-            drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
-            drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
-          }} />
-          <Drawer.Screen name={ReportLostPointName} component={ReportLostPoint} />
+          <Drawer.Screen
+            name={ResultSearchName}
+            component={ResultSearch}
+            options={{
+              drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+              drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+            }}
+          />
+          <Drawer.Screen
+            name={MapName}
+            component={MapApi}
+            options={{
+              drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+              drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+            }}
+          />
           <Drawer.Screen
             name={ReportLostPointName}
             component={ReportLostPoint}

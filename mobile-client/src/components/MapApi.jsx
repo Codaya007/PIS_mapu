@@ -1,9 +1,7 @@
 import { StatusBar, View, StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-
-
-export default function MapApi({selectedNode}) {
+export default function MapApi({ selectedNode }) {
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
   };
@@ -12,7 +10,7 @@ export default function MapApi({selectedNode}) {
     {
       title: "Redondel",
       location: {
-        // latitude: -4.0328,
+        latitude: -4.0328,
         longitude: -79.2024,
       },
       description: "Redondel de la Universidad Nacional de Loja",
@@ -24,7 +22,7 @@ export default function MapApi({selectedNode}) {
   //     return (
   //       <Marker
   //         key={index}
-  //         coordinate={item.location}  
+  //         coordinate={item.location}
   //         title={item.title}
   //         description={item.description}
   //       />
@@ -32,7 +30,7 @@ export default function MapApi({selectedNode}) {
   //   });
   // };
 
-  const showLocationsOfInterest = () => {  
+  const showLocationsOfInterest = () => {
     return placesOfInterest.map((item, index) => {
       const isNodeSelected = selectedNode && selectedNode._id === index; // Verifica si el nodo actual es el nodo seleccionado
       return (
