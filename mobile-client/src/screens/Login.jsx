@@ -97,7 +97,7 @@ const Login = () => {
             />
           </FormControl>
           <FormControl>
-            <FormControl.Label>Contraseña { name }</FormControl.Label>
+            <FormControl.Label>Contraseña {name}</FormControl.Label>
             <Input
               type="password"
               placeholder="****"

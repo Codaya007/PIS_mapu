@@ -17,7 +17,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Toast from "react-native-toast-message";
 import Login from "./Login";
-import { LoginName } from "../constants";
+import { API_BASEURL, LoginName } from "../constants";
 
 const Register = () => {
   const navigation = useNavigation();
@@ -67,7 +67,7 @@ const Register = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/auth/register", {
+      const response = await axios.post(`${API_BASEURL}/auth/register`, {
         name,
         lastname,
         email,
