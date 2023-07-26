@@ -1,8 +1,5 @@
 import {
-  Box,
-  Flex,
   IconButton,
-  Image,
   Menu,
   MenuButton,
   MenuItem,
@@ -15,37 +12,26 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
-import { DEFAULT_IMG } from "../constants";
 
-function InterestingNodeTable({ interestingNodes, handleEdit, handleDelete }) {
+function RouteNodeTable({ routeNodes, handleEdit, handleDelete }) {
   return (
     <Table p={3} variant="simple">
       <Thead>
         <Tr>
-          <Th>Imagen</Th>
           <Th>Coordenadas</Th>
-          <Th>Título</Th>
-          <Th>Descripción</Th>
           <Th>Campus</Th>
-          <Th>Categoría</Th>
           <Th>Activo</Th>
           <Th>Acciones</Th>
         </Tr>
       </Thead>
       <Tbody>
-        {interestingNodes?.map(
+        {routeNodes?.map(
           ({ _id, detail, campus, category, coordinate, available }) => (
             <Tr key={_id}>
-              <Td boxSize={"150px"}>
-                <Image src={detail?.img || DEFAULT_IMG} alt={detail?.name} />
-              </Td>
               <Td>{coordinate?.join(",")}</Td>
-              <Td>{detail?.title}</Td>
-              <Td>{detail.description || "-"}</Td>
               <Td>
                 ({campus?.symbol}) {campus?.name}
               </Td>
-              <Td>{category?.name || "-"}</Td>
               <Td>{available ? "Sí" : "No"}</Td>
               <Td>
                 <Menu>
@@ -71,4 +57,4 @@ function InterestingNodeTable({ interestingNodes, handleEdit, handleDelete }) {
   );
 }
 
-export default InterestingNodeTable;
+export default RouteNodeTable;

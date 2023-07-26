@@ -17,7 +17,7 @@ import {
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { DEFAULT_IMG } from "../constants";
 
-function InterestingNodeTable({ interestingNodes, handleEdit, handleDelete }) {
+function AccessNodeTable({ accessNodes, handleEdit, handleDelete }) {
   return (
     <Table p={3} variant="simple">
       <Thead>
@@ -33,7 +33,7 @@ function InterestingNodeTable({ interestingNodes, handleEdit, handleDelete }) {
         </Tr>
       </Thead>
       <Tbody>
-        {interestingNodes?.map(
+        {accessNodes?.map(
           ({ _id, detail, campus, category, coordinate, available }) => (
             <Tr key={_id}>
               <Td boxSize={"150px"}>
@@ -71,4 +71,4 @@ function InterestingNodeTable({ interestingNodes, handleEdit, handleDelete }) {
   );
 }
 
-export default InterestingNodeTable;
+export default AccessNodeTable;

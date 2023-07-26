@@ -2,31 +2,28 @@ import { Box, Button, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import InterestingNodeTable from "../components/InterestingNodeTable";
-import { deleteInterestingNodeById } from "../services/interestingNodeServices";
-import { fetchInterestingNodes } from "../store/actions/interestingNodeActions";
-import {
-  getWithoutFetchSlice,
-  setPage,
-} from "../store/slices/interestingNodeSlice";
+import AccessNodeTable from "../components/AccessNodeTable";
+import { deleteAccessNodeById } from "../services/accessNodeServices";
+import { fetchAccessNodes } from "../store/actions/accessNodeActions";
+import { getWithoutFetchSlice, setPage } from "../store/slices/accessNodeSlice";
 import { toast } from "react-toastify";
 
-function InterestingNodes() {
+function AccessNodes() {
   const {
     pages: totalPages,
     currentPage: page,
     limit,
     skip,
-    currentSliceInterestingNodes: interestingNodes,
+    currentSliceAccessNodes: accessNodes,
     fetched,
-  } = useSelector((state) => state.interestingNodeReducer);
+  } = useSelector((state) => state.accessNodeReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  console.log(interestingNodes[0]);
+  // console.log(accessNodes[0]);
 
   useEffect(() => {
-    if (!fetched) dispatch(fetchInterestingNodes());
+    if (!fetched) dispatch(fetchAccessNodes());
   }, []);
 
   useEffect(() => {
@@ -37,7 +34,7 @@ function InterestingNodes() {
     if (fetched) {
       dispatch(getWithoutFetchSlice());
     } else {
-      dispatch(fetchInterestingNodes());
+      dispatch(fetchAccessNodes());
     }
   }, [page]);
 
@@ -46,13 +43,13 @@ function InterestingNodes() {
   };
 
   const handleEdit = (interestNodeId) => {
-    navigate(`/edit-interesting-node/${interestNodeId}`);
+    navigate(`/edit-access-node/${interestNodeId}`);
   };
 
   const handleDelete = async (interestNodeId) => {
     try {
-      await deleteInterestingNodeById(interestNodeId);
-      dispatch(fetchInterestingNodes());
+      await deleteAccessNodeById(interestNodeId);
+      dispatch(fetchAccessNodes());
       toast.success("Eliminación exitosa");
     } catch (error) {
       toast.error(
@@ -63,13 +60,13 @@ function InterestingNodes() {
   };
 
   const handleCreate = () => {
-    navigate("/create-interesting-node");
+    navigate("/create-access-node");
   };
 
   return (
     <Box mx={4} my={8}>
       <Heading as="h1" size="lg" mb={4}>
-        Puntos de interés UNL
+        Puntos de acceso a campus UNL
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button
@@ -82,8 +79,8 @@ function InterestingNodes() {
         </Button>
       </Box>
 
-      <InterestingNodeTable
-        interestingNodes={interestingNodes}
+      <AccessNodeTable
+        accessNodes={accessNodes}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
       />
@@ -104,4 +101,4 @@ function InterestingNodes() {
   );
 }
 
-export default InterestingNodes;
+export default AccessNodes;

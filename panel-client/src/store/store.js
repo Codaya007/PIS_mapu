@@ -10,6 +10,8 @@ import userReducer from "./slices/userSlice";
 import commentReducer from "./slices/commentSlice";
 import eventReducer from "./slices/eventSlice";
 import interestingNodeReducer from "./slices/interestingNodeSlice";
+import accessNodeReducer from "./slices/accessNodeSlice";
+import routeNodeReducer from "./slices/routeNodeSlice";
 
 export const store = configureStore({
   reducer: {
@@ -24,5 +26,7 @@ export const store = configureStore({
     commentReducer,
     eventReducer,
     interestingNodeReducer,
+    accessNodeReducer,
+    routeNodeReducer,
   },
 });
