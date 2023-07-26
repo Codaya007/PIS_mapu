@@ -1,12 +1,12 @@
+import { Box, Button, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteEventById } from "../services/eventservices";
-import { getWithoutFetchSlice, setPage } from "../store/slices/eventSlice";
-import { fetchEvents } from "../store/actions/eventActions";
 import { toast } from "react-toastify";
-import { Box, Button, Heading } from "@chakra-ui/react";
 import EventTable from "../components/EventTable";
+import { deleteEventById } from "../services/eventServices";
+import { fetchEvents } from "../store/actions/eventActions";
+import { getWithoutFetchSlice, setPage } from "../store/slices/eventSlice";
 
 function Events() {
   const {

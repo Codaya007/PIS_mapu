@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { getEvents } from "../../services/eventServices";
-import { getAll, getSlice } from "../slices/eventslice";
+import { getAll, getSlice } from "../slices/eventSlice";
 
 export const fetchEvents = (skip, limit) => async (dispatch) => {
   try {

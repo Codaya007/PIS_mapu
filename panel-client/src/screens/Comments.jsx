@@ -1,12 +1,12 @@
+import { Box, Button, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteCommentById } from "../services/commentservices";
-import { getWithoutFetchSlice, setPage } from "../store/slices/commentslice";
-import { fetchComments } from "../store/actions/commentActions";
 import { toast } from "react-toastify";
-import { Box, Button, Heading } from "@chakra-ui/react";
 import CommentTable from "../components/CommentTable";
+import { deleteCommentById } from "../services/commentServices";
+import { fetchComments } from "../store/actions/commentActions";
+import { getWithoutFetchSlice, setPage } from "../store/slices/commentSlice";
 
 function Comments() {
   const {
