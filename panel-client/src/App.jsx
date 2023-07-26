@@ -36,6 +36,7 @@ function App() {
 
     if (user && token) {
       dispatch(login({ user: JSON.parse(user), token: JSON.parse(token) }));
+      navigate("/");
     } else {
       navigate("/login");
     }
