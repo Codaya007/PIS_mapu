@@ -6,10 +6,16 @@ import {
   Switch,
   Text,
   VStack,
+<<<<<<< HEAD
+  Editable,
+  EditableTextarea,
+  EditablePreview,
+=======
   Button,
   FormControl,
   FormLabel,
   Input,
+>>>>>>> b462d241f5a1b6b382fd3fd878ab1a4e155a5c8f
 } from "@chakra-ui/react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -34,7 +40,11 @@ const initialState = {
 
 const ProfileEdit = () => {
   const { user } = useSelector((state) => state.authReducer);
+<<<<<<< HEAD
+  const { name, lastname, email, avatar,  settings, password } = user || {};
+=======
   const { name, lastname, email, avatar, role, settings, _id } = user || {};
+>>>>>>> b462d241f5a1b6b382fd3fd878ab1a4e155a5c8f
   const { notification, spam } = settings || {};
   const dispatch = useDispatch();
   const [userForm, setUserForm] = useState(initialState);
