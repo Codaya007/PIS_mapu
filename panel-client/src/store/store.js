@@ -9,6 +9,7 @@ import careerReducer from "./slices/careerSlice";
 import userReducer from "./slices/userSlice";
 import commentReducer from "./slices/commentSlice";
 import eventReducer from "./slices/eventSlice";
+import interestingNodeReducer from "./slices/interestingNodeSlice";
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +23,6 @@ export const store = configureStore({
     userReducer,
     commentReducer,
     eventReducer,
+    interestingNodeReducer,
   },
 });

@@ -146,7 +146,7 @@ function SidebarMenu() {
                   <Text>Eventos</Text>
                 </Flex>
               </Link>
-              <Link as={NavLink} to="/interes-node" onClick={toggleMenu}>
+              <Link as={NavLink} to="/interesting-node" onClick={toggleMenu}>
                 <Flex align="center">
                   <Icon as={FaMapMarkerAlt} mr={2} />
                   <Text>Nodos de interés</Text>

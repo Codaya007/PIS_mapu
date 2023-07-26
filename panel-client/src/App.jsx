@@ -22,6 +22,7 @@ import Careers from "./screens/Career";
 import Users from "./screens/Users";
 import Comments from "./screens/Comments";
 import Events from "./screens/Events";
+import InterestingNodes from "./screens/InterestNodes";
 
 function App() {
   const location = useLocation();
@@ -74,6 +75,16 @@ function App() {
             <Route path="/event" element={<Events />} />
             <Route path="/edit-event/:id" element={<Events />} />
             <Route path="/create-event" element={<Events />} />
+            {/* Puntos de interés */}
+            <Route path="/interesting-node" element={<InterestingNodes />} />
+            <Route
+              path="/edit-interesting-node/:id"
+              element={<InterestingNodes />}
+            />
+            <Route
+              path="/create-interesting-node"
+              element={<InterestingNodes />}
+            />
             {/* Usuarios */}
             <Route path="/user" element={<Users />} />
             {/* Commentarios */}
