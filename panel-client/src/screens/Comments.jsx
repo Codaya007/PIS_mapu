@@ -1,29 +1,28 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteCampusById } from "../services/campusServices";
-import { getWithoutFetchSlice, setPage } from "../store/slices/campusSlice";
-import { fetchCampuses } from "../store/actions/campusActions";
+import { deleteCommentById } from "../services/commentservices";
+import { getWithoutFetchSlice, setPage } from "../store/slices/commentslice";
+import { fetchComments } from "../store/actions/commentActions";
 import { toast } from "react-toastify";
 import { Box, Button, Heading } from "@chakra-ui/react";
-import CampusTable from "../components/CampusTable";
+import CommentTable from "../components/CommentTable";
 
-function Campuses() {
+function Comments() {
   const {
     pages: totalPages,
     currentPage: page,
     limit,
     skip,
-    currentSliceCampus: campuses,
+    currentSliceComment: comments,
     fetched,
-  } = useSelector((state) => state.campusReducer);
+  } = useSelector((state) => state.commentReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!fetched) {
-      console.log(fetchCampuses());
-      dispatch(fetchCampuses());
+      dispatch(fetchComments());
     }
   }, []);
 
@@ -35,7 +34,7 @@ function Campuses() {
     if (fetched) {
       dispatch(getWithoutFetchSlice());
     } else {
-      dispatch(fetchCampuses());
+      dispatch(fetchComments());
     }
   }, [page]);
 
@@ -43,41 +42,31 @@ function Campuses() {
     dispatch(setPage(newPage));
   };
 
-  const handleEdit = (campusId) => {
-    navigate(`/edit-campus/${campusId}`);
+  const handleEdit = (commentId) => {
+    navigate(`/edit-comment/${commentId}`);
   };
 
-  const handleDelete = async (campusId) => {
+  const handleDelete = async (commentId) => {
     try {
-      await deleteCampusById(campusId);
-      dispatch(fetchCampuses());
+      await deleteCommentById(commentId);
+      dispatch(fetchComments());
       toast.success("Eliminación exitosa");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Algo salio mal");
+      toast.error(error?.response?.data?.message || "Algo salio mal 1");
     }
   };
 
   const handleCreate = () => {
-    navigate("/create-campus");
+    navigate("/create-comment");
   };
 
   return (
     <Box mx={4} my={8}>
       <Heading as="h1" size="lg" mb={4}>
-        Campuses UNL
+        Comentarios
       </Heading>
-      <Box display="flex" justifyContent="flex-end" mb={4}>
-        <Button
-          colorScheme="blue"
-          onClick={handleCreate}
-          mb={4}
-          alignSelf={"flex-end"}
-        >
-          Crear campus
-        </Button>
-      </Box>
-      <CampusTable
-        campuses={campuses}
+      <CommentTable
+        comments={comments}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
       />
@@ -98,4 +87,4 @@ function Campuses() {
   );
 }
 
-export default Campuses;
+export default Comments;

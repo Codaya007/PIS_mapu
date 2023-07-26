@@ -17,6 +17,11 @@ import { login } from "./store/slices/authSlice";
 import CapusesForm from "./screens/CampusForm";
 import ProfileEdit from "./screens/ProfileEdit";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
+import Categories from "./screens/Categories";
+import Careers from "./screens/Career";
+import Users from "./screens/Users";
+import Comments from "./screens/Comments";
+import Events from "./screens/Events";
 
 function App() {
   const location = useLocation();
@@ -48,15 +53,37 @@ function App() {
             <Route path="/block" element={<Blocks />} />
             <Route path="/create-block" element={<BlockForm />} />
             <Route path="/edit-block/:id" element={<BlockForm />} />
+            {/* Facultad */}
             <Route path="/faculty" element={<Faculties />} />
             <Route path="/create-faculty" element={<FacultyForm />} />
             <Route path="/edit-faculty/:id" element={<FacultyForm />} />
-            <Route path="/campus" element={< Campuses />} />
-            <Route path="/edit-campus/:id" element={<CapusesForm />}/>
-            <Route path="/create-campus" element={< CapusesForm/>} />
+            {/* Campus */}
+            <Route path="/campus" element={<Campuses />} />
+            <Route path="/edit-campus/:id" element={<CapusesForm />} />
+            <Route path="/create-campus" element={<CapusesForm />} />
+            {/* Categoría */}
+            <Route path="/category" element={<Categories />} />
+            <Route path="/edit-category/:id" element={<Categories />} />
+            <Route path="/create-category" element={<Categories />} />
+            {/* Carrera */}
+            <Route path="/career" element={<Careers />} />
+            <Route path="/edit-career/:id" element={<Careers />} />
+            <Route path="/create-career" element={<Careers />} />
+            {/* Evento */}
+            <Route path="/event" element={<Events />} />
+            <Route path="/edit-event/:id" element={<Events />} />
+            <Route path="/create-event" element={<Events />} />
+            {/* Usuarios */}
+            <Route path="/user" element={<Users />} />
+            {/* Commentarios */}
+            <Route path="/comment" element={<Comments />} />
+            {/* Profile */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/edit-profile/:id" element={<ProfileEdit />} />
-            <Route path="/edit-pasword-profile/:id" element={<ProfileChangePassword />} />
+            <Route
+              path="/edit-pasword-profile/:id"
+              element={<ProfileChangePassword />}
+            />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </Box>

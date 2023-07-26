@@ -1,29 +1,29 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteCampusById } from "../services/campusServices";
-import { getWithoutFetchSlice, setPage } from "../store/slices/campusSlice";
-import { fetchCampuses } from "../store/actions/campusActions";
+import { deleteCategoryById } from "../services/categoryServices";
+import { getWithoutFetchSlice, setPage } from "../store/slices/categorySlice";
+import { fetchCategories } from "../store/actions/categoryActions";
 import { toast } from "react-toastify";
 import { Box, Button, Heading } from "@chakra-ui/react";
-import CampusTable from "../components/CampusTable";
+import CategoryTable from "../components/CategoryTable";
 
-function Campuses() {
+function Categories() {
   const {
     pages: totalPages,
     currentPage: page,
     limit,
     skip,
-    currentSliceCampus: campuses,
+    currentSliceCategory: categories,
     fetched,
-  } = useSelector((state) => state.campusReducer);
+  } = useSelector((state) => state.categoryReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!fetched) {
-      console.log(fetchCampuses());
-      dispatch(fetchCampuses());
+      console.log(fetchCategories());
+      dispatch(fetchCategories());
     }
   }, []);
 
@@ -35,7 +35,7 @@ function Campuses() {
     if (fetched) {
       dispatch(getWithoutFetchSlice());
     } else {
-      dispatch(fetchCampuses());
+      dispatch(fetchCategories());
     }
   }, [page]);
 
@@ -43,14 +43,14 @@ function Campuses() {
     dispatch(setPage(newPage));
   };
 
-  const handleEdit = (campusId) => {
-    navigate(`/edit-campus/${campusId}`);
+  const handleEdit = (categoryId) => {
+    navigate(`/edit-category/${categoryId}`);
   };
 
-  const handleDelete = async (campusId) => {
+  const handleDelete = async (categoryId) => {
     try {
-      await deleteCampusById(campusId);
-      dispatch(fetchCampuses());
+      await deleteCategoryById(categoryId);
+      dispatch(fetchCategories());
       toast.success("Eliminación exitosa");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Algo salio mal");
@@ -58,13 +58,13 @@ function Campuses() {
   };
 
   const handleCreate = () => {
-    navigate("/create-campus");
+    navigate("/create-category");
   };
 
   return (
     <Box mx={4} my={8}>
       <Heading as="h1" size="lg" mb={4}>
-        Campuses UNL
+        Categorías de puntos de interés
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button
@@ -73,11 +73,11 @@ function Campuses() {
           mb={4}
           alignSelf={"flex-end"}
         >
-          Crear campus
+          Crear categoría
         </Button>
       </Box>
-      <CampusTable
-        campuses={campuses}
+      <CategoryTable
+        categories={categories}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
       />
@@ -98,4 +98,4 @@ function Campuses() {
   );
 }
 
-export default Campuses;
+export default Categories;

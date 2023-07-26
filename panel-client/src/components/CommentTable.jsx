@@ -11,27 +11,27 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { getTimeAgo } from "../utils";
 
-function CampusTable({ campuses, handleEdit, handleDelete }) {
+function CommentTable({ comments, handleEdit, handleDelete }) {
   return (
     <Table p={3} variant="simple">
       <Thead>
         <Tr>
-          <Th>Nombre</Th>
-          <Th>Símbolo nomenclatura</Th>
-          <Th>Descripción</Th>
-          <Th>Dirección</Th>
+          <Th>Contenido</Th>
+          <Th>Fecha creación</Th>
+          <Th>Usuario</Th>
+          <Th>Oculto</Th>
         </Tr>
       </Thead>
       <Tbody>
-        {campuses.map((campus) => (
-          <Tr key={campus._id}>
-            <Td>{campus.name || "-"}</Td>
-            <Td>{campus.symbol || "-"}</Td>
-            <Td>{campus.description || "-"} </Td>
-            <Td>{campus.address || "-"}</Td>
+        {comments.map((comment) => (
+          <Tr key={comment._id}>
+            <Td>{comment.content || "-"}</Td>
+            <Td>{getTimeAgo(comment.createdAt) || "-"} </Td>
+            <Td>{comment.user || "-"}</Td>
+            <Td>{comment.hide ? "Si" : "No"}</Td>
             <Td>
               <Menu>
                 <MenuButton
@@ -41,10 +41,10 @@ function CampusTable({ campuses, handleEdit, handleDelete }) {
                   size="sm"
                 />
                 <MenuList>
-                  <MenuItem onClick={() => handleEdit(campus._id)}>
+                  <MenuItem onClick={() => handleEdit(comment._id)}>
                     Editar
                   </MenuItem>
-                  <MenuItem onClick={() => handleDelete(campus._id)}>
+                  <MenuItem onClick={() => handleDelete(comment._id)}>
                     Eliminar
                   </MenuItem>
                 </MenuList>
@@ -57,4 +57,4 @@ function CampusTable({ campuses, handleEdit, handleDelete }) {
   );
 }
 
-export default CampusTable;
+export default CommentTable;

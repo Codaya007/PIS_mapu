@@ -1,4 +1,5 @@
 import {
+  Avatar,
   IconButton,
   Menu,
   MenuButton,
@@ -11,27 +12,32 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 
-function CampusTable({ campuses, handleEdit, handleDelete }) {
+function UserTable({ users, handleEdit, handleDelete }) {
   return (
     <Table p={3} variant="simple">
       <Thead>
         <Tr>
+          <Th>Avatar</Th>
           <Th>Nombre</Th>
-          <Th>Símbolo nomenclatura</Th>
-          <Th>Descripción</Th>
-          <Th>Dirección</Th>
+          <Th>Apellido</Th>
+          <Th>Email</Th>
+          <Th>Rol</Th>
+          <Th>Bloqueado</Th>
         </Tr>
       </Thead>
       <Tbody>
-        {campuses.map((campus) => (
-          <Tr key={campus._id}>
-            <Td>{campus.name || "-"}</Td>
-            <Td>{campus.symbol || "-"}</Td>
-            <Td>{campus.description || "-"} </Td>
-            <Td>{campus.address || "-"}</Td>
+        {users.map((user) => (
+          <Tr key={user._id}>
+            <Td>
+              <Avatar name={user.name} src={user.avatar} />
+            </Td>
+            <Td>{user.name || "-"}</Td>
+            <Td>{user.lastname || "-"} </Td>
+            <Td>{user.email || "-"}</Td>
+            <Td>{user.role || "-"}</Td>
+            <Td>{user.blocked ? "Si" : "No"}</Td>
             <Td>
               <Menu>
                 <MenuButton
@@ -41,10 +47,10 @@ function CampusTable({ campuses, handleEdit, handleDelete }) {
                   size="sm"
                 />
                 <MenuList>
-                  <MenuItem onClick={() => handleEdit(campus._id)}>
+                  <MenuItem onClick={() => handleEdit(user._id)}>
                     Editar
                   </MenuItem>
-                  <MenuItem onClick={() => handleDelete(campus._id)}>
+                  <MenuItem onClick={() => handleDelete(user._id)}>
                     Eliminar
                   </MenuItem>
                 </MenuList>
@@ -57,4 +63,4 @@ function CampusTable({ campuses, handleEdit, handleDelete }) {
   );
 }
 
-export default CampusTable;
+export default UserTable;

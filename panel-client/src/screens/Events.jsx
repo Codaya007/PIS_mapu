@@ -1,29 +1,28 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteCampusById } from "../services/campusServices";
-import { getWithoutFetchSlice, setPage } from "../store/slices/campusSlice";
-import { fetchCampuses } from "../store/actions/campusActions";
+import { deleteEventById } from "../services/eventservices";
+import { getWithoutFetchSlice, setPage } from "../store/slices/eventSlice";
+import { fetchEvents } from "../store/actions/eventActions";
 import { toast } from "react-toastify";
 import { Box, Button, Heading } from "@chakra-ui/react";
-import CampusTable from "../components/CampusTable";
+import EventTable from "../components/EventTable";
 
-function Campuses() {
+function Events() {
   const {
     pages: totalPages,
     currentPage: page,
     limit,
     skip,
-    currentSliceCampus: campuses,
+    currentSliceEvent: events,
     fetched,
-  } = useSelector((state) => state.campusReducer);
+  } = useSelector((state) => state.eventReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!fetched) {
-      console.log(fetchCampuses());
-      dispatch(fetchCampuses());
+      dispatch(fetchEvents());
     }
   }, []);
 
@@ -35,7 +34,7 @@ function Campuses() {
     if (fetched) {
       dispatch(getWithoutFetchSlice());
     } else {
-      dispatch(fetchCampuses());
+      dispatch(fetchEvents());
     }
   }, [page]);
 
@@ -43,28 +42,28 @@ function Campuses() {
     dispatch(setPage(newPage));
   };
 
-  const handleEdit = (campusId) => {
-    navigate(`/edit-campus/${campusId}`);
+  const handleEdit = (eventId) => {
+    navigate(`/edit-event/${eventId}`);
   };
 
-  const handleDelete = async (campusId) => {
+  const handleDelete = async (eventId) => {
     try {
-      await deleteCampusById(campusId);
-      dispatch(fetchCampuses());
+      await deleteEventById(eventId);
+      dispatch(fetchEvents());
       toast.success("Eliminación exitosa");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Algo salio mal");
+      toast.error(error?.response?.data?.message || "Algo salio mal 1");
     }
   };
 
   const handleCreate = () => {
-    navigate("/create-campus");
+    navigate("/create-event");
   };
 
   return (
     <Box mx={4} my={8}>
       <Heading as="h1" size="lg" mb={4}>
-        Campuses UNL
+        Eventos
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button
@@ -73,11 +72,11 @@ function Campuses() {
           mb={4}
           alignSelf={"flex-end"}
         >
-          Crear campus
+          Crear evento
         </Button>
       </Box>
-      <CampusTable
-        campuses={campuses}
+      <EventTable
+        events={events}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
       />
@@ -98,4 +97,4 @@ function Campuses() {
   );
 }
 
-export default Campuses;
+export default Events;

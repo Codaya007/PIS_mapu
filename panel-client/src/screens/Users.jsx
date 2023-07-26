@@ -1,29 +1,28 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteCampusById } from "../services/campusServices";
-import { getWithoutFetchSlice, setPage } from "../store/slices/campusSlice";
-import { fetchCampuses } from "../store/actions/campusActions";
+import { deleteUserById } from "../services/userServices";
+import { getWithoutFetchSlice, setPage } from "../store/slices/userSlice";
+import { fetchUsers } from "../store/actions/userActions";
 import { toast } from "react-toastify";
 import { Box, Button, Heading } from "@chakra-ui/react";
-import CampusTable from "../components/CampusTable";
+import UserTable from "../components/UserTable";
 
-function Campuses() {
+function Users() {
   const {
     pages: totalPages,
     currentPage: page,
     limit,
     skip,
-    currentSliceCampus: campuses,
+    currentSliceUser: users,
     fetched,
-  } = useSelector((state) => state.campusReducer);
+  } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!fetched) {
-      console.log(fetchCampuses());
-      dispatch(fetchCampuses());
+      dispatch(fetchUsers());
     }
   }, []);
 
@@ -35,7 +34,7 @@ function Campuses() {
     if (fetched) {
       dispatch(getWithoutFetchSlice());
     } else {
-      dispatch(fetchCampuses());
+      dispatch(fetchUsers());
     }
   }, [page]);
 
@@ -43,28 +42,28 @@ function Campuses() {
     dispatch(setPage(newPage));
   };
 
-  const handleEdit = (campusId) => {
-    navigate(`/edit-campus/${campusId}`);
+  const handleEdit = (userId) => {
+    navigate(`/edit-user/${userId}`);
   };
 
-  const handleDelete = async (campusId) => {
+  const handleDelete = async (userId) => {
     try {
-      await deleteCampusById(campusId);
-      dispatch(fetchCampuses());
+      await deleteUserById(userId);
+      dispatch(fetchUsers());
       toast.success("Eliminación exitosa");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Algo salio mal");
+      toast.error(error?.response?.data?.message || "Algo salio mal 1");
     }
   };
 
   const handleCreate = () => {
-    navigate("/create-campus");
+    navigate("/create-user");
   };
 
   return (
     <Box mx={4} my={8}>
       <Heading as="h1" size="lg" mb={4}>
-        Campuses UNL
+        Usuarios
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button
@@ -73,11 +72,11 @@ function Campuses() {
           mb={4}
           alignSelf={"flex-end"}
         >
-          Crear campus
+          Crear usuario
         </Button>
       </Box>
-      <CampusTable
-        campuses={campuses}
+      <UserTable
+        users={users}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
       />
@@ -98,4 +97,4 @@ function Campuses() {
   );
 }
 
-export default Campuses;
+export default Users;

@@ -11,27 +11,29 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { getTimeAgo } from "../utils";
 
-function CampusTable({ campuses, handleEdit, handleDelete }) {
+function EventTable({ events, handleEdit, handleDelete }) {
   return (
     <Table p={3} variant="simple">
       <Thead>
         <Tr>
-          <Th>Nombre</Th>
-          <Th>Símbolo nomenclatura</Th>
+          <Th>Titulo</Th>
           <Th>Descripción</Th>
-          <Th>Dirección</Th>
+          <Th>Precio</Th>
+          <Th>Desde</Th>
+          <Th>Hasta</Th>
         </Tr>
       </Thead>
       <Tbody>
-        {campuses.map((campus) => (
-          <Tr key={campus._id}>
-            <Td>{campus.name || "-"}</Td>
-            <Td>{campus.symbol || "-"}</Td>
-            <Td>{campus.description || "-"} </Td>
-            <Td>{campus.address || "-"}</Td>
+        {events.map((event) => (
+          <Tr key={event._id}>
+            <Td>{event.name || "-"}</Td>
+            <Td>{event.description || "-"}</Td>
+            <Td>{event.price ? `$${event.price}` : "Evento gratuito"}</Td>
+            <Td>{new Date(event.sinceDate).toLocaleDateString()}</Td>
+            <Td>{new Date(event.untilDate).toLocaleDateString()}</Td>
             <Td>
               <Menu>
                 <MenuButton
@@ -41,10 +43,10 @@ function CampusTable({ campuses, handleEdit, handleDelete }) {
                   size="sm"
                 />
                 <MenuList>
-                  <MenuItem onClick={() => handleEdit(campus._id)}>
+                  <MenuItem onClick={() => handleEdit(event._id)}>
                     Editar
                   </MenuItem>
-                  <MenuItem onClick={() => handleDelete(campus._id)}>
+                  <MenuItem onClick={() => handleDelete(event._id)}>
                     Eliminar
                   </MenuItem>
                 </MenuList>
@@ -57,4 +59,4 @@ function CampusTable({ campuses, handleEdit, handleDelete }) {
   );
 }
 
-export default CampusTable;
+export default EventTable;

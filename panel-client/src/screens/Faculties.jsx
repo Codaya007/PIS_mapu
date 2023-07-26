@@ -61,7 +61,7 @@ function Faculties() {
   return (
     <Box mx={4} my={8}>
       <Heading as="h1" size="lg" mb={4}>
-        Facultades
+        Facultades UNL
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button

@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { AsyncStorage } from "react-native";
 
 const initialState = {
   user: null,
