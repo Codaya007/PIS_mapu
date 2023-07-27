@@ -4,6 +4,8 @@ const { validateCategory } = require("./Node");
 const Campus = require("../models/Campus");
 const Block = require("../models/Block");
 const { MIN_LAT, MAX_LAT, MIN_LON, MAX_LON } = require("../constants");
+const Detail = require("../models/Detail");
+const Category = require("../models/Category");
 
 const validateCampus = async (campus) => {
   if (!isValidObjectId(campus)) return false;
@@ -46,6 +48,18 @@ const validateNomenclature = async (value, helpers) => {
   }
 
   return value;
+};
+
+const detailIsValid = async (detail) => {
+  const result = await Detail.findOne({ _id: detail });
+
+  return !!result;
+};
+
+const categoryIsValid = async (category) => {
+  const result = await Category.findOne({ _id: category });
+
+  return !!result;
 };
 
 const createSubNodeSchema = Joi.object({
@@ -155,4 +169,6 @@ const updateSubNodeSchema = Joi.object({
 module.exports = {
   createSubNodeSchema,
   updateSubNodeSchema,
+  detailIsValid,
+  categoryIsValid,
 };

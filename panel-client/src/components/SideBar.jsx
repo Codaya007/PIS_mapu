@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { BiSolidCategory, BiSolidDoorOpen, BiSolidHome } from "react-icons/bi";
+import { GoAlertFill } from "react-icons/go";
 import { BsFillCalendarEventFill } from "react-icons/bs";
 import {
   FaBuilding,
@@ -23,10 +24,10 @@ import {
   FaUniversity,
   FaUsers,
 } from "react-icons/fa";
-import { FaCirclePlus, FaHashnode } from "react-icons/fa6";
+import { FaHashnode } from "react-icons/fa6";
 import { FiLogIn, FiLogOut, FiMenu } from "react-icons/fi";
-import { PiPolygonFill } from "react-icons/pi";
-import { TbZoomReplace } from "react-icons/tb";
+// import { PiPolygonFill } from "react-icons/pi";
+// import { TbZoomReplace } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../store/slices/authSlice";
@@ -166,16 +167,16 @@ function SidebarMenu() {
               </Link>
               <Link as={NavLink} to="/report" onClick={toggleMenu}>
                 <Flex align="center">
-                  <Icon as={TbZoomReplace} mr={2} />
-                  <Text>Puntos desactualizados</Text>
+                  <Icon as={GoAlertFill} mr={2} />
+                  <Text>Reportes de usuarios</Text>
                 </Flex>
               </Link>
-              <Link as={NavLink} to="/lost-point" onClick={toggleMenu}>
+              {/* <Link as={NavLink} to="/lost-point" onClick={toggleMenu}>
                 <Flex align="center">
                   <Icon as={FaCirclePlus} mr={2} />
                   <Text>Puntos perdidos</Text>
                 </Flex>
-              </Link>
+              </Link> */}
 
               {user ? (
                 <Button variant="link" onClick={handleLogout}>

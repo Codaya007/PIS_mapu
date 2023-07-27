@@ -12,6 +12,7 @@ import eventReducer from "./slices/eventSlice";
 import interestingNodeReducer from "./slices/interestingNodeSlice";
 import accessNodeReducer from "./slices/accessNodeSlice";
 import routeNodeReducer from "./slices/routeNodeSlice";
+import reportReducer from "./slices/reportSlice";
 
 export const store = configureStore({
   reducer: {
@@ -28,5 +29,6 @@ export const store = configureStore({
     interestingNodeReducer,
     accessNodeReducer,
     routeNodeReducer,
+    reportReducer,
   },
 });

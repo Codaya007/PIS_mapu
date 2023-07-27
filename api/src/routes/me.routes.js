@@ -12,6 +12,13 @@ const meRouter = Router();
 meRouter.get("/", isLoggedIn, meController.getMyProfile);
 
 /**
+ * @route GET /report
+ * @desc Obtener todos los reportes realizador por un usuario
+ * @access Private isLoggedIn
+ */
+meRouter.get("/reports", isLoggedIn, meController.getMyReports);
+
+/**
  * @route PUT /
  * @desc Actualizar perfil de usuario
  * @access Private User

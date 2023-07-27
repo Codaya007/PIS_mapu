@@ -1,6 +1,25 @@
 const SubNode = require("../models/SubNode.js");
 const ValidationError = require("../errors/ValidationError.js");
 const { isValidObjectId } = require("mongoose");
+const validateSubNodeExcelFile = require("../helpers/validateSubNodeFile.js");
+const { uploadImageToS3 } = require("../helpers/s3Helpers");
+
+const mapSubNode = (row) => {
+  const result = {};
+  
+  result.name = row.NOMBRE;
+  result.description = row.DESCRIPCION;
+  result.detail = row.DETALLE;
+  result.img = row.IMAGEN;
+  result.latitude = row.LATITUD;
+  result.longitude = row.LONGITUD;
+  result.category = row.CATEGORIA;
+  result.floor = row.PISO;
+  result.enviroment = row.AMBIENTE;
+  result.subenviroment = row.SUBAMBIENTE;
+
+  return result;
+};
 
 const getSubNodeById = async (_id) => {
   if (!isValidObjectId(_id)) {
@@ -10,7 +29,7 @@ const getSubNodeById = async (_id) => {
   const subNode = await SubNode.findOne({ _id }).populate("category");
 
   if (!subNode) {
-    throw new ValidationError("SubNode no encontrado");
+    throw new ValidationError("Subnodo no encontrado");
   }
 
   return subNode;
@@ -48,9 +67,32 @@ const deleteSubNode = async (_id) => {
     throw new ValidationError("El id debe ser un Object id");
   }
   const deleteSubNode = SubNode.deleteOne({ _id });
-  if (!deleteSubNode) throw ValidationError("SubNode no encontrado");
+  if (!deleteSubNode) throw ValidationError("Subnodo no encontrado");
 
   return deleteSubNode;
+};
+
+const masiveUpload = async (file) => {
+  const { valid, errorsFile, rows } = await validateSubNodeExcelFile(file);
+  
+  if (valid) {
+    const results = await Promise.all(
+      rows.map(async (row) => {
+        return await createSubNode(mapSubNode(row));
+      })
+    );
+
+    return { valid, results };
+  } else {
+    const { Location: errorsURL } = await uploadImageToS3(
+      errorsFile,
+      "xlsx",
+      "validations",
+      true
+    );
+      
+    return { valid, errorsURL };
+  }
 };
 
 module.exports = {
@@ -60,4 +102,5 @@ module.exports = {
   createSubNode,
   deleteSubNode,
   getCountSubNodes,
+  masiveUpload,
 };

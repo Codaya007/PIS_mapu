@@ -1,8 +1,17 @@
-import { Box, SimpleGrid, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  SimpleGrid,
+  Stat,
+  StatLabel,
+  StatNumber,
+} from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { getInfoDashboard } from "../store/actions/dashboardActions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import MapContainerComponent from "../components/Map";
+import { getAllCoordinates } from "../services/nodeServices";
+import { toast } from "react-toastify";
 
 function Dashboard() {
   const {
@@ -13,12 +22,23 @@ function Dashboard() {
     totalBlock,
     totalCareer,
     totalCategory,
-    totalSector,
+    // totalSector,
   } = useSelector((state) => state.dashboardReducer);
+  const [markers, setMarkers] = useState([]);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
+    const getMarkers = async () => {
+      try {
+        const { results } = await getAllCoordinates();
+        setMarkers(results);
+      } catch (error) {
+        toast.error("No se han podido obtener las coordenadas");
+      }
+    };
+    getMarkers();
+
     dispatch(getInfoDashboard());
   }, []);
 
@@ -34,7 +54,7 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-          <StatLabel>Total usuarios</StatLabel>
+          <StatLabel fontSize={"xs"}>Total usuarios</StatLabel>
           <StatNumber color={"blue.500"}>{totalUser}</StatNumber>
         </Stat>
         <Stat
@@ -46,7 +66,9 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-          <StatLabel>Usuarios registrados en el último mes</StatLabel>
+          <StatLabel fontSize={"xs"}>
+            Usuarios registrados en el último mes
+          </StatLabel>
           <StatNumber color={"blue.500"}>{totalUserLastMonth}</StatNumber>
         </Stat>
         <Stat
@@ -58,7 +80,7 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-          <StatLabel>Total de facultades</StatLabel>
+          <StatLabel fontSize={"xs"}>Total de facultades</StatLabel>
           <StatNumber color={"blue.500"}>{totalFaculty}</StatNumber>
         </Stat>
         <Stat
@@ -70,7 +92,7 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-          <StatLabel>Total de bloques</StatLabel>
+          <StatLabel fontSize={"xs"}>Total de bloques</StatLabel>
           <StatNumber color={"blue.500"}>{totalBlock}</StatNumber>
         </Stat>
         <Stat
@@ -82,7 +104,7 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-          <StatLabel>Total de carreras</StatLabel>
+          <StatLabel fontSize={"xs"}>Total de carreras</StatLabel>
           <StatNumber color={"blue.500"}>{totalCareer}</StatNumber>
         </Stat>
         <Stat
@@ -94,10 +116,10 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-          <StatLabel>Total de categorias</StatLabel>
+          <StatLabel fontSize={"xs"}>Total de categorías</StatLabel>
           <StatNumber color={"blue.500"}>{totalCategory}</StatNumber>
         </Stat>
-        <Stat
+        {/* <Stat
           p={4}
           bg="white"
           borderRadius="lg"
@@ -108,7 +130,7 @@ function Dashboard() {
         >
           <StatLabel>Total de sectores</StatLabel>
           <StatNumber color={"blue.500"}>{totalSector}</StatNumber>
-        </Stat>
+        </Stat> */}
         <Stat
           p={4}
           bg="white"
@@ -118,12 +140,16 @@ function Dashboard() {
             boxShadow: "lg",
           }}
         >
-          <StatLabel>Total de Campus</StatLabel>
+          <StatLabel fontSize={"xs"}>Total de Campus</StatLabel>
           <StatNumber color={"blue.500"}>{totalCampus}</StatNumber>
         </Stat>
       </SimpleGrid>
-
-      <MapContainerComponent />
+      <Box p={4}>
+        <Heading as="h1" size="lg" mb={4}>
+          Mapa de nodos
+        </Heading>
+        <MapContainerComponent markers={markers} circle />
+      </Box>
     </Box>
   );
 }
