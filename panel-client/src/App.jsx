@@ -26,7 +26,7 @@ import InterestingNodes from "./screens/InterestingNodes";
 import AccessNodes from "./screens/AccessNodes";
 import RouteNodes from "./screens/RouteNodes";
 import EventsForm from "./screens/EventForm";
-import Reports from "./screens/Reports";
+// import Reports from "./screens/Reports";
 
 function App() {
   const location = useLocation();
@@ -100,7 +100,7 @@ function App() {
             {/* Usuarios */}
             <Route path="/user" element={<Users />} />
             {/* Reportes */}
-            <Route path="/report" element={<Reports />} />
+            {/* <Route path="/report" element={<Reports />} /> */}
             {/* Commentarios */}
             <Route path="/comment" element={<Comments />} />
             {/* Profile */}

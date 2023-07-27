@@ -174,12 +174,11 @@ const EventsForm = () => {
                 borderColor="gray.500"
               />
             </FormControl>
-            {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
-            {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}
 
             <Button type="submit" colorScheme="blue">
               {id ? "Guardar cambios" : "Crear Evento"}
             </Button>
+
           </VStack>
         </form>
       </Box>
