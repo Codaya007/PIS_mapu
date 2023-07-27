@@ -41,11 +41,6 @@ module.exports = {
     );
     const totalCount = await nodeService.getCountNodes(req.body);
 
-    results.map((node) => {
-      node.type = node.type?.name || null;
-      node.coordinates = [node.latitude, node.longitude];
-    });
-
     return res.json({ totalCount, results });
   },
 

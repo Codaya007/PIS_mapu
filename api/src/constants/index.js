@@ -38,6 +38,13 @@ const INTEREST_NODO_TYPE = "Interés";
 const ACCESS_NODO_TYPE = "Acceso";
 const BLOCK_NODO_TYPE = "Bloque";
 
+const COLORS_DICTIONARY = {
+  [ROUTE_NODO_TYPE]: "green",
+  [INTEREST_NODO_TYPE]: "blue",
+  [ACCESS_NODO_TYPE]: "red",
+  [BLOCK_NODO_TYPE]: "brown",
+};
+
 module.exports = {
   EARTH_RADIUS_M,
   NORMAL_ROLE_NAME,
@@ -57,4 +64,5 @@ module.exports = {
   MIN_LON,
   MAX_LON,
   OBJECT_ID_REGEX,
+  COLORS_DICTIONARY,
 };
