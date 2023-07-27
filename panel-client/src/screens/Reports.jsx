@@ -38,9 +38,9 @@ function Reports() {
     dispatch(setPage(newPage));
   };
 
-  const maskAsReviewed = async (id) => {
+  const maskAsReviewed = async (id, revised = true) => {
     try {
-      await updateReportById(id, { revised: true });
+      await updateReportById(id, { revised });
       toast.success("Actualización exitosa");
 
       dispatch(fetchReports());

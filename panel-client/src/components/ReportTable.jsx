@@ -11,7 +11,7 @@ function ReportTable({ reports, maskAsReviewed }) {
           <Th>Reporte de usuario</Th>
           <Th>Usuario</Th>
           <Th>Revisado</Th>
-          <Th>Acciones</Th>
+          <Th>Marcar como</Th>
         </Tr>
       </Thead>
       <Tbody>
@@ -42,9 +42,9 @@ function ReportTable({ reports, maskAsReviewed }) {
                   <Button
                     colorScheme="blue"
                     mb={4}
-                    onClick={() => maskAsReviewed(_id)}
+                    onClick={() => maskAsReviewed(_id, !revised)}
                   >
-                    Revisar
+                    {revised ? "No revisado" : "Revisado"}
                   </Button>
                 </Td>
               </Tr>
