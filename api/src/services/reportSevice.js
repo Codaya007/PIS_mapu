@@ -86,6 +86,10 @@ const getReports = async (where = {}, skip, limit, populate = true) => {
     reports = await Report.find(where).skip(skip).limit(limit).lean();
   }
 
+  reports.map((report) => {
+    report.type = report.lostPoint ? "Punto perdido" : "Punto desactualizado";
+  });
+
   return reports;
 };
 
@@ -105,6 +109,8 @@ const getReportById = async (_id) => {
   if (!report) {
     throw new NotExist("Reporte no encontrado");
   }
+
+  report.type = report.lostPoint ? "Punto perdido" : "Punto desactualizado";
 
   return report;
 };
