@@ -25,6 +25,7 @@ import Events from "./screens/Events";
 import InterestingNodes from "./screens/InterestingNodes";
 import AccessNodes from "./screens/AccessNodes";
 import RouteNodes from "./screens/RouteNodes";
+import EventsForm from "./screens/EventForm";
 
 function App() {
   const location = useLocation();
@@ -75,8 +76,8 @@ function App() {
             <Route path="/create-career" element={<Careers />} />
             {/* Evento */}
             <Route path="/event" element={<Events />} />
-            <Route path="/edit-event/:id" element={<Events />} />
-            <Route path="/create-event" element={<Events />} />
+            <Route path="/edit-event/:id" element={<EventsForm />} />
+            <Route path="/create-event" element={<EventsForm />} />
             {/* Puntos de interés */}
             <Route path="/interesting-node" element={<InterestingNodes />} />
             <Route
