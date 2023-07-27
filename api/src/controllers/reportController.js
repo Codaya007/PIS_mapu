@@ -2,10 +2,15 @@ const reportService = require("../services/reportSevice");
 
 module.exports = {
   getAllReports: async (req, res) => {
-    const { skip = 0, limit = 10, ...where } = req.query;
+    const { skip = 0, limit = 10, populate = "true", ...where } = req.query;
 
     const totalCount = await reportService.getCountReports(where);
-    const results = await reportService.getReports(where, skip, limit);
+    const results = await reportService.getReports(
+      where,
+      skip,
+      limit,
+      populate === "true"
+    );
 
     return res.json({ totalCount, results });
   },
@@ -19,6 +24,7 @@ module.exports = {
   },
 
   createReport: async (req, res, next) => {
+    req.body.user = req.user?.id;
     const report = await reportService.createReport(req.body);
 
     return res.json(report);
@@ -31,5 +37,4 @@ module.exports = {
 
     res.json(report);
   },
-   
 };

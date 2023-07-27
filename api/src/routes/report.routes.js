@@ -2,9 +2,11 @@ const { Router } = require("express");
 const reportController = require("../controllers/reportController.js");
 const middlewares = require("../middlewares");
 const {
-    createReportSchema,
-    updateReportSchema,
+  createReportSchema,
+  updateReportSchema,
 } = require("../validationSchemas/Report");
+const isAdmin = require("../policies/isAdmin.js");
+const isLoggedIn = require("../policies/isLoggedIn.js");
 
 const reportRouter = Router();
 
@@ -13,20 +15,14 @@ const reportRouter = Router();
  * @desc Obtiene todos los reportes guardados en BD
  * @access Admin
  */
-reportRouter.get(
-    "/",
-    reportController.getAllReports
-);
+reportRouter.get("/", isAdmin, reportController.getAllReports);
 
 /**
  * @route GET /:id
  * @desc Obtiene el report por Id
  * @access Admin
-*/
-reportRouter.get(
-    "/:id",
-    reportController.getReportById
-);
+ */
+reportRouter.get("/:id", isAdmin, reportController.getReportById);
 
 /**
  * @route POST /
@@ -34,21 +30,22 @@ reportRouter.get(
  * @access Admin
  */
 reportRouter.post(
-    "/",
-    middlewares.validateRequestBody(createReportSchema),
-    reportController.createReport
+  "/",
+  isLoggedIn,
+  middlewares.validateRequestBody(createReportSchema),
+  reportController.createReport
 );
 
 /**
  * @route PUT /:id
  * @desc Actualiza el reporte modificando el campo revisión
  * @access Admin
-*/
+ */
 reportRouter.put(
-    "/:id",
-    middlewares.validateRequestBody(updateReportSchema),
-    reportController.updateReport
+  "/:id",
+  isAdmin,
+  middlewares.validateRequestBody(updateReportSchema),
+  reportController.updateReport
 );
-
 
 module.exports = reportRouter;

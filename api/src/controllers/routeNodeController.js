@@ -12,9 +12,9 @@ module.exports = {
     let { skip, limit, ...where } = req.query;
 
     const totalCount = await routeNodeService.getCountRouteNodes(where);
-    const result = await routeNodeService.getRouteNodes(where, skip, limit);
+    const results = await routeNodeService.getRouteNodes(where, skip, limit);
 
-    res.json({ totalCount, result });
+    res.json({ totalCount, results });
   },
 
   createRouteNode: async (req, res) => {

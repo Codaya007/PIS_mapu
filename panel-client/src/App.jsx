@@ -19,6 +19,13 @@ import ProfileEdit from "./screens/ProfileEdit";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
 import Categories from "./screens/Categories";
 import Careers from "./screens/Career";
+import Users from "./screens/Users";
+import Comments from "./screens/Comments";
+import Events from "./screens/Events";
+import InterestingNodes from "./screens/InterestingNodes";
+import AccessNodes from "./screens/AccessNodes";
+import RouteNodes from "./screens/RouteNodes";
+import Reports from "./screens/Reports";
 
 function App() {
   const location = useLocation();
@@ -33,6 +40,7 @@ function App() {
 
     if (user && token) {
       dispatch(login({ user: JSON.parse(user), token: JSON.parse(token) }));
+      navigate("/");
     } else {
       navigate("/login");
     }
@@ -66,6 +74,34 @@ function App() {
             <Route path="/career" element={<Careers />} />
             <Route path="/edit-career/:id" element={<Careers />} />
             <Route path="/create-career" element={<Careers />} />
+            {/* Evento */}
+            <Route path="/event" element={<Events />} />
+            <Route path="/edit-event/:id" element={<Events />} />
+            <Route path="/create-event" element={<Events />} />
+            {/* Puntos de interés */}
+            <Route path="/interesting-node" element={<InterestingNodes />} />
+            <Route
+              path="/edit-interesting-node/:id"
+              element={<InterestingNodes />}
+            />
+            <Route
+              path="/create-interesting-node"
+              element={<InterestingNodes />}
+            />
+            {/* Puntos de acceso */}
+            <Route path="/access-node" element={<AccessNodes />} />
+            <Route path="/edit-access-node/:id" element={<AccessNodes />} />
+            <Route path="/create-access-node" element={<AccessNodes />} />
+            {/* Puntos de ruta */}
+            <Route path="/route-node" element={<RouteNodes />} />
+            <Route path="/edit-route-node/:id" element={<RouteNodes />} />
+            <Route path="/create-route-node" element={<RouteNodes />} />
+            {/* Usuarios */}
+            <Route path="/user" element={<Users />} />
+            {/* Reportes */}
+            <Route path="/report" element={<Reports />} />
+            {/* Commentarios */}
+            <Route path="/comment" element={<Comments />} />
             {/* Profile */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/edit-profile/:id" element={<ProfileEdit />} />

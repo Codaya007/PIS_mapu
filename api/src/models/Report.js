@@ -6,26 +6,39 @@ const reportSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Node",
     required: false,
+    default: null,
   },
   subnode: {
     type: Schema.Types.ObjectId,
-    ref: "Subnode",
+    ref: "subnode",
     required: false,
-  },
-  comment: {
-    type: String,
-    required: false,
-    default: "",
-    maxLength: 200,
-  },
-  revised: {
-    type: Boolean,
-    required: true,
+    default: null,
   },
   lostPoint: {
     type: Schema.Types.ObjectId,
     ref: "LostPoint",
-    requiered: false,
+    required: false,
+    default: null,
+  },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: "users",
+    required: true,
+  },
+  comment: {
+    type: String,
+    required: true,
+    maxLength: 300,
+  },
+  revised: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+reportSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    ret.type = ret.lostPoint ? "Punto perdido" : "Punto desactualizado";
   },
 });
 

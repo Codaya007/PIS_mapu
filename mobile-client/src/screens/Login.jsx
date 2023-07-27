@@ -20,6 +20,7 @@ import {
 } from "../constants";
 import { loginUser } from "../store/actions/authActions";
 import { useNavigation } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 const Login = () => {
   const { user } = useSelector((state) => state.authReducer);
@@ -51,7 +52,13 @@ const Login = () => {
     const errors = validateForm();
 
     if (!errors.email && !errors.password) {
-      dispatch(loginUser(email, password));
+      dispatch(loginUser(email, password));      
+    }else{
+      Toast.show({
+        type: "error",
+        text1: "Datos erroneos",
+        position: "bottom",
+      });
     }
     // console.log(typeof(user._id))
   };
@@ -97,7 +104,7 @@ const Login = () => {
             />
           </FormControl>
           <FormControl>
-            <FormControl.Label>Contraseña { name }</FormControl.Label>
+            <FormControl.Label>Contraseña {name}</FormControl.Label>
             <Input
               type="password"
               placeholder="****"

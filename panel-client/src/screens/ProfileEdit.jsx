@@ -1,23 +1,23 @@
 import {
   Avatar,
   Box,
-  Card,
-  Heading,
-  Switch,
-  Text,
-  VStack,
   Button,
+  Card,
   FormControl,
   FormLabel,
+  Heading,
   Input,
+  Switch,
+  Text,
+  VStack
 } from "@chakra-ui/react";
 
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { putProfile } from "../services/authServices";
 import { fetchProfile } from "../store/actions/authActions";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 
 const initialState = {
@@ -39,8 +39,6 @@ const ProfileEdit = () => {
   const dispatch = useDispatch();
   const [userForm, setUserForm] = useState(initialState);
   const navigate = useNavigate();
-
-
 
   const saveChange = async() => {
     console.log("SaveChanges")

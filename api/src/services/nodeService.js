@@ -9,6 +9,7 @@ const {
   getDistanceBetweenCoordinates,
 } = require("../helpers/index");
 const SubNode = require("../models/SubNode");
+const { ROUTE_NODO_TYPE, COLORS_DICTIONARY } = require("../constants");
 
 const populateDetail = async (node) => {
   const formated = node.toJSON();
@@ -117,6 +118,28 @@ const getNodes = async (where = {}, skip, limit, populate = true) => {
   return nodes;
 };
 
+const getAllNodesCoordinates = async (where = {}, skip, limit) => {
+  const nodes = await Node.find(where)
+    .select(["latitude", "longitude", "type", "available"])
+    .populate("type", ["name"])
+    .populate("detail", ["title"])
+    .sort({ createdAt: -1 })
+    .lean();
+
+  nodes.map((node) => {
+    node.type = node.type?.name || null;
+    node.name =
+      node.type === ROUTE_NODO_TYPE
+        ? "Nodo ruta"
+        : node?.detail?.title || "Sin datos";
+    node.color = COLORS_DICTIONARY[node.type];
+    node.coordinates = [node.latitude, node.longitude];
+    node.detail = undefined;
+  });
+
+  return nodes;
+};
+
 const getCountNodes = async (where = {}) => {
   const countNodes = await Node.count(where);
 
@@ -203,6 +226,7 @@ module.exports = {
   createNodeWithDetail,
   updateNodeWithDetailById,
   getNodes,
+  getAllNodesCoordinates,
   getCountNodes,
   getNodeById,
   updateNodeById,

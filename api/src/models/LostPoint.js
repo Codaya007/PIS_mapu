@@ -6,13 +6,19 @@ const lostPointSchema = new Schema({
     type: Number,
     required: true,
     min: -200,
-    max: 200
-  },  
-  length: {
+    max: 200,
+  },
+  longitude: {
     type: Number,
     required: true,
     min: -200,
-    max: 200
+    max: 200,
+  },
+});
+
+lostPointSchema.set("toJSON", {
+  transform: function (doc, ret) {
+    ret.coordinate = [ret.latitude, ret.longitude];
   },
 });
 

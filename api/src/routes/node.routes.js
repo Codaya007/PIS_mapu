@@ -11,6 +11,13 @@ const nodeRouter = Router();
 nodeRouter.get("/", nodeController.getAllNodes);
 
 /**
+ * @route GET /coordinates
+ * @desc Obtener todas las coordenadas de nodos
+ * @access Public
+ */
+nodeRouter.get("/coordinates", nodeController.getAllCoordinates);
+
+/**
  * @route GET /:id
  * @desc Obtener el nodo por id
  * @access Public

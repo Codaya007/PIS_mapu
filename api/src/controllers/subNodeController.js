@@ -9,10 +9,10 @@ module.exports = {
 
   getAllSubNodes: async (req, res) => {
     const { skip = 0, limit = 10, ...where } = req.query;
-    const result = await subNodeService.getAllSubNodes(where, skip, limit);
+    const results = await subNodeService.getAllSubNodes(where, skip, limit);
     const totalCount = await subNodeService.getCountSubNodes(where);
 
-    res.json({ totalCount, result });
+    res.json({ totalCount, results });
   },
 
   getSubNodeById: async (req, res) => {

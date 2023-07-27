@@ -4,21 +4,21 @@ const BadRequestError = require("../errors/BadRequestError");
 module.exports = {
   getAdyacenciesByNode: async (req, res) => {
     const { node } = req.params;
-    const result = await adyacencyService.getNodeAdyacencies(node);
+    const results = await adyacencyService.getNodeAdyacencies(node);
 
-    res.json({ totalCount: result.length, result });
+    res.json({ totalCount: result.length, results });
   },
 
   getAllAdyacencies: async (req, res) => {
     let { skip, limit, populate, ...where } = req.query;
 
     const totalCount = await adyacencyService.getAllAdyacenciesCount(where);
-    const result = await adyacencyService.getAllAdyacencies(
+    const results = await adyacencyService.getAllAdyacencies(
       where,
       populate === "true"
     );
 
-    res.json({ totalCount, result });
+    res.json({ totalCount, results });
   },
 
   createAdyacency: async (req, res) => {
