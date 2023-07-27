@@ -17,7 +17,7 @@ subNodeRouter.post(
 
 subNodeRouter.post(
   "/upload",
-  // isAdmin,
+  isAdmin,
   upload.single("file"),
   subNodeController.masiveUpload
 );
