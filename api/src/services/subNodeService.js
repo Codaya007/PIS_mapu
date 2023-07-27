@@ -10,7 +10,7 @@ const getSubNodeById = async (_id) => {
   const subNode = await SubNode.findOne({ _id }).populate("category");
 
   if (!subNode) {
-    throw new ValidationError("SubNode no encontrado");
+    throw new ValidationError("Subnodo no encontrado");
   }
 
   return subNode;
@@ -48,7 +48,7 @@ const deleteSubNode = async (_id) => {
     throw new ValidationError("El id debe ser un Object id");
   }
   const deleteSubNode = SubNode.deleteOne({ _id });
-  if (!deleteSubNode) throw ValidationError("SubNode no encontrado");
+  if (!deleteSubNode) throw ValidationError("Subnodo no encontrado");
 
   return deleteSubNode;
 };
