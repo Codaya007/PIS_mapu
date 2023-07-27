@@ -35,4 +35,14 @@ module.exports = {
 
     res.json(deletedUser);
   },
+
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await subNodeService.masiveUpload(
+      req.file
+    );
+
+    if (valid) return res.json({ success: true, results });
+
+    return res.json({ success: false, results: errorsURL });
+  },
 };

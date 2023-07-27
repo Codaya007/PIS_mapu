@@ -5,12 +5,21 @@ const {
   createSubNodeSchema,
   updateSubNodeSchema,
 } = require("../validationSchemas/SubNode.js");
+const isAdmin = require("../policies/isAdmin.js");
+const { upload } = require("../configs/multerConfig.js");
 const subNodeRouter = Router();
 
 subNodeRouter.post(
   "/",
   middlewares.validateRequestBody(createSubNodeSchema),
   subNodeController.createSubNode
+);
+
+subNodeRouter.post(
+  "/upload",
+  // isAdmin,
+  upload.single("file"),
+  subNodeController.masiveUpload
 );
 
 subNodeRouter.get("/", subNodeController.getAllSubNodes);
