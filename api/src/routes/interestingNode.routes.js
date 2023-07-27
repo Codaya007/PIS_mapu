@@ -5,6 +5,8 @@ const {
   createNodeWithDetailSchema,
   updateNodeWithDetailSchema,
 } = require("../validationSchemas/NodeWithDetail");
+const isAdmin = require("../policies/isAdmin");
+const { upload } = require("../configs/multerConfig");
 
 const interestingNodeRouter = Router();
 
@@ -56,5 +58,12 @@ interestingNodeRouter.delete(
   "/:id",
   interestingNodeController.deleteInterestingNode
 );
+
+interestingNodeRouter.post(
+  "/upload",
+  isAdmin,
+  upload.single("file"),
+  interestingNodeController.masiveUpload
+)
 
 module.exports = interestingNodeRouter;
