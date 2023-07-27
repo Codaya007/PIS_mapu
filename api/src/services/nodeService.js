@@ -117,6 +117,16 @@ const getNodes = async (where = {}, skip, limit, populate = true) => {
   return nodes;
 };
 
+const getAllNodesCoordinates = async (where = {}, skip, limit) => {
+  const nodes = await Node.find(where)
+    .select(["latitude", "longitude", "type"])
+    .populate("type", ["name"])
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return nodes;
+};
+
 const getCountNodes = async (where = {}) => {
   const countNodes = await Node.count(where);
 
@@ -203,6 +213,7 @@ module.exports = {
   createNodeWithDetail,
   updateNodeWithDetailById,
   getNodes,
+  getAllNodesCoordinates,
   getCountNodes,
   getNodeById,
   updateNodeById,

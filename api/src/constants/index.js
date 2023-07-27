@@ -17,27 +17,26 @@ const MAX_LAT = 90;
 const MIN_LON = -180;
 const MAX_LON = 180;
 
-const NORMAL_ROLE_NAME = "Normal";
+const OBJECT_ID_REGEX = /^[0-9a-fA-F]{24}$/;
 
+//! Tipos de rol
+const NORMAL_ROLE_NAME = "Normal";
 const ADMIN_ROLE_NAME = "Administrador";
 
+//! Tipos de reporte
 const NODE = "NODE";
-
 const SUBNODE = "SUBNODE";
-
 const LOSTPOINT = "LOSTPOINT";
-
-const OBJECT_ID_REGEX = /^[0-9a-fA-F]{24}$/;
 
 //! Tipos de nodo
 // Ya no se usan
-const ENTRANCE_NODO_TYPE = "ENTRANCE";
-const VIA_NODO_TYPE = "VIA";
+const ENTRANCE_NODO_TYPE = "Entrada";
+const VIA_NODO_TYPE = "Vía";
 // Se usan
-const ROUTE_NODO_TYPE = "ROUTE";
-const INTEREST_NODO_TYPE = "INTEREST";
-const ACCESS_NODO_TYPE = "ACCESS";
-const BLOCK_NODO_TYPE = "BLOCK";
+const ROUTE_NODO_TYPE = "Ruta";
+const INTEREST_NODO_TYPE = "Interés";
+const ACCESS_NODO_TYPE = "Acceso";
+const BLOCK_NODO_TYPE = "Bloque";
 
 module.exports = {
   EARTH_RADIUS_M,

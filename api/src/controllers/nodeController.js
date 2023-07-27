@@ -31,6 +31,24 @@ module.exports = {
     return res.json({ totalCount, results });
   },
 
+  getAllCoordinates: async (req, res, next) => {
+    const { skip, limit, ...where } = req.query;
+
+    const results = await nodeService.getAllNodesCoordinates(
+      req.body,
+      skip,
+      limit
+    );
+    const totalCount = await nodeService.getCountNodes(req.body);
+
+    results.map((node) => {
+      node.type = node.type?.name || null;
+      node.coordinates = [node.latitude, node.longitude];
+    });
+
+    return res.json({ totalCount, results });
+  },
+
   createNode: async (req, res, next) => {
     const newNode = await nodeService.createNodeAdyacencies(req.body);
     return res.json(newNode);
