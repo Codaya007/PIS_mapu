@@ -3,31 +3,70 @@ import {
   Button,
   Center,
   FormControl,
+  HStack,
   Heading,
   Input,
+  Text,
   VStack,
   KeyboardAvoidingView,
+  Link as LinkStyle,
+  Switch,
 } from "native-base";
-import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
+import { EditProfileName } from "../constants";
+import { useDispatch, useSelector } from "react-redux";
+import { updateUser, updateUserPassword } from "../store/actions/authActions";
 
 const initialState = {
-  newPassword: "",
-  newPasswordInput: "",
+  password: "",
+  passwordReWritten: ""
 };
 
 const ProfileChangePassword = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [userPassword, setUserPassword] = useState(initialState);
-  const handleEdit = async (e) => {
-    const { name, value } = e.target;
-    setUserPassword({ ...userPassword, [name]: value });
+  const navigate = (to) => navigation.navigate(to);
+  const handleEdit = (text, input) => {
+    setUserPassword({ ...userPassword, [input]: text });
   };
 
-  const saveChange = async () => {
-    console.log("SaveChanges");
+  const saveChange = async (e) => {
+    e.preventDefault();
+    if(userPassword.password == ""| userPassword.passwordReWritten == ""){
+        Toast.show({
+        type: "error",
+        text1: "Campos incompletos",
+        position: "bottom",
+      });
+      return;
+    }
+    if(userPassword.password != userPassword.passwordReWritten){
+      Toast.show({
+        type: "error",
+        text1: "Las contraseñas no coinciden",
+        position: "bottom",
+      });
+      return;
+    }
+    if (userPassword.password.length <= 8) {
+      Toast.show({
+        type: "error",
+        text1: "Contraseña muy corta",
+        position: "bottom",
+      });
+      return;
+    }
     try {
-      await putProfile(userPassword);
-      dispatch(fetchProfile());
+      dispatch(updateUserPassword(userPassword.password));
+        Toast.show({
+          type: "success",
+          text1: "Registro exitoso",
+          position: "bottom",
+        });
+
     } catch (error) {
       Toast.show({
         type: "error",
@@ -36,6 +75,7 @@ const ProfileChangePassword = () => {
       });
     }
   };
+
 
   return (
     <KeyboardAvoidingView
@@ -57,18 +97,37 @@ const ProfileChangePassword = () => {
           >
             Cambiar Contraseña
           </Heading>
+          <Heading
+            mt="1"
+            color="coolGray.600"
+            _dark={{
+              color: "warmGray.200",
+            }}
+            fontWeight="medium"
+            size="xs"
+          >
+            Registrate para continuar!
+          </Heading>
           <VStack space={3} mt="5">
+
             <FormControl>
-              <FormControl.Label>Nueva contraseña</FormControl.Label>
-              <Input name="newPassword" onChangeText={handleEdit} />
+              <FormControl.Label>Nueva contraseña </FormControl.Label>
+              <Input type="password"
+              placeholder="*******"
+              onChangeText={(text) => handleEdit(text, "password")} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Reescribe la contraseña</FormControl.Label>
-              <Input name="newPasswordInput" onChangeText={handleEdit} />
+              <Input type="password"
+              placeholder="********"
+              onChangeText={(text) => handleEdit(text, "passwordReWritten")} />
             </FormControl>
 
-            <Button mt="2" bgColor="indigo.500" onPress={saveChange}>
+            <Button mt="2" colorScheme="indigo" onPress={saveChange}>
               Guardar
+            </Button>
+            <Button mt="2" colorScheme="orange" onPress={() => navigate(EditProfileName)}>
+              Regresar
             </Button>
           </VStack>
         </Box>
