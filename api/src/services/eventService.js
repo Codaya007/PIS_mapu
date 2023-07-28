@@ -53,10 +53,13 @@ const getCountEvents = async (mobile, search, where = {}) => {
 const updateEventById = async (_id, eventData) => {
   let existingEvent = await getEventById(_id);
   if (!existingEvent) throw new NotExist("El evento no se encontro");
+  const existingName = await Event.findOne({ name: eventData.name });
+  if (existingEvent.name != existingName.name) {
+    if (existingName) throw new FieldExistingError(`El evento ya existe`, 400);
+  }
 
   const sinceDate = eventData.sinceDate ?? existingEvent.sinceDate;
   const untilDate = eventData.untilDate ?? existingEvent.untilDate;
-
   if (untilDate < sinceDate)
     throw new ValidationError(
       "La fecha de inicio del evento debe ser antes de la fecha de término"
