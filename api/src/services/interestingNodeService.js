@@ -3,6 +3,8 @@ const typeService = require("./typeService");
 const detailService = require("./detailService");
 const nodeService = require("./nodeService");
 const { INTEREST_NODO_TYPE } = require("../constants/index");
+const validateInterestingExcelFile = require("../helpers/validateInterestingFile");
+const { uploadImageToS3 } = require("../helpers/s3Helpers");
 
 const getInterestingNodeTypeId = async () => {
   const accessType = await typeService.getOneType({
@@ -83,6 +85,45 @@ const deleteInterestingNodeById = async (id) => {
   return deletedNode;
 };
 
+const masiveUpload = async (file) => {
+  const { valid, errorsFile, rows } = await validateInterestingExcelFile(file);
+  
+  if (valid) {
+    const results = await Promise.all(
+      rows.map(async (row) => {
+        return await createInterestingNode(mapInterestingNode(row));
+      })
+    );
+
+    return { valid, results };
+  } else {
+    const { Location: errorsURL } = await uploadImageToS3(
+      errorsFile,
+      "xlsx",
+      "validations",
+      true
+    );
+      
+    return { valid, errorsURL };
+  }
+};
+
+const mapInterestingNode = (row) => {
+  const result = {};
+
+  result.campus = row.CAMPUS;
+  result.category = row.CATEGORIA;
+  result.detail = {
+    title: row.TITULO,
+    description: row.DESCRIPCION || null,
+    img: row.IMAGEN || null,
+  };
+  result.latitude = row.LATITUD;
+  result.longitude = row.LONGITUD;
+
+  return result;
+};
+
 module.exports = {
   createInterestingNode,
   getInterestingNodes,
@@ -90,4 +131,5 @@ module.exports = {
   getInterestingNodeById,
   updateInterestingNodeById,
   deleteInterestingNodeById,
+  masiveUpload,
 };
