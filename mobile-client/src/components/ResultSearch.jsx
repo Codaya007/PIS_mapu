@@ -34,8 +34,8 @@ const ResultSearch = ({ route }) => {
 
   const { nodes } = route.params;
 
-  const handleNodePress = (node) => {
-    navigation.navigate(MapName, { selectedNode: node });
+  const handleNodePress = (nodeSelected) => {
+    navigation.navigate(MapName, { nodeSelected });
   };
 
   const pressedColor = useColorModeValue("#EAEAEA");
@@ -48,8 +48,8 @@ const ResultSearch = ({ route }) => {
           <VStack space={1} mt="5">
             {nodes.map((node) => (
               <Button
-                key={node.id} // Asegúrate de tener una clave única para cada componente
-                onPress={() => handleNodePress(node)} // Agrega un evento onPress para el botón
+                key={node.id}
+                onPress={() => handleNodePress(node)}
                 justifyContent="flex-start"
                 w="100%"
                 maxW="500"

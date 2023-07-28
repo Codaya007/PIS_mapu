@@ -7,12 +7,14 @@ import {
   Icon,
   VStack,
   useColorModeValue,
+  LinkStyle
 } from "native-base";
 import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getInterestingNodesByStringSearch } from "../services/Search";
+import { getAllNodes } from "../services/Nodes";
 
 const SearchBar = () => {
   const navigate = useNavigation().navigate;
@@ -21,6 +23,7 @@ const SearchBar = () => {
   const [showResults, setShowResults] = useState(false);
 
   const colorIcon = useColorModeValue("#DADADA");
+  const colorLink = useColorModeValue("#FAFAFA");
 
   const handleSearch = async () => {
     try {
@@ -28,6 +31,16 @@ const SearchBar = () => {
       setNodes(nodes);
       setShowResults(true);
       handleClearSearch();
+    } catch (error) {
+      // Mostrar error
+      console.log({ error });
+    }
+  };
+
+  const handleNodes = async () => {
+    try {
+      const { nodes } = await getAllNodes();
+      console.log(nodes)
     } catch (error) {
       // Mostrar error
       console.log({ error });
@@ -80,7 +93,8 @@ const SearchBar = () => {
               InputLeftElement={
                 <Button
                   bg="transparent"
-                  onPress={handleClearSearch}
+                  // onPress={handleSearch}
+                  onPress={handleNodes}
                   _pressed={{ bg: "transparent" }}
                   _text={{ color: "gray" }}
                   py={1}
@@ -96,6 +110,7 @@ const SearchBar = () => {
               }
               onSubmitEditing={handleSearch}
             />
+            
           </FormControl>
         </HStack>
       </VStack>

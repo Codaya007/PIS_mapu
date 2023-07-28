@@ -4,6 +4,7 @@ import MapApi from "../components/MapApi";
 import SearchBar from "../components/SearchBar";
 import ResultSearch from "../components/ResultSearch";
 import Filter from "../screens/Filter"
+import BeginRoute from "./BeginRoute";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <MapApi />
       <View style={styles.appBar}>
         <SearchBar />
+        {/* <BeginRoute /> */}
         {/* <ResultSearch/> */}
         {/* <Text>M A P U</Text> */}
         {/* <Filter/> */}
