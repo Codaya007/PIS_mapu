@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { getAllNodes } from "../services/Nodes";
 
 export default function MapApi({ nodeSelected }) {
-
-  const [nodesPoint, setNodesPoint] = useState("");
+  const [nodesPoint, setNodesPoint] = useState([]);
+  const [onSelect, setOnSelect] = useState(false);
 
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
@@ -14,7 +14,7 @@ export default function MapApi({ nodeSelected }) {
   const handleNodes = async () => {
     try {
       const { nodes } = await getAllNodes();
-      setNodesPoint(nodes)
+      setNodesPoint(nodes);
     } catch (error) {
       // Mostrar error
       console.log({ error });
@@ -26,15 +26,18 @@ export default function MapApi({ nodeSelected }) {
   }, []);
 
   const showNodesOnMap = () => {
-    return nodesPoint.map((node, index) => {
-      if (node.type !== "Ruta") {
+    return nodesPoint.map((node) => {
+      if (node.type !== "Ruta" && !onSelect) {
         return (
           <Marker
-            key={index}
-            coordinate={{ latitude: node.latitude, longitude: node.longitude }}
-            title={node.name}
-            description={node.type}
-            pinColor={node.color}
+            key={node?._id}
+            coordinate={{
+              latitude: node?.latitude,
+              longitude: node?.longitude,
+            }}
+            title={node?.name}
+            description={node?.type}
+            pinColor={node?.color}
           />
         );
       }
