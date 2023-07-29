@@ -60,7 +60,7 @@ category -> name
 avaible
 */
 
-const FacultyForm = () => {
+const InterestingNodesForm = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [interestingNode, setInterestingNode] = useState(initialState);
     const [campuses, setCampuses] = useState([]);
@@ -73,13 +73,23 @@ const FacultyForm = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        //! OJO con esto
-        setInterestingNode({ ...interestingNode, [name]: value });
+        if (name === "title" || name === "description") {
+            setInterestingNode({
+                ...interestingNode,
+                detail: {
+                    ...interestingNode.detail,
+                    [name]: value,
+                },
+            });
+        } else {
+            setInterestingNode({ ...interestingNode, [name]: value });
+        }
     };
 
     const fetchCampuses = async () => {
         try {
             const result = await getCampuses();
+            console.log(result.results)
             setCampuses(result.results);
         } catch (error) {
             console.log("Ocurrió un error al recuperar los campus:", error);
@@ -99,21 +109,22 @@ const FacultyForm = () => {
         if (id) {
             const getInterestingNodeDb = async () => {
                 const interestingNodeDB = await fetchInterestNodeById(id);
-                console.log({ interestingNodeDB });
-
+                
                 setInterestingNode({
                     latitude: interestingNodeDB.latitude,
                     longitude: interestingNodeDB.longitude,
                     available: interestingNodeDB.available,
-                    campus: interestingNodeDB.campus,
-                    category: interestingNodeDB.category,
+                    campus: interestingNodeDB.campus._id,
+                    category: interestingNodeDB.category._id,
                     detail: {
+                        _id: interestingNodeDB.detail._id,
                         title: interestingNodeDB.detail.title || "",
                         description: interestingNodeDB.detail.description || null,
                         img: interestingNodeDB.detail.img || null,
                     },
                 });
 
+                console.log({ interestingNode });
             };
 
             getInterestingNodeDb();
@@ -123,7 +134,7 @@ const FacultyForm = () => {
         fetchCampuses();
         fetchCategories();
 
-        // }, []);
+    // }, []);
     }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA 
 
     const handleSubmit = async (e) => {
@@ -148,7 +159,7 @@ const FacultyForm = () => {
     };
 
     return (
-        <Center height="90vh">
+        <Center height="90vh" mt="3">
             <Box
                 width="500px"
                 p="8"
@@ -167,8 +178,8 @@ const FacultyForm = () => {
                             <Input
                                 type="text"
                                 id="name"
-                                name="name"
-                                value={interestingNode.detail.title}
+                                name="title"
+                                value={interestingNode.detail.title || ""}
                                 onChange={handleChange}
                                 required
                                 borderColor="gray.500"
@@ -220,7 +231,7 @@ const FacultyForm = () => {
                                 <ModalCloseButton />
                                 <ModalBody>
                                     Elige un punto para crear el nuevo nodo
-                                    <MapContainerComponent w="100%" h="75vh"/>
+                                    <MapContainerComponent width="100%" height="75vh" />
                                 </ModalBody>
 
                                 <ModalFooter>
@@ -238,12 +249,16 @@ const FacultyForm = () => {
                                 name="campus"
                                 value={interestingNode.campus}
                                 onChange={handleChange}
+                                required
                                 borderColor="gray.500"
                             >
                                 <option value="">Seleccionar campus</option>
                                 {campuses.length > 0 &&
                                     campuses.map((campus) => (
-                                        <option key={campus._id} value={campus._id}>
+                                        <option
+                                            key={campus._id}
+                                            value={campus._id}
+                                            selected={campus._id === interestingNode.campus}>
                                             {campus.symbol} - {campus.name}
                                         </option>
                                     ))}
@@ -256,6 +271,7 @@ const FacultyForm = () => {
                                 name="category"
                                 value={interestingNode.category}
                                 onChange={handleChange}
+                                required
                                 borderColor="gray.500"
                             >
                                 <option value="">Seleccionar categoria</option>
@@ -273,11 +289,9 @@ const FacultyForm = () => {
                                 <FormLabel htmlFor="avaible">¿Está disponible?</FormLabel>
                                 <Checkbox
                                     id="avaible"
-                                    name="avaible"
+                                    name="available"
                                     isChecked={interestingNode.available}
                                     value={interestingNode.available || ""}
-
-                                    //! OJO CON ESTO NOSE SI ESTARÁ BIEN
                                     onChange={(e) => {
                                         setInterestingNode({
                                             ...interestingNode,
@@ -302,4 +316,4 @@ const FacultyForm = () => {
     );
 };
 
-export default FacultyForm;
+export default InterestingNodesForm;

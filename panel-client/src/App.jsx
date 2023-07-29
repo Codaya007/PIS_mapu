@@ -86,7 +86,7 @@ function App() {
             <Route path="/interesting-node" element={<InterestingNodes />} />
             <Route
               path="/edit-interesting-node/:id"
-              element={<InterestingNodes />}
+              element={<InterestingNodesForm />}
             />
             <Route
               path="/create-interesting-node"
@@ -94,11 +94,11 @@ function App() {
             />
             {/* Puntos de acceso */}
             <Route path="/access-node" element={<AccessNodes />} />
-            <Route path="/edit-access-node/:id" element={<AccessNodes />} />
+            <Route path="/edit-access-node/:id" element={<AccessNodesForm />} />
             <Route path="/create-access-node" element={<AccessNodesForm />} />
             {/* Puntos de ruta */}
             <Route path="/route-node" element={<RouteNodes />} />
-            <Route path="/edit-route-node/:id" element={<RouteNodes />} />
+            <Route path="/edit-route-node/:id" element={<RouteNodesForm />} />
             <Route path="/create-route-node" element={<RouteNodesForm />} />
             {/* Usuarios */}
             <Route path="/user" element={<Users />} />
