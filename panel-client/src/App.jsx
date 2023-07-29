@@ -29,6 +29,7 @@ import AccessNodesForm from "./screens/AccessNodesForm";
 import RouteNodes from "./screens/RouteNodes";
 import RouteNodesForm from "./screens/RouteNodesForm";
 import EventsForm from "./screens/EventForm";
+import CareerForm from "./screens/CareerForm";
 // import Reports from "./screens/Reports";
 
 function App() {
@@ -76,8 +77,8 @@ function App() {
             <Route path="/create-category" element={<Categories />} />
             {/* Carrera */}
             <Route path="/career" element={<Careers />} />
-            <Route path="/edit-career/:id" element={<Careers />} />
-            <Route path="/create-career" element={<Careers />} />
+            <Route path="/edit-career/:id" element={<CareerForm />} />
+            <Route path="/create-career" element={<CareerForm />} />
             {/* Evento */}
             <Route path="/event" element={<Events />} />
             <Route path="/edit-event/:id" element={<EventsForm />} />
