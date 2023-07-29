@@ -21,7 +21,7 @@ app.use(morgan("dev"));
 app.use(cors());
 
 // routes
-app.use("/", require("./src/routes/example.routes.js"));
+app.use("/", require("./src/routes/index.routes.js"));
 app.use("/dashboard", require("./src/routes/dashboard.routes.js"));
 app.use("/auth", require("./src/routes/auth.routes.js"));
 app.use("/adyacency", require("./src/routes/adyacency.routes.js"));

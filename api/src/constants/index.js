@@ -42,7 +42,14 @@ const COLORS_DICTIONARY = {
   [ROUTE_NODO_TYPE]: "green",
   [INTEREST_NODO_TYPE]: "blue",
   [ACCESS_NODO_TYPE]: "red",
-  [BLOCK_NODO_TYPE]: "brown",
+  [BLOCK_NODO_TYPE]: "violet",
+};
+
+const SPANISH_COLORS_DICTIONARY = {
+  green: "Verde",
+  blue: "Azul",
+  red: "Rojo",
+  violet: "Violeta",
 };
 
 module.exports = {
@@ -65,4 +72,5 @@ module.exports = {
   MAX_LON,
   OBJECT_ID_REGEX,
   COLORS_DICTIONARY,
+  SPANISH_COLORS_DICTIONARY,
 };
