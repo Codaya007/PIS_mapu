@@ -15,7 +15,7 @@ export const getAccessNodes = async (skip, limit) => {
   return data;
 };
 
-export const fetchInterestNodeById = async (id) => {
+export const fetchAccesNodeById = async (id) => {
   const { data } = await axios.get(`${API_BASEURL}/access-node/${id}`);
 
   // console.log({ data });
