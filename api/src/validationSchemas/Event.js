@@ -2,52 +2,52 @@ const Joi = require("joi");
 
 // Definir el esquema de validación para la creación de un Evento
 const createEventSchema = Joi.object({
-    name: Joi.string().required().messages({
-        "*": "El campo 'name' es requerido",
-    }),
-    sinceDate: Joi.date().required().messages({
-        "*": "El campo 'sinceDate' es requerido",
-    }),
-    untilDate: Joi.date().required().messages({
-        "*": "El campo 'untilDate' es requerido",
-    }),
-    description: Joi.string().optional().messages({
-        "*": "El campo 'description' es opcional",
-    }),
-    price: Joi.number().precision(2).required().messages({
-        "*": "El campo 'price' es requerido y tiene una precisión de 2 (por ejemplo, 10.99, 5.50)",
-    }),
-    img: Joi.string().optional().messages({
-        "*": "El campo 'img' debe ser una cadena string y es opcional",
-    }),
+  name: Joi.string().required().messages({
+    "*": "El campo 'Nombre' es requerido",
+  }),
+  sinceDate: Joi.date().required().messages({
+    "*": "El campo 'Fecha de inicio' es requerido",
+  }),
+  untilDate: Joi.date().required().messages({
+    "*": "El campo 'Fecha de terminación' es requerido",
+  }),
+  description: Joi.string().optional().messages({
+    "*": "El campo 'Descripción' es opcional",
+  }),
+  price: Joi.number().precision(2).required().messages({
+    "*": "El campo 'Precio' es requerido y tiene una precisión de 2 (por ejemplo, 10.99, 5.50)",
+  }),
+  img: Joi.string().optional().messages({
+    "*": "El campo 'Imagen' debe ser una cadena string y es opcional",
+  }),
 });
 
 // Definir el esquema de validación para la actualización de un Event
 const updateEventSchema = Joi.object({
-    id: Joi.string().strip().messages({
-        "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
-    }),
-    name: Joi.string().optional().messages({
-        "*": "El campo 'name' es optional",
-    }),
-    sinceDate: Joi.date().optional().messages({
-        "*": "El campo 'sinceDate' es optional",
-    }),
-    untilDate: Joi.date().optional().messages({
-        "*": "El campo 'untilDate' es optional",
-    }),
-    description: Joi.string().optional().messages({
-        "*": "El campo 'description' es opcional",
-    }),
-    price: Joi.number().precision(2).optional().messages({
-        "*": "El campo 'price' es optional y tiene una precisión de 2 (por ejemplo, 10.99, 5.50)",
-    }),
-    img: Joi.string().optional().messages({
-        "*": "El campo 'img' debe ser una cadena string y es opcional",
-    }),
+  id: Joi.string().strip().messages({
+    "*": "El campo 'id' presente en la ruta de la petición. Se valida y se elimina el id",
+  }),
+  name: Joi.string().optional().messages({
+    "*": "El campo 'Nombre' es opcional",
+  }),
+  sinceDate: Joi.date().optional().messages({
+    "*": "El campo 'Fecha de inicio' es opcional",
+  }),
+  untilDate: Joi.date().optional().messages({
+    "*": "El campo 'Fecha de terminacion' es opcional",
+  }),
+  description: Joi.string().optional().messages({
+    "*": "El campo 'descripcion' es opcional",
+  }),
+  price: Joi.number().precision(2).optional().messages({
+    "*": "El campo 'Precio' es opcional y tiene una precisión de 2 (por ejemplo, 10.99, 5.50)",
+  }),
+  img: Joi.string().optional().messages({
+    "*": "El campo 'Img' debe ser una cadena string y es opcional",
+  }),
 });
 
 module.exports = {
-    createEventSchema,
-    updateEventSchema
+  createEventSchema,
+  updateEventSchema,
 };

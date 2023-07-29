@@ -54,9 +54,18 @@ const updateEventById = async (_id, eventData) => {
   let existingEvent = await getEventById(_id);
   if (!existingEvent) throw new NotExist("El evento no se encontro");
 
+  if (eventData.name) {
+    const existingName = await Event.findOne({
+      name: eventData.name,
+      _id: { $ne: _id },
+    });
+
+    if (existingName)
+      throw new ValidationError(`El evento ${eventData.name} ya existe`);
+  }
+
   const sinceDate = eventData.sinceDate ?? existingEvent.sinceDate;
   const untilDate = eventData.untilDate ?? existingEvent.untilDate;
-
   if (untilDate < sinceDate)
     throw new ValidationError(
       "La fecha de inicio del evento debe ser antes de la fecha de término"

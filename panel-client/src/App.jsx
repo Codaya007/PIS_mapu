@@ -28,7 +28,8 @@ import AccessNodes from "./screens/AccessNodes";
 import AccessNodesForm from "./screens/AccessNodesForm";
 import RouteNodes from "./screens/RouteNodes";
 import RouteNodesForm from "./screens/RouteNodesForm";
-import Reports from "./screens/Reports";
+import EventsForm from "./screens/EventForm";
+// import Reports from "./screens/Reports";
 
 function App() {
   const location = useLocation();
@@ -79,8 +80,8 @@ function App() {
             <Route path="/create-career" element={<Careers />} />
             {/* Evento */}
             <Route path="/event" element={<Events />} />
-            <Route path="/edit-event/:id" element={<Events />} />
-            <Route path="/create-event" element={<Events />} />
+            <Route path="/edit-event/:id" element={<EventsForm />} />
+            <Route path="/create-event" element={<EventsForm />} />
             {/* Puntos de interés */}
             <Route path="/interesting-node" element={<InterestingNodes />} />
             <Route
@@ -102,7 +103,7 @@ function App() {
             {/* Usuarios */}
             <Route path="/user" element={<Users />} />
             {/* Reportes */}
-            <Route path="/report" element={<Reports />} />
+            {/* <Route path="/report" element={<Reports />} /> */}
             {/* Commentarios */}
             <Route path="/comment" element={<Comments />} />
             {/* Profile */}
