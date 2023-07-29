@@ -7,13 +7,12 @@ import {
   Input,
   VStack,
   Select,
+  Textarea,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createCategory, fetchCategoryById, updateCategoryById } from "../services/categoryServices";
-import { fetchCategories } from "../store/actions/categoryActions";
 import { createCareer, fetchCareerById, updateCareerById } from "../services/careerServices";
 import { fetchCareers } from "../store/actions/careerActions";
 import { getFaculties } from "../services/facultyServices";
@@ -51,7 +50,7 @@ const CareerForm = () => {
       return false;
     };
     if (career.manager.length > 125) {
-      toast.error("El nombre del gerente debe ser de máximo 125 caracteres");
+      toast.error("El nombre del gestor debe ser de máximo 125 caracteres");
       return false;
     };
     if (!/^[0-9a-fA-F]{24}$/.test(career.faculty)) {
@@ -134,12 +133,12 @@ const CareerForm = () => {
             </FormControl>
 
             <FormControl>
-              <FormLabel htmlFor="description">Descripción</FormLabel>
+              <FormLabel htmlFor="manager">Gestor</FormLabel>
               <Input
                 type="text"
-                id="description"
-                name="description"
-                value={career.description || ""}
+                id="manager"
+                name="manager"
+                value={career.manager || ""}
                 onChange={handleChange}
                 required
                 borderColor="gray.500"
@@ -147,12 +146,12 @@ const CareerForm = () => {
             </FormControl>
 
             <FormControl>
-              <FormLabel htmlFor="manager">Gerente</FormLabel>
-              <Input
+              <FormLabel htmlFor="description">Descripción</FormLabel>
+              <Textarea
                 type="text"
-                id="manager"
-                name="manager"
-                value={career.manager || ""}
+                id="description"
+                name="description"
+                value={career.description || ""}
                 onChange={handleChange}
                 required
                 borderColor="gray.500"
