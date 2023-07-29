@@ -15,7 +15,7 @@ export const getRouteNodes = async (skip, limit) => {
   return data;
 };
 
-export const fetchInterestNodeById = async (id) => {
+export const fetchRouteNodeById = async (id) => {
   const { data } = await axios.get(`${API_BASEURL}/route-node/${id}`);
 
   // console.log({ data });

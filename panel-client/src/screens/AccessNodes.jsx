@@ -12,8 +12,6 @@ function AccessNodes() {
   const {
     pages: totalPages,
     currentPage: page,
-    limit,
-    skip,
     currentSliceAccessNodes: accessNodes,
     fetched,
   } = useSelector((state) => state.accessNodeReducer);

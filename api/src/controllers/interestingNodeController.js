@@ -50,4 +50,14 @@ module.exports = {
 
     return res.json(deleteInterestingNode);
   },
+
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await interestingnodeService.masiveUpload(
+      req.file
+    );
+
+    if (valid) return res.json({ success: true, results });
+
+    return res.json({ success: false, results: errorsURL });
+  },
 };
