@@ -91,9 +91,9 @@ const AccessNodesForm = () => {
                     latitude: accessNodeDb.latitude,
                     longitude: accessNodeDb.longitude,
                     available: accessNodeDb.available,
-                    campus: accessNodeDb.campus,
-                    category: accessNodeDb.category,
+                    campus: accessNodeDb.campus._id,
                     detail: {
+                        _id: accessNodeDb.detail._id,
                         title: accessNodeDb.detail.title || "",
                         description: accessNodeDb.detail.description || null,
                         img: accessNodeDb.detail.img || null,
@@ -108,8 +108,8 @@ const AccessNodesForm = () => {
 
         fetchCampuses();
 
-        }, []);
-    // }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA 
+        // }, []);
+    }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -244,7 +244,6 @@ const AccessNodesForm = () => {
                                     name="avaible"
                                     isChecked={accessNode.available}
                                     value={accessNode.available || ""}
-                                    required
                                     onChange={(e) => {
                                         setAccessNode({
                                             ...accessNode,

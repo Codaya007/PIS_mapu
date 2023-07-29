@@ -83,7 +83,7 @@ const RouteNodesForm = () => {
                     latitude: routeNodeDB.latitude,
                     longitude: routeNodeDB.longitude,
                     available: routeNodeDB.available,
-                    campus: routeNodeDB.campus,
+                    campus: routeNodeDB.campus._id,
                 });
 
             };
@@ -204,7 +204,6 @@ const RouteNodesForm = () => {
                                     name="avaible"
                                     isChecked={routeNode.available}
                                     value={routeNode.available || ""}
-                                    required
                                     onChange={(e) => {
                                         setRouteNode({
                                             ...routeNode,

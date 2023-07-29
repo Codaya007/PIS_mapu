@@ -75,13 +75,13 @@ const InterestingNodesForm = () => {
 
         if (name === "title" || name === "description") {
             setInterestingNode({
-              ...interestingNode,
-              detail: {
-                ...interestingNode.detail,
-                [name]: value,
-              },
+                ...interestingNode,
+                detail: {
+                    ...interestingNode.detail,
+                    [name]: value,
+                },
             });
-          } else {
+        } else {
             setInterestingNode({ ...interestingNode, [name]: value });
         }
     };
@@ -89,6 +89,7 @@ const InterestingNodesForm = () => {
     const fetchCampuses = async () => {
         try {
             const result = await getCampuses();
+            console.log(result.results)
             setCampuses(result.results);
         } catch (error) {
             console.log("Ocurrió un error al recuperar los campus:", error);
@@ -108,21 +109,22 @@ const InterestingNodesForm = () => {
         if (id) {
             const getInterestingNodeDb = async () => {
                 const interestingNodeDB = await fetchInterestNodeById(id);
-                console.log({ interestingNodeDB });
-
+                
                 setInterestingNode({
                     latitude: interestingNodeDB.latitude,
                     longitude: interestingNodeDB.longitude,
                     available: interestingNodeDB.available,
-                    campus: interestingNodeDB.campus,
-                    category: interestingNodeDB.category,
+                    campus: interestingNodeDB.campus._id,
+                    category: interestingNodeDB.category._id,
                     detail: {
+                        _id: interestingNodeDB.detail._id,
                         title: interestingNodeDB.detail.title || "",
                         description: interestingNodeDB.detail.description || null,
                         img: interestingNodeDB.detail.img || null,
                     },
                 });
 
+                console.log({ interestingNode });
             };
 
             getInterestingNodeDb();
@@ -132,8 +134,8 @@ const InterestingNodesForm = () => {
         fetchCampuses();
         fetchCategories();
 
-    }, []);
-    // }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA 
+    // }, []);
+    }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -253,7 +255,10 @@ const InterestingNodesForm = () => {
                                 <option value="">Seleccionar campus</option>
                                 {campuses.length > 0 &&
                                     campuses.map((campus) => (
-                                        <option key={campus._id} value={campus._id}>
+                                        <option
+                                            key={campus._id}
+                                            value={campus._id}
+                                            selected={campus._id === interestingNode.campus}>
                                             {campus.symbol} - {campus.name}
                                         </option>
                                     ))}
@@ -287,7 +292,6 @@ const InterestingNodesForm = () => {
                                     name="available"
                                     isChecked={interestingNode.available}
                                     value={interestingNode.available || ""}
-                                    required
                                     onChange={(e) => {
                                         setInterestingNode({
                                             ...interestingNode,
