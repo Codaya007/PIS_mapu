@@ -6,6 +6,7 @@ import {
   FormLabel,
   Input,
   VStack,
+  Heading,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -17,6 +18,8 @@ import {
   updateFacultyById,
 } from "../services/facultyServices";
 import { fetchFaculties } from "../store/actions/facultyActions";
+import MapWithDraw from "../components/MapWithDraw";
+import { MapContainer, TileLayer } from "react-leaflet";
 
 const initialState = {
   name: "",
@@ -30,6 +33,13 @@ const FacultyForm = () => {
   const dispacth = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
+  const center = [-4.032747, -79.202405]; 
+	const zoom = 18;
+
+  const handlePolygonDrawn = (polygonCoordinates) => {
+    const coordinates = polygonCoordinates.geometry.coordinates;
+    setFaculty({ ...faculty, polygons: coordinates });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,10 +86,14 @@ const FacultyForm = () => {
     }
   };
 
+  const deletePolygon = async () => {
+    setFaculty({ ...faculty, polygons: [] });
+  };
+
   return (
-    <Center height="90vh">
+    <Center height="135vh">
       <Box
-        width="500px"
+        width="900px"
         p="8"
         bg="white"
         boxShadow="md"
@@ -125,8 +139,32 @@ const FacultyForm = () => {
               />
             </FormControl>
 
-            {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
-            {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}
+            <Box p={4} width={"100%"}>
+              <Heading as="h1" size="lg" mb={4}>
+                Póligono De La Facultad
+              </Heading>
+              
+              <MapContainer
+                style={{ width: "90%", height: "60vh" }}
+                center={center}
+                zoom={zoom}
+                scrollWheelZoom={false}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <MapWithDraw faculty={faculty} onPolygonDrawn={handlePolygonDrawn} />
+              </MapContainer>
+            </Box>
+
+            {id ? (
+              <Button colorScheme="blue" onClick={deletePolygon}>
+                Eliminar Poligono
+              </Button>
+            ) : (
+              null
+            )}
 
             <Button type="submit" colorScheme="blue">
               {id ? "Guardar cambios" : "Crear facultad"}
