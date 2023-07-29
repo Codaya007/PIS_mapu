@@ -7,34 +7,56 @@ import {
   FormLabel,
   Input,
   Button,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import {  useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { putProfile } from "../services/authServices";
+import { fetchProfile } from "../store/actions/authActions";
+import { toast } from "react-toastify";
 
 const initialState = {
-  password: "",
   newPassword: "",
-  rewriteNewPassword: ""
+  rewriteNewPassword: "",
 };
 
 const ProfileChangePassword = () => {
   const { user } = useSelector((state) => state.authReducer);
+  const dispatch = useDispatch();
   const [passwordForm, setPasswordForm] = useState(initialState);
   const { avatar } = user || {};
+  const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
+
+  const handleClick = () => setShow(!show);
+  const handleClick2 = () => setShow2(!show2);
+
 
   const handleEdit = async (e) => {
     const { name, value } = e.target;
     setPasswordForm({ ...passwordForm, [name]: value });
+    console.log(name + value);
   };
   const saveChange = async () => {
     console.log("SaveChanges");
-    
-    // try {
-    //   await putProfile({ password: passwordForm.newPassword });
-    //   dispatch(fetchProfile());
-    // } catch (error) {
-    //   toast.error(error.response?.data?.message || "Algo salió mal");
-    // }
+    if(passwordForm.newPassword == passwordForm.rewriteNewPassword){
+      if(passwordForm.newPassword.length < 8){
+        toast.error("La contraseña debe tener mas de 8 caracteres");
+        return ;
+      }
+    }
+    if(passwordForm.newPassword != passwordForm.rewriteNewPassword){
+      toast.error("Las contreseñas no son iguales");
+      return;
+    }
+    try {
+      await putProfile({ password: passwordForm.newPassword });
+      dispatch(fetchProfile());
+      toast.success("Contraseña modificada");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Algo salió mal");
+    }
   };
 
   return (
@@ -42,30 +64,39 @@ const ProfileChangePassword = () => {
       <Card p={5} bgColor={"#dcdcdc"}>
         <VStack spacing="4" alignItems="start">
           <Avatar size="xl" src={avatar} alt="Avatar" />
-
-          <FormControl isRequired>
-            <FormLabel>Actual Contraseña:</FormLabel>
-            <Input
-              name="password"
-              placeholder="Actual contraseña"
-              onChange={handleEdit}
-            />
-          </FormControl>
           <FormControl isRequired>
             <FormLabel>Nueva Contraseña</FormLabel>
-            <Input
-              name="newPassword"
-              placeholder="Nueva contraseña"
-              onChange={handleEdit}
-            />
+            <InputGroup size="md">
+              <Input
+                pr="4.5rem"
+                type={show ? "text" : "password"}
+                name="newPassword"
+                onChange={handleEdit}
+                placeholder="Enter password"
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={handleClick}>
+                  {show ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Re-escribir contraseña:</FormLabel>
-            <Input
-              name="rewriteNewPassword"
-              placeholder="Nueva contraseña"
-              onChange={handleEdit}
-            />
+          <FormControl> 
+            <FormLabel>Escribir nuevamente la contraseña:</FormLabel>
+            <InputGroup size="md">
+              <Input
+                pr="4.5rem"
+                type={show2 ? "text" : "password"}
+                name="rewriteNewPassword"
+                placeholder="Nueva contraseña"
+                onChange={handleEdit}
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={handleClick2}>
+                  {show2 ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
           </FormControl>
 
           <Box display="flex" justifyContent="flex-end" mb={4}>
