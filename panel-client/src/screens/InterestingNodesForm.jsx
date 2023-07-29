@@ -60,7 +60,7 @@ category -> name
 avaible
 */
 
-const FacultyForm = () => {
+const InterestingNodesForm = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [interestingNode, setInterestingNode] = useState(initialState);
     const [campuses, setCampuses] = useState([]);
@@ -73,8 +73,17 @@ const FacultyForm = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        //! OJO con esto
-        setInterestingNode({ ...interestingNode, [name]: value });
+        if (name === "title" || name === "description") {
+            setInterestingNode({
+              ...interestingNode,
+              detail: {
+                ...interestingNode.detail,
+                [name]: value,
+              },
+            });
+          } else {
+            setInterestingNode({ ...interestingNode, [name]: value });
+        }
     };
 
     const fetchCampuses = async () => {
@@ -123,8 +132,8 @@ const FacultyForm = () => {
         fetchCampuses();
         fetchCategories();
 
-        // }, []);
-    }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA 
+    }, []);
+    // }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -148,7 +157,7 @@ const FacultyForm = () => {
     };
 
     return (
-        <Center height="90vh">
+        <Center height="90vh" mt="3">
             <Box
                 width="500px"
                 p="8"
@@ -167,8 +176,8 @@ const FacultyForm = () => {
                             <Input
                                 type="text"
                                 id="name"
-                                name="name"
-                                value={interestingNode.detail.title}
+                                name="title"
+                                value={interestingNode.detail.title || ""}
                                 onChange={handleChange}
                                 required
                                 borderColor="gray.500"
@@ -220,7 +229,7 @@ const FacultyForm = () => {
                                 <ModalCloseButton />
                                 <ModalBody>
                                     Elige un punto para crear el nuevo nodo
-                                    <MapContainerComponent w="100%" h="75vh"/>
+                                    <MapContainerComponent width="100%" height="75vh" />
                                 </ModalBody>
 
                                 <ModalFooter>
@@ -238,6 +247,7 @@ const FacultyForm = () => {
                                 name="campus"
                                 value={interestingNode.campus}
                                 onChange={handleChange}
+                                required
                                 borderColor="gray.500"
                             >
                                 <option value="">Seleccionar campus</option>
@@ -256,6 +266,7 @@ const FacultyForm = () => {
                                 name="category"
                                 value={interestingNode.category}
                                 onChange={handleChange}
+                                required
                                 borderColor="gray.500"
                             >
                                 <option value="">Seleccionar categoria</option>
@@ -273,11 +284,10 @@ const FacultyForm = () => {
                                 <FormLabel htmlFor="avaible">¿Está disponible?</FormLabel>
                                 <Checkbox
                                     id="avaible"
-                                    name="avaible"
+                                    name="available"
                                     isChecked={interestingNode.available}
                                     value={interestingNode.available || ""}
-
-                                    //! OJO CON ESTO NOSE SI ESTARÁ BIEN
+                                    required
                                     onChange={(e) => {
                                         setInterestingNode({
                                             ...interestingNode,
@@ -302,4 +312,4 @@ const FacultyForm = () => {
     );
 };
 
-export default FacultyForm;
+export default InterestingNodesForm;
