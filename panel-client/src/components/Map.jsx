@@ -31,14 +31,17 @@ function MapContainerComponent({
   markers = defaultMarkers,
   circle = false,
   zoom = 18,
+  w = "90%",
+  h = "60vh",
 }) {
   return (
     <Box p={4}>
       <MapContainer
-        style={{ width: "90%", height: "60vh" }}
+        style={{ width: w, height: h }}
         center={center}
         zoom={zoom}
         scrollWheelZoom={false}
+        interactive={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
