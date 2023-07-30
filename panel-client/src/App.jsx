@@ -29,6 +29,7 @@ import AccessNodesForm from "./screens/AccessNodesForm";
 import RouteNodes from "./screens/RouteNodes";
 import RouteNodesForm from "./screens/RouteNodesForm";
 import EventsForm from "./screens/EventForm";
+import UserForm from "./screens/UserForm";
 // import Reports from "./screens/Reports";
 
 function App() {
@@ -102,6 +103,9 @@ function App() {
             <Route path="/create-route-node" element={<RouteNodesForm />} />
             {/* Usuarios */}
             <Route path="/user" element={<Users />} />
+            <Route path="/edit-user/:id" element={ <UserForm/> } />
+            <Route path="/create-user" element={ <UserForm/> } />
+
             {/* Reportes */}
             {/* <Route path="/report" element={<Reports />} /> */}
             {/* Commentarios */}
@@ -113,6 +117,7 @@ function App() {
               path="/edit-pasword-profile/:id"
               element={<ProfileChangePassword />}
             />
+            
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </Box>
