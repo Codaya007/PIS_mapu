@@ -1,6 +1,7 @@
 export const EXAMPLE = "example";
 
 export const API_BASEURL = "http://localhost:3000";
+// export const API_BASEURL = "http://192.168.0.42:3000";
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
