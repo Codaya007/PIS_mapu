@@ -21,3 +21,9 @@ export const putProfile = async (newInfo) => {
 
   return true;
 };
+
+export const recoverPassword = async (recoveryPassword) => {
+  await axios.post(`${API_BASEURL}/auth/recovery-password`, recoveryPassword);
+
+  return true;
+};
