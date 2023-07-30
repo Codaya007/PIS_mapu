@@ -23,24 +23,22 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
-    createInterestingNode,
-    fetchInterestNodeById,
-    updateInterestingNodeById,
-} from "../services/interestingNodeServices";
+    createAccessNode,
+    fetchAccesNodeById,
+    updateAccessNodeById
+} from "../services/accessNodeServices";
 
 import { getCampuses } from "../services/campusServices";
-import { getCategories } from "../services/categoryServices";
 
 import MapContainerComponent from "../components/Map"
 
-import { fetchInterestingNodes } from "../store/actions/interestingNodeActions";
+import { fetchAccessNodes } from "../store/actions/accessNodeActions";
 
 const initialState = {
     latitude: 0,
     longitude: 0,
     available: false,
     campus: "",
-    category: "",
     detail: {
         title: "",
         description: null,
@@ -48,23 +46,11 @@ const initialState = {
     },
 };
 
-/*
-detail -> img
-detail -> name
-coordinate
-detail -> title
-detail -> description
-campus -> symbol
-campus -> name
-category -> name
-avaible
-*/
 
-const FacultyForm = () => {
+const AccessNodesForm = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [interestingNode, setInterestingNode] = useState(initialState);
+    const [accessNode, setAccessNode] = useState(initialState);
     const [campuses, setCampuses] = useState([]);
-    const [categories, setCategories] = useState([]);
     const dispacth = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
@@ -73,8 +59,17 @@ const FacultyForm = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        //! OJO con esto
-        setInterestingNode({ ...interestingNode, [name]: value });
+        if (name === "title" || name === "description") {
+            setAccessNode({
+                ...accessNode,
+                detail: {
+                    ...accessNode.detail,
+                    [name]: value,
+                },
+            });
+        } else {
+            setAccessNode({ ...accessNode, [name]: value });
+        }
     };
 
     const fetchCampuses = async () => {
@@ -86,42 +81,32 @@ const FacultyForm = () => {
         }
     };
 
-    const fetchCategories = async () => {
-        try {
-            const result = await getCategories();
-            setCategories(result.results);
-        } catch (error) {
-            console.log("Ocurrió un error al recuperar las categorias:", error);
-        }
-    };
-
     useEffect(() => {
         if (id) {
-            const getInterestingNodeDb = async () => {
-                const interestingNodeDB = await fetchInterestNodeById(id);
-                console.log({ interestingNodeDB });
+            const getAccessNodeDb = async () => {
+                const accessNodeDb = await fetchAccesNodeById(id);
+                console.log({ accessNodeDb });
 
-                setInterestingNode({
-                    latitude: interestingNodeDB.latitude,
-                    longitude: interestingNodeDB.longitude,
-                    available: interestingNodeDB.available,
-                    campus: interestingNodeDB.campus,
-                    category: interestingNodeDB.category,
+                setAccessNode({
+                    latitude: accessNodeDb.latitude,
+                    longitude: accessNodeDb.longitude,
+                    available: accessNodeDb.available,
+                    campus: accessNodeDb.campus._id,
                     detail: {
-                        title: interestingNodeDB.detail.title || "",
-                        description: interestingNodeDB.detail.description || null,
-                        img: interestingNodeDB.detail.img || null,
+                        _id: accessNodeDb.detail._id,
+                        title: accessNodeDb.detail.title || "",
+                        description: accessNodeDb.detail.description || null,
+                        img: accessNodeDb.detail.img || null,
                     },
                 });
 
             };
 
-            getInterestingNodeDb();
+            getAccessNodeDb();
         }
 
 
         fetchCampuses();
-        fetchCategories();
 
         // }, []);
     }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA 
@@ -132,16 +117,16 @@ const FacultyForm = () => {
         try {
             // Aquí puedes hacer la llamada a tu API para guardar el nuevo interesting node
             if (id) {
-                await updateInterestingNodeById(id, interestingNode);
-                navigate("/interesting-node");
+                await updateAccessNodeById(id, accessNode);
+                navigate("/access-node");
                 toast.success("Actualización exitosa");
             } else {
-                await createInterestingNode(interestingNode);
-                toast.success("Nodo de interés creado");
+                await createAccessNode(accessNode);
+                toast.success("Nodo de acceso creado");
             }
 
-            dispacth(fetchInterestingNodes());
-            navigate("/interesting-node");
+            dispacth(fetchAccessNodes());
+            navigate("/access-node");
         } catch (error) {
             toast.error(error.response?.data?.message);
         }
@@ -167,8 +152,8 @@ const FacultyForm = () => {
                             <Input
                                 type="text"
                                 id="name"
-                                name="name"
-                                value={interestingNode.detail.title}
+                                name="title"
+                                value={accessNode.detail.title}
                                 onChange={handleChange}
                                 required
                                 borderColor="gray.500"
@@ -181,7 +166,7 @@ const FacultyForm = () => {
                                 type="text"
                                 id="description"
                                 name="description"
-                                value={interestingNode.detail.description || ""}
+                                value={accessNode.detail.description || ""}
                                 onChange={handleChange}
                                 borderColor="gray.500"
                             />
@@ -193,7 +178,7 @@ const FacultyForm = () => {
                                 type="number"
                                 id="latitude"
                                 name="latitude"
-                                value={interestingNode.latitude || ""}
+                                value={accessNode.latitude || ""}
                                 onChange={handleChange}
                                 borderColor="gray.500"
                             />
@@ -205,7 +190,7 @@ const FacultyForm = () => {
                                 type="number"
                                 id="longitude"
                                 name="longitude"
-                                value={interestingNode.longitude || ""}
+                                value={accessNode.longitude || ""}
                                 onChange={handleChange}
                                 borderColor="gray.500"
                             />
@@ -220,7 +205,7 @@ const FacultyForm = () => {
                                 <ModalCloseButton />
                                 <ModalBody>
                                     Elige un punto para crear el nuevo nodo
-                                    <MapContainerComponent w="100%" h="75vh"/>
+                                    <MapContainerComponent w="100%" h="75vh" />
                                 </ModalBody>
 
                                 <ModalFooter>
@@ -236,8 +221,9 @@ const FacultyForm = () => {
                             <FormLabel htmlFor="campus">Campus</FormLabel>
                             <Select
                                 name="campus"
-                                value={interestingNode.campus}
+                                value={accessNode.campus}
                                 onChange={handleChange}
+                                required
                                 borderColor="gray.500"
                             >
                                 <option value="">Seleccionar campus</option>
@@ -251,36 +237,16 @@ const FacultyForm = () => {
                         </FormControl>
 
                         <FormControl>
-                            <FormLabel htmlFor="category">Categoria</FormLabel>
-                            <Select
-                                name="category"
-                                value={interestingNode.category}
-                                onChange={handleChange}
-                                borderColor="gray.500"
-                            >
-                                <option value="">Seleccionar categoria</option>
-                                {categories.length > 0 &&
-                                    categories.map((category) => (
-                                        <option key={category._id} value={category._id}>
-                                            {category.name}
-                                        </option>
-                                    ))}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl>
                             <HStack alignItems="center">
                                 <FormLabel htmlFor="avaible">¿Está disponible?</FormLabel>
                                 <Checkbox
                                     id="avaible"
                                     name="avaible"
-                                    isChecked={interestingNode.available}
-                                    value={interestingNode.available || ""}
-
-                                    //! OJO CON ESTO NOSE SI ESTARÁ BIEN
+                                    isChecked={accessNode.available}
+                                    value={accessNode.available || ""}
                                     onChange={(e) => {
-                                        setInterestingNode({
-                                            ...interestingNode,
+                                        setAccessNode({
+                                            ...accessNode,
                                             available: e.target.checked,
                                         });
                                     }}
@@ -302,4 +268,4 @@ const FacultyForm = () => {
     );
 };
 
-export default FacultyForm;
+export default AccessNodesForm;

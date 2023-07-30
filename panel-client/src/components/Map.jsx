@@ -31,13 +31,14 @@ function MapContainerComponent({
   markers = defaultMarkers,
   circle = false,
   zoom = 18,
-  w = "90%",
-  h = "60vh",
+  width = "90%",
+  height = "60vh",
 }) {
   return (
-    <Box p={4}>
+    // <Box p={4}>
+    <Box p={4} width={width} height={height}>
       <MapContainer
-        style={{ width: w, height: h }}
+        style={{ width: "100%", height: "100%" }}
         center={center}
         zoom={zoom}
         scrollWheelZoom={false}

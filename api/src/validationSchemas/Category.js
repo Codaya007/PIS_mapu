@@ -27,8 +27,8 @@ const createCategorySchema = Joi.object({
   description: Joi.string().optional().max(200).messages({
     "*": "El campo 'description' debe tener un largo máximo de 200 caracteres",
   }),
-  icon: Joi.string().optional().max(500).messages({
-    "*": "El campo 'icon' debe tener un largo máximo de 500 caracteres",
+  icon: Joi.string().required().messages({
+    "*": "El campo 'icon' es requerido",
   }),
 }).external(nameIsUnique);
 
@@ -43,8 +43,8 @@ const updateCategorySchema = Joi.object({
   description: Joi.string().optional().max(200).messages({
     "*": "El campo 'description' debe tener un largo máximo de 200 caracteres",
   }),
-  icon: Joi.string().optional().max(500).messages({
-    "*": "El campo 'icon' debe tener un largo máximo de 500 caracteres",
+  icon: Joi.string().optional().messages({
+    "*": "El campo 'icon' es invalido",
   }),
 }).external(nameIsUnique);
 

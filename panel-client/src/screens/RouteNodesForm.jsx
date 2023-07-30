@@ -49,7 +49,7 @@ longitude
 latitude
 */
 
-const FacultyForm = () => {
+const RouteNodesForm = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [routeNode, setRouteNode] = useState(initialState);
     const [campuses, setCampuses] = useState([]);
@@ -61,7 +61,6 @@ const FacultyForm = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        //! OJO con esto
         setRouteNode({ ...routeNode, [name]: value });
     };
 
@@ -84,7 +83,7 @@ const FacultyForm = () => {
                     latitude: routeNodeDB.latitude,
                     longitude: routeNodeDB.longitude,
                     available: routeNodeDB.available,
-                    campus: routeNodeDB.campus,
+                    campus: routeNodeDB.campus._id,
                 });
 
             };
@@ -184,6 +183,7 @@ const FacultyForm = () => {
                                 name="campus"
                                 value={routeNode.campus}
                                 onChange={handleChange}
+                                required
                                 borderColor="gray.500"
                             >
                                 <option value="">Seleccionar campus</option>
@@ -204,8 +204,6 @@ const FacultyForm = () => {
                                     name="avaible"
                                     isChecked={routeNode.available}
                                     value={routeNode.available || ""}
-
-                                    //! OJO CON ESTO NOSE SI ESTARÁ BIEN
                                     onChange={(e) => {
                                         setRouteNode({
                                             ...routeNode,
@@ -230,4 +228,4 @@ const FacultyForm = () => {
     );
 };
 
-export default FacultyForm;
+export default RouteNodesForm;
