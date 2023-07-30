@@ -31,6 +31,7 @@ import RouteNodesForm from "./screens/RouteNodesForm";
 import EventsForm from "./screens/EventForm";
 import CareerForm from "./screens/CareerForm";
 import CategoryForm from "./screens/CategoryForm";
+import RecoveryPasswordForm from "./screens/RecoveryPasswordForm-mobile";
 // import Reports from "./screens/Reports";
 
 function App() {
@@ -41,10 +42,27 @@ function App() {
   const shouldShowSidebar = location.pathname !== "/login";
 
   useEffect(() => {
+    let tokenQuery = "";
+    let recoverPass = "";
+
+    const setTokenRecoveryPass = () => {
+      const pathNameChar = location.pathname;
+      for (let i = 0; i < pathNameChar.length; i++) {
+        if(i <= 18) {
+          recoverPass = recoverPass + pathNameChar[i]; 
+        }else{
+          tokenQuery = tokenQuery + pathNameChar[i];
+        }
+      }
+    };
+
     const user = localStorage.getItem("user");
     const token = localStorage.getItem("token");
-
-    if (user && token) {
+        
+    setTokenRecoveryPass();
+    if (recoverPass == "/recovery-password/"){
+      navigate(recoverPass + tokenQuery);
+    }else if (user && token) {
       dispatch(login({ user: JSON.parse(user), token: JSON.parse(token) }));
       navigate("/");
     } else {
@@ -116,6 +134,7 @@ function App() {
               element={<ProfileChangePassword />}
             />
             <Route path="/*" element={<NotFound />} />
+            <Route path="/recovery-password/:tokenQuery" element={<RecoveryPasswordForm />} />
           </Routes>
         </Box>
       </Flex>

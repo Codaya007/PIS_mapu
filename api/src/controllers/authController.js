@@ -37,7 +37,7 @@ module.exports = {
       subject: "Recuperación de contraseña",
       html: `
       <b>Haga click en el siguiente enlace o pégelo en su navegador web para la recuperación de contraseña</b>
-      <a href="http://localhost:3000/auth/recovery-password?token=${token}">http://localhost:3000/auth/recovery-password?token=${token}</a>
+      <a href="https://pis-mapu.vercel.app/recovery-password/${token}">https://pis-mapu.vercel.app/recovery-password/${token}</a>
       `,
     };
 
@@ -49,10 +49,10 @@ module.exports = {
   },
 
   recoverPassword: async (req, res, next) => {
-    const token = req.query.token;
+    const token = req.body.token;
     const user = await authService.validateToken(token);
 
-    user.password = await authService.hashPassword(req.body.password);
+    user.password = await authService.hashPassword(req.body.newPassword);
     const newUser = await user.save();
 
     if (!newUser) {

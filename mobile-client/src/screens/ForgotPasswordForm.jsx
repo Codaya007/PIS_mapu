@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Platform } from "react-native";
 import axios from "axios";
 import Toast from 'react-native-toast-message';
+import { API_BASEURL } from "../constants";
 
 export default function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
@@ -27,9 +28,9 @@ export default function ForgotPasswordForm() {
     }
 
     setIsSending(true);
-      
+    
     try{
-      const response = await axios.post("http://192.168.0.102:3000/auth/forgot-password", {
+      const response = await axios.post(`${API_BASEURL}/auth/forgot-password`, {
         email
       });
 
