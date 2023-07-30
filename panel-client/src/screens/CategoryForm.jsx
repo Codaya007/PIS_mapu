@@ -5,8 +5,8 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Textarea,
   VStack,
-  Heading,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { createCategory, fetchCategoryById, updateCategoryById } from "../services/categoryServices";
 import { fetchCategories } from "../store/actions/categoryActions";
+import { updateImageToS3 } from "../services/imageServices";
 
 const initialState = {
   name: "",
@@ -37,15 +38,17 @@ const CategoryForm = () => {
       return false;
     };
     if (!/^https?:\/\/\S+$/.test(category.icon)){
-      toast.error("El ícono debe ser una URL válida de mínimo 2 y máximo 30 caracteres");
+      toast.error("Seleccione el ícono de la categoría");
       return false;
     }
-    if (category.icon.length < 2 | category.icon.length > 30) {
-      toast.error("El ícono debe ser de mínimo 2 y máximo de 30 caracteres");
-      return false;
-    };
     return true;
   }
+
+  const handleIconChange = async (e) => {
+    const file = e.target.files[0];
+    const url = await updateImageToS3(file);
+    setCategory({ ...category, icon: url });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -120,7 +123,7 @@ const CategoryForm = () => {
 
             <FormControl>
               <FormLabel htmlFor="description">Descripción</FormLabel>
-              <Input
+              <Textarea
                 type="text"
                 id="description"
                 name="description"
@@ -131,18 +134,32 @@ const CategoryForm = () => {
               />
             </FormControl>
 
-            <FormControl>
-              <FormLabel htmlFor="icon">Icono</FormLabel>
-              <Input
-                type="text"
-                id="icon"
-                name="icon"
-                value={category.icon || ""}
-                onChange={handleChange}
-                required
-                borderColor="gray.500"
-              />
-            </FormControl>
+            {category.icon.length > 0 ? (
+              <FormControl>
+                <FormLabel htmlFor="icon">Icono</FormLabel>
+                <Input
+                  type="file"
+                  id="icon"
+                  name="icon"
+                  accept=".png, .jpg, .jpeg, .svg"
+                  onChange={handleIconChange}
+                  borderColor="gray.500"
+                />
+              </FormControl>
+            ) : (
+              <FormControl>
+                <FormLabel htmlFor="icon">Icono</FormLabel>
+                <Input
+                  type="file"
+                  id="icon"
+                  name="icon"
+                  accept=".png, .jpg, .jpeg, .svg"
+                  onChange={handleIconChange}
+                  required
+                  borderColor="gray.500"
+                />
+              </FormControl>)
+            }
 
             <Button type="submit" colorScheme="blue">
               {id ? "Guardar cambios" : "Crear categoria"}
