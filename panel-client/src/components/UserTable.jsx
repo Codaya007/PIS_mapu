@@ -37,7 +37,7 @@ function UserTable({ users, handleEdit, handleDelete }) {
             <Td>{user.lastname || "-"} </Td>
             <Td>{user.email || "-"}</Td>
             <Td>{user.role || "-"}</Td>
-            <Td>{user.blocked ? "Si" : "No"}</Td>
+            <Td>{user.bloqued ? "Si" : "No"}</Td>
             <Td>
               <Menu>
                 <MenuButton

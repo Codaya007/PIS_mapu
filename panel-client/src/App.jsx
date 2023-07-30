@@ -32,6 +32,7 @@ import EventsForm from "./screens/EventForm";
 import CareerForm from "./screens/CareerForm";
 import CategoryForm from "./screens/CategoryForm";
 import RecoveryPasswordForm from "./screens/RecoveryPasswordForm-mobile";
+import UserForm from "./screens/UserForm";
 // import Reports from "./screens/Reports";
 
 function App() {
@@ -122,6 +123,9 @@ function App() {
             <Route path="/create-route-node" element={<RouteNodesForm />} />
             {/* Usuarios */}
             <Route path="/user" element={<Users />} />
+            <Route path="/edit-user/:id" element={ <UserForm/> } />
+            <Route path="/create-user" element={ <UserForm/> } />
+
             {/* Reportes */}
             {/* <Route path="/report" element={<Reports />} /> */}
             {/* Commentarios */}
@@ -133,6 +137,7 @@ function App() {
               path="/edit-pasword-profile/:id"
               element={<ProfileChangePassword />}
             />
+            
             <Route path="/*" element={<NotFound />} />
             <Route path="/recovery-password/:tokenQuery" element={<RecoveryPasswordForm />} />
           </Routes>

@@ -53,6 +53,7 @@ const ProfileEdit = () => {
         setUserForm({ ...userForm, avatar:  stringWithoutQuotes});
         console.log(userForm.avatar);
       } catch (error) {
+        toast.error(error.response?.data?.message || "Error al cargar la imagen");
         console.log("error " + error);
       }
     }

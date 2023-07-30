@@ -12,8 +12,8 @@ function Users() {
   const {
     pages: totalPages,
     currentPage: page,
-    limit,
-    skip,
+    // limit,
+    // skip,
     currentSliceUser: users,
     fetched,
   } = useSelector((state) => state.userReducer);

@@ -36,7 +36,7 @@ const userSchema = new Schema({
     max: 30,
   },
   settings: {
-    nofitication: {
+    notification: {
       type: Boolean,
       required: false,
       default: true,
