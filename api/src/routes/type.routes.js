@@ -33,17 +33,19 @@ typeRouter.get("/", typeController.getAllTypes);
  */
 typeRouter.get("/:id", typeController.getTypeById);
 
-/**
- * @route PUT/:id
- * @des Actualizar typo por id (/:id)
- * @access Admin
- */
-typeRouter.put(
-  "/:id",
-  middlewares.validateRequestBody(updateTypeSchema),
-  typeController.updateType
-);
+//! NO SE PUEDEN ACTUALIZAR LOS TIPOS
+// /**
+//  * @route PUT/:id
+//  * @des Actualizar typo por id (/:id)
+//  * @access Admin
+//  */
+// typeRouter.put(
+//   "/:id",
+//   middlewares.validateRequestBody(updateTypeSchema),
+//   typeController.updateType
+// );
 
+//! NO SE PUEDEN ELIMINAR LOS TIPOS
 /**
  * @route DELETE/:id
  * @des Eliminar por id (/:id)

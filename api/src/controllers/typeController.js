@@ -8,9 +8,11 @@ module.exports = {
 
   getAllTypes: async (req, res) => {
     const { skip = 0, limit = 10 } = req.query;
+
     const totalCount = await typesService.getCountTypes(req.query);
-    const types = await typesService.getTypes(req.query, skip, limit);
-    return res.json({ totalCount, types });
+    const results = await typesService.getTypes(req.query, skip, limit);
+
+    return res.json({ totalCount, results });
   },
 
   getTypeById: async (req, res) => {

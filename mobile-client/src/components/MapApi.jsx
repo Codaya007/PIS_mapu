@@ -1,32 +1,46 @@
-import { StatusBar, View, StyleSheet } from "react-native";
+import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { useEffect, useState } from "react";
+import { getAllNodes } from "../services/Nodes";
 
-let placesOfInterest = [
-  {
-    title: "Redondel",
-    location: {
-      latitude: -4.0328,
-      longitude: -79.2024,
-    },
-    description: "Redondel de la Universidad Nacional de Loja",
-  },
-];
+export default function MapApi({ nodeSelected }) {
+  const [nodesPoint, setNodesPoint] = useState([]);
+  const [onSelect, setOnSelect] = useState(false);
 
-export default function MapApi() {
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
   };
 
-  const showLocationsOfInterest = () => {
-    return placesOfInterest.map((item, index) => {
-      return (
-        <Marker
-          key={index}
-          coordinate={item.location}
-          title={item.title}
-          description={item.description}
-        />
-      );
+  const handleNodes = async () => {
+    try {
+      const { nodes } = await getAllNodes();
+      setNodesPoint(nodes);
+    } catch (error) {
+      // Mostrar error
+      console.log({ error });
+    }
+  };
+
+  useEffect(() => {
+    handleNodes();
+  }, []);
+
+  const showNodesOnMap = () => {
+    return nodesPoint.map((node) => {
+      if (node.type !== "Ruta" && !onSelect) {
+        return (
+          <Marker
+            key={node?._id}
+            coordinate={{
+              latitude: node?.latitude,
+              longitude: node?.longitude,
+            }}
+            title={node?.name}
+            description={node?.type}
+            pinColor={node?.color}
+          />
+        );
+      }
     });
   };
 
@@ -42,7 +56,8 @@ export default function MapApi() {
           longitudeDelta: 0.00026654452085494995,
         }}
       >
-        {showLocationsOfInterest()}
+        {/* {showLocationsOfInterest()} */}
+        {showNodesOnMap()}
       </MapView>
       <StatusBar style="auto" />
     </View>

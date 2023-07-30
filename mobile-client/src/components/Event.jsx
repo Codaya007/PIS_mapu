@@ -54,9 +54,9 @@ const Event = ({ event = {} }) => {
           </AspectRatio>
           {price ? (
             <Center
-              bg="violet.500"
+              bg="indigo.500"
               _dark={{
-                bg: "violet.400",
+                bg: "indigo.400",
               }}
               _text={{
                 color: "warmGray.50",

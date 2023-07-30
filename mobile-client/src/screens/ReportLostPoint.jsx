@@ -4,14 +4,12 @@ import {
   Box,
   Button,
   Center,
-  Checkbox,
   FormControl,
-  HStack,
   Heading,
   Input,
   KeyboardAvoidingView,
   ScrollView,
-  Text,
+  TextArea,
   VStack,
 } from "native-base";
 import { useState } from "react";
@@ -23,8 +21,8 @@ const reportState = {
   comment: "",
   revised: false,
   lostPoint: {
-    latitude: 0,
-    length: 0,
+    latitude: "0",
+    length: "0",
   },
 };
 
@@ -39,7 +37,7 @@ const ReportLostPoint = () => {
         ...report,
         lostPoint: {
           ...report.lostPoint,
-          [input]: Number(text),
+          [input]: parseInt(text),
         },
       });
     } else {
@@ -59,22 +57,22 @@ const ReportLostPoint = () => {
       });
       return;
     }
+
     if (report.lostPoint.latitude == 0 || report.lostPoint.length == 0) {
       Toast.show({
         type: "error",
-        text1: "La longitud y latitud son obligartorios",
+        text1: "La longitud y latitud son obligatorios",
         position: "bottom",
       });
       return;
     }
+
     try {
-      await axios.post(
-        `${API_BASEURL}/report/`,
-        {comment: report.comment, 
-      revised: report.revised,
-      lostPoint: report.lostPoint}
-      );
-      
+      await axios.post(`${API_BASEURL}/report/`, {
+        comment: report.comment,
+        revised: report.revised,
+        lostPoint: report.lostPoint,
+      });
 
       Toast.show({
         type: "success",
@@ -91,6 +89,7 @@ const ReportLostPoint = () => {
       navigate(HomeName);
     }
   };
+
   return (
     <ScrollView w={["360", "300"]} h="30">
       <KeyboardAvoidingView
@@ -127,6 +126,7 @@ const ReportLostPoint = () => {
               <FormControl>
                 <FormControl.Label>Latitud</FormControl.Label>
                 <Input
+                  keyboardType="numeric"
                   id="latitude"
                   onChangeText={(text) => handleEditReport(text, "latitude")}
                   value={report.lostPoint.latitude}
@@ -135,21 +135,20 @@ const ReportLostPoint = () => {
               <FormControl>
                 <FormControl.Label>Longitud</FormControl.Label>
                 <Input
+                  keyboardType="numeric"
                   onChangeText={(text) => handleEditReport(text, "length")}
                   value={report.lostPoint.length}
                 />
               </FormControl>
               <FormControl>
-                <FormControl.Label>
-                  Comentario 
-                </FormControl.Label>
-                <Input
+                <FormControl.Label>Comentario</FormControl.Label>
+                <TextArea
                   onChangeText={(text) => handleEditReport(text, "comment")}
                   value={report.comment}
                 />
               </FormControl>
 
-              <Button mt="2" colorScheme="orange" onPress={handleSave}>
+              <Button mt="2" bgColor={"indigo.500"} onPress={handleSave}>
                 Enviar
               </Button>
             </VStack>

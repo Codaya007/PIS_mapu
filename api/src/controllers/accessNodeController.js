@@ -12,9 +12,9 @@ module.exports = {
     let { skip, limit, ...where } = req.query;
 
     const totalCount = await accessNodeService.getCountAccessNodes(where);
-    const result = await accessNodeService.getAccessNodes(where, skip, limit);
+    const results = await accessNodeService.getAccessNodes(where, skip, limit);
 
-    res.json({ totalCount, result });
+    res.json({ totalCount, results });
   },
 
   createAccessNode: async (req, res) => {

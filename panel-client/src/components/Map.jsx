@@ -2,7 +2,13 @@ import { Box } from "@chakra-ui/react";
 import iconRetina from "leaflet/dist/images/marker-icon-2x.png";
 import iconMarker from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import {
+  CircleMarker,
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+} from "react-leaflet";
 
 const icon = L.icon({
   iconRetinaUrl: iconRetina,
@@ -10,29 +16,54 @@ const icon = L.icon({
   shadowUrl: iconShadow,
 });
 
-function MapContainerComponent() {
-  const position = [-4.035475, -79.200633];
+const defaultMarkers = [
+  {
+    _id: 1,
+    coordinates: [-4.032747, -79.202405],
+    name: "Universidad Nacional de Loja",
+    color: "red",
+  },
+];
 
-  //   .leaflet-container {
-  //   width: 90%;
-  //   height: 80vh;
-  // }
+const center = [-4.032747, -79.202405];
 
+function MapContainerComponent({
+  markers = defaultMarkers,
+  circle = false,
+  zoom = 18,
+  width = "90%",
+  height = "60vh",
+}) {
   return (
-    <Box p={4}>
+    // <Box p={4}>
+    <Box p={4} width={width} height={height}>
       <MapContainer
-        style={{ width: "90%", height: "60vh" }}
-        center={position}
-        zoom={15}
+        style={{ width: "100%", height: "100%" }}
+        center={center}
+        zoom={zoom}
         scrollWheelZoom={false}
+        interactive={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker icon={icon} position={position}>
-          <Popup>Universidad Nacional De Loja</Popup>
-        </Marker>
+        {markers.map((marker) =>
+          circle ? (
+            <CircleMarker
+              center={marker.coordinates}
+              key={marker._id}
+              radius={5}
+              pathOptions={{ color: marker.color || "red" }}
+            >
+              <Popup>{marker.name}</Popup>
+            </CircleMarker>
+          ) : (
+            <Marker key={marker._id} icon={icon} position={marker.coordinates}>
+              <Popup>{marker.name}</Popup>
+            </Marker>
+          )
+        )}
       </MapContainer>
     </Box>
   );

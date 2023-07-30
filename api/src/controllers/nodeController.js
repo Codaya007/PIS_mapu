@@ -31,6 +31,19 @@ module.exports = {
     return res.json({ totalCount, results });
   },
 
+  getAllCoordinates: async (req, res, next) => {
+    const { skip, limit, ...where } = req.query;
+
+    const results = await nodeService.getAllNodesCoordinates(
+      req.body,
+      skip,
+      limit
+    );
+    const totalCount = await nodeService.getCountNodes(req.body);
+
+    return res.json({ totalCount, results });
+  },
+
   createNode: async (req, res, next) => {
     const newNode = await nodeService.createNodeAdyacencies(req.body);
     return res.json(newNode);

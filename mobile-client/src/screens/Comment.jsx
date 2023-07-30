@@ -1,24 +1,20 @@
-import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import {
   Box,
   Button,
   Center,
-  Checkbox,
   FormControl,
-  HStack,
   Heading,
   Input,
   KeyboardAvoidingView,
   ScrollView,
+  TextArea,
   VStack,
 } from "native-base";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
-import { HomeName } from "../constants";
 import { API_BASEURL } from "../constants";
 import { useSelector } from "react-redux";
-import { ObjectId } from "bson-objectid";
 
 //Talvez toque cambiarle el tipo de dato de user y node
 const commentState = {
@@ -53,49 +49,45 @@ const Comment = () => {
   };
 
   const handleSave = async () => {
-
-    
     if (user == null) {
-      Toast.show({
+      return Toast.show({
         type: "error",
         text1: "Para comentar debe registrarse",
         position: "bottom",
       });
-      return;
     }
+
     setComment({
       ...comment,
       user: user._id,
     });
 
     try {
-      // const a = new ObjectId("64bac6ef1b3b6f9d5ec5757f");
-      // console.log(a.toString());
-
       //Modificar para que tenga ek id del nodo que selecciono el usuario
       //Se lo puede hace mediante el useSelector cuando el user e de click sobre el el
       const result = await axios.get(
-        `http://${API_BASEURL}/interesting-node/${comment.node}`
+        `${API_BASEURL}/interesting-node/${comment.node}`
       );
-      console.log(result);
+
       setComment({
         ...comment,
         nodo: result._id,
       });
-      
+
       if (comment.content == "" || comment.node == null) {
-        Toast.show({
+        return Toast.show({
           type: "error",
           text1: "Datos incompletos",
           position: "bottom",
         });
-        return;
       }
 
-      await axios.post(
-        `http://${API_BASEURL}/comment/`,
-        { content: comment.content, hide: comment.hide, user: comment.user, node: comment.node}
-      );
+      await axios.post(`${API_BASEURL}/comment/`, {
+        content: comment.content,
+        hide: comment.hide,
+        user: comment.user,
+        node: comment.node,
+      });
 
       Toast.show({
         type: "success",
@@ -140,7 +132,7 @@ const Comment = () => {
               fontWeight="medium"
               size="xs"
             >
-              Agregue un nuevo comentario para el nodo selecionado
+              Agregue un nuevo comentario para el lugar seleccionado
             </Heading>
             <VStack space={3} mt="5">
               <FormControl>
@@ -159,16 +151,13 @@ const Comment = () => {
                 />
               </FormControl>
               <FormControl>
-                <FormControl.Label>
-                  Comentario 
-                </FormControl.Label>
-                <Input
+                <FormControl.Label>Comentario</FormControl.Label>
+                <TextArea
                   onChangeText={(text) => handleEditComment(text, "content")}
                   value={comment.content}
                 />
               </FormControl>
-
-              <Button mt="2" colorScheme="yellow" onPress={handleSave}>
+              <Button mt="2" bgColor="indigo.500" onPress={handleSave}>
                 Comentar
               </Button>
             </VStack>

@@ -1,4 +1,4 @@
-export const API_BASEURL = "http://192.168.100.6:3000";
+export const API_BASEURL = "http://192.168.100.48:3000";
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -9,5 +9,10 @@ export const LoginName = "Iniciar sesión";
 export const RegisterName = "Registrarse";
 export const ForgotPasswordName = "Olvidé mi contraseña";
 export const AboutName = "Acerca de";
+export const FilterName = "Filtro";
 export const ReportLostPointName = "Reportar punto perdido";
-export const CommentName = "Comentar ";
+export const ResultSearchName = "Resultados de búsqueda";
+export const MapName = "Mapa";
+export const CommentName = "Comentar";
+export const EditProfileName = "Actualizar perfil";
+export const ChangePasswordName = "Actualizar contraseña";

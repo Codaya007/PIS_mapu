@@ -10,15 +10,17 @@ module.exports = {
   },
 
   getAllInterestingNodes: async (req, res) => {
-    const { skip, limit, ...where } = req.query;
+    const { skip, limit, search, ...where } = req.query;
 
     const totalCount = await interestingnodeService.getCountInterestingNodes(
-      where
+      where,
+      search
     );
     const results = await interestingnodeService.getInterestingNodes(
       where,
       skip,
-      limit
+      limit,
+      search
     );
 
     return res.json({ totalCount, results });
@@ -47,5 +49,15 @@ module.exports = {
       await interestingnodeService.deleteInterestingNodeById(id);
 
     return res.json(deleteInterestingNode);
+  },
+
+  masiveUpload: async (req, res, next) => {
+    const { valid, errorsURL, results } = await interestingnodeService.masiveUpload(
+      req.file
+    );
+
+    if (valid) return res.json({ success: true, results });
+
+    return res.json({ success: false, results: errorsURL });
   },
 };
