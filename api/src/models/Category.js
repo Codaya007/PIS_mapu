@@ -17,8 +17,6 @@ const categorySchema = new Schema({
   icon: {
     type: String,
     required: true,
-    minLength: 2,
-    maxLength: 30,
   },
 });
 
