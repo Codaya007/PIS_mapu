@@ -1,7 +1,7 @@
 import {
     Box,
     Button,
-    Center,
+    Container,
     FormControl,
     FormLabel,
     Input,
@@ -9,16 +9,9 @@ import {
     VStack,
     HStack,
     Select,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    useDisclosure,
+    Heading
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -30,7 +23,8 @@ import {
 
 import { getCampuses } from "../services/campusServices";
 
-import MapContainerComponent from "../components/Map"
+import { MapContainer, TileLayer } from "react-leaflet";
+import MapWithDrawNodes from "../components/MapWithDrawNodes";
 
 import { fetchRouteNodes } from "../store/actions/routeNodeActions";
 
@@ -50,12 +44,24 @@ latitude
 */
 
 const RouteNodesForm = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
     const [routeNode, setRouteNode] = useState(initialState);
     const [campuses, setCampuses] = useState([]);
     const dispacth = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
+    const center = [-4.032747, -79.202405];
+    const zoom = 18;
+    const markerRef = useRef();
+
+    const handleMarkerDrawn = (markerCoordinates) => {
+        const coordinates = markerCoordinates.geometry.coordinates;
+        setRouteNode((prevState) => ({
+            ...prevState,
+            latitude: coordinates[1],
+            longitude: coordinates[0],
+        }));
+    };
+
 
 
     const handleChange = (e) => {
@@ -77,7 +83,6 @@ const RouteNodesForm = () => {
         if (id) {
             const getRouteNodeDb = async () => {
                 const routeNodeDB = await fetchRouteNodeById(id);
-                console.log({ routeNodeDB });
 
                 setRouteNode({
                     latitude: routeNodeDB.latitude,
@@ -118,113 +123,112 @@ const RouteNodesForm = () => {
     };
 
     return (
-        <Center height="90vh">
-            <Box
-                width="500px"
-                p="8"
-                bg="white"
-                boxShadow="md"
-                borderRadius="md"
-                borderColor="gray.300"
-            >
-                <form onSubmit={handleSubmit}>
-                    <VStack spacing="4">
+        <Box bg="gray.100" minH="100vh">
+            <Container maxW="container.lg">
+                <Box p="8" bg="white" boxShadow="md" borderRadius="md" borderColor="gray.300">
+                    <form onSubmit={handleSubmit}>
+                        <VStack spacing="4">
 
-                        {/* TODO: AGREGAR EL CAMPO PARA LA IMAGEN*/}
+                            {/* TODO: AGREGAR EL CAMPO PARA LA IMAGEN*/}
 
-                        <FormControl>
-                            <FormLabel htmlFor="latitude">Latitud</FormLabel>
-                            <Input
-                                type="number"
-                                id="latitude"
-                                name="latitude"
-                                value={routeNode.latitude || ""}
-                                onChange={handleChange}
-                                borderColor="gray.500"
-                            />
-                        </FormControl>
-
-                        <FormControl>
-                            <FormLabel htmlFor="longitude">Longitud</FormLabel>
-                            <Input
-                                type="number"
-                                id="longitude"
-                                name="longitude"
-                                value={routeNode.longitude || ""}
-                                onChange={handleChange}
-                                borderColor="gray.500"
-                            />
-                        </FormControl>
-
-                        <Button onClick={onOpen}>Open Modal</Button>
-
-                        <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
-                            <ModalOverlay />
-                            <ModalContent >
-                                <ModalHeader>Mapa</ModalHeader>
-                                <ModalCloseButton />
-                                <ModalBody>
-                                    Elige un punto para crear el nuevo nodo
-                                    <MapContainerComponent w="100%" h="75vh"/>
-                                </ModalBody>
-
-                                <ModalFooter>
-                                    <Button variant='ghost' mr={3} onClick={onClose}>
-                                        Cancelar
-                                    </Button>
-                                    <Button colorScheme='blue'>Aceptar</Button>
-                                </ModalFooter>
-                            </ModalContent>
-                        </Modal>
-
-                        <FormControl>
-                            <FormLabel htmlFor="campus">Campus</FormLabel>
-                            <Select
-                                name="campus"
-                                value={routeNode.campus}
-                                onChange={handleChange}
-                                required
-                                borderColor="gray.500"
-                            >
-                                <option value="">Seleccionar campus</option>
-                                {campuses.length > 0 &&
-                                    campuses.map((campus) => (
-                                        <option key={campus._id} value={campus._id}>
-                                            {campus.symbol} - {campus.name}
-                                        </option>
-                                    ))}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl>
-                            <HStack alignItems="center">
-                                <FormLabel htmlFor="avaible">¿Está disponible?</FormLabel>
-                                <Checkbox
-                                    id="avaible"
-                                    name="avaible"
-                                    isChecked={routeNode.available}
-                                    value={routeNode.available || ""}
-                                    onChange={(e) => {
-                                        setRouteNode({
-                                            ...routeNode,
-                                            available: e.target.checked,
-                                        });
-                                    }}
+                            <FormControl>
+                                <FormLabel htmlFor="latitude">Latitud</FormLabel>
+                                <Input
+                                    type="number"
+                                    id="latitude"
+                                    name="latitude"
+                                    value={routeNode.latitude || ""}
+                                    onChange={handleChange}
                                     borderColor="gray.500"
                                 />
-                            </HStack>
-                        </FormControl>
+                            </FormControl>
 
-                        {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
-                        {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}
+                            <FormControl>
+                                <FormLabel htmlFor="longitude">Longitud</FormLabel>
+                                <Input
+                                    type="number"
+                                    id="longitude"
+                                    name="longitude"
+                                    value={routeNode.longitude || ""}
+                                    onChange={handleChange}
+                                    borderColor="gray.500"
+                                />
+                            </FormControl>
 
-                        <Button type="submit" colorScheme="blue">
-                            {id ? "Guardar cambios" : "Crear Nodo Ruta"}
-                        </Button>
-                    </VStack>
-                </form>
-            </Box>
-        </Center>
+                            <Box p={4} width={"100%"}>
+                                <Heading as="h1" size="lg" mb={4}>
+                                    Nodo Ruta
+                                </Heading>
+
+                                <MapContainer
+                                    style={{ width: "100%", height: "60vh" }}
+                                    center={center}
+                                    zoom={zoom}
+                                    scrollWheelZoom={false}
+                                >
+                                    <TileLayer
+                                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    />
+
+                                    <MapWithDrawNodes
+                                        onMarkerDrawn={handleMarkerDrawn}
+                                        markerRef={markerRef}
+                                        latitude={routeNode.latitude}
+                                        longitude={routeNode.longitude} />
+
+                                </MapContainer>
+                            </Box>
+
+                            <FormControl>
+                                <FormLabel htmlFor="campus">Campus</FormLabel>
+                                <Select
+                                    name="campus"
+                                    value={routeNode.campus}
+                                    onChange={handleChange}
+                                    required
+                                    borderColor="gray.500"
+                                >
+                                    <option value="">Seleccionar campus</option>
+                                    {campuses.length > 0 &&
+                                        campuses.map((campus) => (
+                                            <option key={campus._id} value={campus._id}>
+                                                {campus.symbol} - {campus.name}
+                                            </option>
+                                        ))}
+                                </Select>
+                            </FormControl>
+
+                            <FormControl>
+                                <HStack alignItems="center">
+                                    <FormLabel htmlFor="avaible">¿Está disponible?</FormLabel>
+                                    <Checkbox
+                                        id="avaible"
+                                        name="avaible"
+                                        isChecked={routeNode.available}
+                                        value={routeNode.available || ""}
+                                        onChange={(e) => {
+                                            setRouteNode({
+                                                ...routeNode,
+                                                available: e.target.checked,
+                                            });
+                                        }}
+                                        borderColor="gray.500"
+                                    />
+                                </HStack>
+                            </FormControl>
+
+                            {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
+                            {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}
+
+                            <Button type="submit" colorScheme="blue">
+                                {id ? "Guardar cambios" : "Crear Nodo Ruta"}
+                            </Button>
+                        </VStack>
+                    </form>
+                </Box>
+            </Container>
+        </Box>
     );
 };
 

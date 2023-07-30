@@ -1,7 +1,6 @@
 import {
     Box,
     Button,
-    Center,
     FormControl,
     FormLabel,
     Input,
@@ -9,16 +8,10 @@ import {
     VStack,
     HStack,
     Select,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-    useDisclosure,
+    Heading,
+    Container,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -30,7 +23,8 @@ import {
 
 import { getCampuses } from "../services/campusServices";
 
-import MapContainerComponent from "../components/Map"
+import { MapContainer, TileLayer } from "react-leaflet";
+import MapWithDrawNodes from "../components/MapWithDrawNodes";
 
 import { fetchAccessNodes } from "../store/actions/accessNodeActions";
 
@@ -48,12 +42,24 @@ const initialState = {
 
 
 const AccessNodesForm = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
     const [accessNode, setAccessNode] = useState(initialState);
     const [campuses, setCampuses] = useState([]);
     const dispacth = useDispatch();
     const navigate = useNavigate();
     const { id } = useParams();
+    const center = [-4.032747, -79.202405];
+    const zoom = 18;
+    const markerRef = useRef();
+
+    const handleMarkerDrawn = (markerCoordinates) => {
+        const coordinates = markerCoordinates.geometry.coordinates;
+        setAccessNode((prevState) => ({
+            ...prevState,
+            latitude: coordinates[1],
+            longitude: coordinates[0],
+        }));
+    };
+
 
 
     const handleChange = (e) => {
@@ -133,138 +139,135 @@ const AccessNodesForm = () => {
     };
 
     return (
-        <Center height="90vh">
-            <Box
-                width="500px"
-                p="8"
-                bg="white"
-                boxShadow="md"
-                borderRadius="md"
-                borderColor="gray.300"
-            >
-                <form onSubmit={handleSubmit}>
-                    <VStack spacing="4">
+        <Box bg="gray.100" minH="100vh">
+            <Container maxW="container.lg">
+                <Box p="8" bg="white" boxShadow="md" borderRadius="md" borderColor="gray.300">
+                    <form onSubmit={handleSubmit}>
+                        <VStack spacing="4">
 
-                        {/* TODO: AGREGAR EL CAMPO PARA LA IMAGEN*/}
+                            {/* TODO: AGREGAR EL CAMPO PARA LA IMAGEN*/}
 
-                        <FormControl>
-                            <FormLabel htmlFor="name">Nombre</FormLabel>
-                            <Input
-                                type="text"
-                                id="name"
-                                name="title"
-                                value={accessNode.detail.title}
-                                onChange={handleChange}
-                                required
-                                borderColor="gray.500"
-                            />
-                        </FormControl>
-
-                        <FormControl>
-                            <FormLabel htmlFor="description">Descripción</FormLabel>
-                            <Input
-                                type="text"
-                                id="description"
-                                name="description"
-                                value={accessNode.detail.description || ""}
-                                onChange={handleChange}
-                                borderColor="gray.500"
-                            />
-                        </FormControl>
-
-                        <FormControl>
-                            <FormLabel htmlFor="latitude">Latitud</FormLabel>
-                            <Input
-                                type="number"
-                                id="latitude"
-                                name="latitude"
-                                value={accessNode.latitude || ""}
-                                onChange={handleChange}
-                                borderColor="gray.500"
-                            />
-                        </FormControl>
-
-                        <FormControl>
-                            <FormLabel htmlFor="longitude">Longitud</FormLabel>
-                            <Input
-                                type="number"
-                                id="longitude"
-                                name="longitude"
-                                value={accessNode.longitude || ""}
-                                onChange={handleChange}
-                                borderColor="gray.500"
-                            />
-                        </FormControl>
-
-                        <Button onClick={onOpen}>Open Modal</Button>
-
-                        <Modal isOpen={isOpen} onClose={onClose} size={"full"}>
-                            <ModalOverlay />
-                            <ModalContent >
-                                <ModalHeader>Mapa</ModalHeader>
-                                <ModalCloseButton />
-                                <ModalBody>
-                                    Elige un punto para crear el nuevo nodo
-                                    <MapContainerComponent w="100%" h="75vh" />
-                                </ModalBody>
-
-                                <ModalFooter>
-                                    <Button variant='ghost' mr={3} onClick={onClose}>
-                                        Cancelar
-                                    </Button>
-                                    <Button colorScheme='blue'>Aceptar</Button>
-                                </ModalFooter>
-                            </ModalContent>
-                        </Modal>
-
-                        <FormControl>
-                            <FormLabel htmlFor="campus">Campus</FormLabel>
-                            <Select
-                                name="campus"
-                                value={accessNode.campus}
-                                onChange={handleChange}
-                                required
-                                borderColor="gray.500"
-                            >
-                                <option value="">Seleccionar campus</option>
-                                {campuses.length > 0 &&
-                                    campuses.map((campus) => (
-                                        <option key={campus._id} value={campus._id}>
-                                            {campus.symbol} - {campus.name}
-                                        </option>
-                                    ))}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl>
-                            <HStack alignItems="center">
-                                <FormLabel htmlFor="avaible">¿Está disponible?</FormLabel>
-                                <Checkbox
-                                    id="avaible"
-                                    name="avaible"
-                                    isChecked={accessNode.available}
-                                    value={accessNode.available || ""}
-                                    onChange={(e) => {
-                                        setAccessNode({
-                                            ...accessNode,
-                                            available: e.target.checked,
-                                        });
-                                    }}
+                            <FormControl>
+                                <FormLabel htmlFor="name">Nombre</FormLabel>
+                                <Input
+                                    type="text"
+                                    id="name"
+                                    name="title"
+                                    value={accessNode.detail.title}
+                                    onChange={handleChange}
+                                    required
                                     borderColor="gray.500"
                                 />
-                            </HStack>
-                        </FormControl>
+                            </FormControl>
 
-                        {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
-                        {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}
+                            <FormControl>
+                                <FormLabel htmlFor="description">Descripción</FormLabel>
+                                <Input
+                                    type="text"
+                                    id="description"
+                                    name="description"
+                                    value={accessNode.detail.description || ""}
+                                    onChange={handleChange}
+                                    borderColor="gray.500"
+                                />
+                            </FormControl>
 
-                        <Button type="submit" colorScheme="blue">
-                            {id ? "Guardar cambios" : "Crear Nodo de Acceso"}
-                        </Button>
-                    </VStack>
-                </form>
-            </Box>
-        </Center>
+                            <FormControl>
+                                <FormLabel htmlFor="latitude">Latitud</FormLabel>
+                                <Input
+                                    type="number"
+                                    id="latitude"
+                                    name="latitude"
+                                    value={accessNode.latitude || ""}
+                                    onChange={handleChange}
+                                    borderColor="gray.500"
+                                />
+                            </FormControl>
+
+                            <FormControl>
+                                <FormLabel htmlFor="longitude">Longitud</FormLabel>
+                                <Input
+                                    type="number"
+                                    id="longitude"
+                                    name="longitude"
+                                    value={accessNode.longitude || ""}
+                                    onChange={handleChange}
+                                    borderColor="gray.500"
+                                />
+                            </FormControl>
+
+                            <Box p={4} width={"100%"}>
+                                <Heading as="h1" size="lg" mb={4}>
+                                    Nodo de acceso
+                                </Heading>
+
+                                <MapContainer
+                                    style={{ width: "100%", height: "60vh" }}
+                                    center={center}
+                                    zoom={zoom}
+                                    scrollWheelZoom={false}
+                                >
+                                    <TileLayer
+                                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    />
+                                    <MapWithDrawNodes
+                                        onMarkerDrawn={handleMarkerDrawn}
+                                        markerRef={markerRef}
+                                        latitude={accessNode.latitude}
+                                        longitude={accessNode.longitude} />
+
+                                </MapContainer>
+                            </Box>
+                            <FormControl>
+                                <FormLabel htmlFor="campus">Campus</FormLabel>
+                                <Select
+                                    name="campus"
+                                    value={accessNode.campus}
+                                    onChange={handleChange}
+                                    required
+                                    borderColor="gray.500"
+                                >
+                                    <option value="">Seleccionar campus</option>
+                                    {campuses.length > 0 &&
+                                        campuses.map((campus) => (
+                                            <option key={campus._id} value={campus._id}>
+                                                {campus.symbol} - {campus.name}
+                                            </option>
+                                        ))}
+                                </Select>
+                            </FormControl>
+
+                            <FormControl>
+                                <HStack alignItems="center">
+                                    <FormLabel htmlFor="avaible">¿Está disponible?</FormLabel>
+                                    <Checkbox
+                                        id="avaible"
+                                        name="avaible"
+                                        isChecked={accessNode.available}
+                                        value={accessNode.available || ""}
+                                        onChange={(e) => {
+                                            setAccessNode({
+                                                ...accessNode,
+                                                available: e.target.checked,
+                                            });
+                                        }}
+                                        borderColor="gray.500"
+                                    />
+                                </HStack>
+                            </FormControl>
+
+                            {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
+                            {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}
+
+                            <Button type="submit" colorScheme="blue">
+                                {id ? "Guardar cambios" : "Crear Nodo de Acceso"}
+                            </Button>
+                        </VStack>
+                    </form>
+                </Box>
+            </Container>
+        </Box>
     );
 };
 

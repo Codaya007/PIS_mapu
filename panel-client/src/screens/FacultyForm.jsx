@@ -33,8 +33,8 @@ const FacultyForm = () => {
   const dispacth = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const center = [-4.032747, -79.202405]; 
-	const zoom = 18;
+  const center = [-4.032747, -79.202405];
+  const zoom = 18;
 
   const handlePolygonDrawn = (polygonCoordinates) => {
     const coordinates = polygonCoordinates.geometry.coordinates;
@@ -143,7 +143,7 @@ const FacultyForm = () => {
               <Heading as="h1" size="lg" mb={4}>
                 Póligono De La Facultad
               </Heading>
-              
+
               <MapContainer
                 style={{ width: "90%", height: "60vh" }}
                 center={center}
