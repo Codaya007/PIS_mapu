@@ -44,3 +44,9 @@ export function getTimeAgo(isoString, start = "Publicado") {
     return `${start} hace ${months} mes${months !== 1 ? "es" : ""}`;
   }
 }
+
+export const deleteDbFields = (obj) => {
+  delete obj.createdAt;
+  delete obj.deletedAt;
+  delete obj.updatedAt;
+};

@@ -8,11 +8,13 @@ export const updateImageToS3 = async (file) => {
 
     const response = await axios.post(`${API_BASEURL}/image`, formData);
 
-    const imageUrl =  response.data.imageUrl;
-		
-		return imageUrl;
+    const imageUrl = response.data.imageUrl;
+
+    return imageUrl;
   } catch (error) {
     console.error("Error al subir la imagen:", error);
     throw error;
   }
 };
+
+export const uploadImageToS3 = updateImageToS3;
