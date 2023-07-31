@@ -4,22 +4,22 @@ const Schema = mongoose.Schema;
 const commentSchema = new Schema({
   content: {
     type: String,
-    required: true
+    required: true,
   },
   hide: {
     type: Boolean,
     required: true,
-    default: false
+    default: false,
   },
   user: {
-    type: Schema.Types.ObjectId,  // Tipo ObjectId para referencia
-    ref: 'User',  // Nombre del modelo referenciado
-    required: true
+    type: Schema.Types.ObjectId, // Tipo ObjectId para referencia
+    ref: "users", // Nombre del modelo referenciado
+    required: true,
   },
   node: {
-    type: Schema.Types.ObjectId,  // Tipo ObjectId para referencia
-    ref: 'Node',  // Nombre del modelo referenciado
-    required: true
+    type: Schema.Types.ObjectId, // Tipo ObjectId para referencia
+    ref: "Node", // Nombre del modelo referenciado
+    required: true,
   },
 });
 

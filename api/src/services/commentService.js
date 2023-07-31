@@ -4,7 +4,7 @@ const userService = require("../services/userService");
 const NotExist = require("../errors/NotExist");
 const ValidationError = require("../errors/ValidationError");
 const { isValidObjectId } = require("mongoose");
-const constants = require("../constants/index")
+const constants = require("../constants/index");
 
 const createComment = async (commentData) => {
   validateNode(commentData.node);
@@ -26,9 +26,20 @@ const createComment = async (commentData) => {
   return newComment;
 };
 
-const getComments = async (where = {}, skip, limit, mobile) => {
+const getComments = async (where = {}, skip, limit, mobile, populate) => {
   await applyRegex(where, mobile);
-  const comments = await Comment.find(where).skip(skip).limit(limit);
+
+  let comments = [];
+
+  if (skip || limit) {
+    comments = populate
+      ? await Comment.find(where).skip(skip).limit(limit).populate("user")
+      : await Comment.find(where).skip(skip).limit(limit);
+  } else {
+    comments = populate
+      ? await Comment.find(where).populate("user")
+      : await Comment.find(where);
+  }
 
   return comments;
 };
@@ -36,7 +47,9 @@ const getComments = async (where = {}, skip, limit, mobile) => {
 const validateNode = async (nodeId) => {
   const node = await nodeService.getNodeById(nodeId);
   if (node.type != constants.INTEREST_NODO_TYPE) {
-    throw new ValidationError("El comentario debe escribirse en un Nodo de Interes")
+    throw new ValidationError(
+      "El comentario debe escribirse en un Nodo de Interes"
+    );
   }
 
   return true;
@@ -45,23 +58,25 @@ const validateNode = async (nodeId) => {
 const validateUser = async (userId) => {
   const user = await userService.getUserById(userId);
   if (user.bloqued == true) {
-    throw new ValidationError('El usuario se encuentra bloqueado')
+    throw new ValidationError("El usuario se encuentra bloqueado");
   }
 
   return true;
 };
 
 const applyRegex = async (where, mobile) => {
-  if (mobile === 'true') {
-    where.hide = false
+  if (mobile === "true") {
+    where.hide = false;
   }
-}
+};
 
-const getCommentById = async (_id) => {
+const getCommentById = async (_id, populate = true) => {
   if (!isValidObjectId(_id))
     throw new ValidationError("El id debe ser un ObjectId");
 
-  const comment = await Comment.findOne({ _id });
+  const comment = populate
+    ? await Comment.findOne({ _id }).populate("user")
+    : await Comment.findOne({ _id });
 
   if (!comment) {
     throw new NotExist("Comentario no encontrado");
@@ -92,7 +107,7 @@ const deleteCommentById = async (_id) => {
   const deletedComment = await Comment.findByIdAndRemove(_id);
 
   if (!deletedComment) throw new NotExist("Comentario no encontrado");
-  
+
   return deletedComment;
 };
 
