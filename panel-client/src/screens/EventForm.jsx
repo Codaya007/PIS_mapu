@@ -1,10 +1,12 @@
 import {
   Box,
   Button,
-  Center,
   FormControl,
   FormLabel,
+  Heading,
+  Image,
   Input,
+  Textarea,
   VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -17,6 +19,7 @@ import {
   updateEventById,
 } from "../services/eventServices";
 import { fetchEvents } from "../store/actions/eventActions";
+import { handleFileChange } from "./BlockForm";
 
 const initialState = {
   name: "",
@@ -35,10 +38,13 @@ const EventsForm = () => {
 
   const handleChange = (e) => {
     let { name, value } = e.target;
-    console.log(typeof(value));
-    if(name == "sinceDate" || name == "untilDate" ){
-        let valueA = new Date(value);
-        console.log(typeof(valueA))
+
+    // console.log({ value });
+    // if (name == "sinceDate" || name == "untilDate") {
+    //   value = new Date(value);
+    // } else
+    if (name === "price") {
+      value = parseFloat(value);
     }
 
     setEvent({ ...event, [name]: value });
@@ -68,7 +74,7 @@ const EventsForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(event.sinceDate);
+
     try {
       // Aquí puedes hacer la llamada a tu API para guardar la nueva faculty
       if (id) {
@@ -88,101 +94,118 @@ const EventsForm = () => {
   };
 
   return (
-    <Center height="90vh">
-      <Box
-        width="500px"
-        p="8"
-        bg="white"
-        boxShadow="md"
-        borderRadius="md"
-        borderColor="gray.300"
-      >
-        <form onSubmit={handleSubmit}>
-          <VStack spacing="4">
-            <FormControl>
-              <FormLabel htmlFor="name">Nombre</FormLabel>
-              <Input
-                type="text"
-                id="name"
-                name="name"
-                value={event.name}
-                onChange={handleChange}
-                required
-                borderColor="gray.500"
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor="description">Fecha de inicio</FormLabel>
-              <Input
-                type="datetime-local"
-                id="sinceDate"
-                name="sinceDate"
-                value={event.sinceDate || ""}
-                onChange={handleChange}
-                borderColor="gray.500"
-                size="md"
-              />
-
-            </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor="dean">Fecha de terminación</FormLabel>
-              <Input
-                type="datetime-local"
-                id="untilDate"
-                name="untilDate"
-                value={event.untilDate || ""}
-                onChange={handleChange}
-                borderColor="gray.500"
-                size="md"
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor="dean">Descripción</FormLabel>
-              <Input
-                type="text"
-                id="description"
-                name="description"
-                value={event.description || ""}
-                onChange={handleChange}
-                borderColor="gray.500"
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor="dean">Precio</FormLabel>
-              <Input
-                type="text"
-                id="price"
-                name="price"
-                value={event.price || ""}
-                onChange={handleChange}
-                borderColor="gray.500"
-              />
-            </FormControl>
-
-            <FormControl>
-              <FormLabel htmlFor="dean">Imagen</FormLabel>
-              <Input
-                type="text"
-                id="img"
-                name="img"
-                value={event.img || ""}
-                onChange={handleChange}
-                borderColor="gray.500"
-              />
-            </FormControl>
-
-            <Button type="submit" colorScheme="blue">
-              {id ? "Guardar cambios" : "Crear Evento"}
-            </Button>
-
-          </VStack>
-        </form>
+    <Box
+      margin={"auto"}
+      maxWidth="750px"
+      p="5"
+      bg="white"
+      boxShadow="lg"
+      borderRadius="md"
+      borderColor="gray.300"
+    >
+      <Box p="4">
+        <Heading textAlign={"center"} color={"blue.400"}>
+          {id ? "Edición" : "Creación"} de eventos
+        </Heading>
       </Box>
-    </Center>
+      <form onSubmit={handleSubmit}>
+        <VStack spacing="4">
+          <FormControl>
+            <FormLabel htmlFor="name">Nombre</FormLabel>
+            <Input
+              type="text"
+              id="name"
+              name="name"
+              value={event.name}
+              onChange={handleChange}
+              required
+              borderColor="gray.500"
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel htmlFor="sinceDate">Fecha de inicio</FormLabel>
+            <Input
+              type="datetime-local"
+              id="sinceDate"
+              name="sinceDate"
+              value={event.sinceDate || ""}
+              onChange={handleChange}
+              borderColor="gray.500"
+              size="md"
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel htmlFor="dean">Fecha de terminación</FormLabel>
+            <Input
+              type="datetime-local"
+              id="untilDate"
+              name="untilDate"
+              value={event.untilDate || ""}
+              onChange={handleChange}
+              borderColor="gray.500"
+              size="md"
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel htmlFor="dean">Descripción</FormLabel>
+            <Textarea
+              type="text"
+              id="description"
+              name="description"
+              value={event.description || ""}
+              onChange={handleChange}
+              borderColor="gray.500"
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel htmlFor="dean">Precio</FormLabel>
+            <Input
+              type="number"
+              id="price"
+              name="price"
+              value={event.price || ""}
+              onChange={handleChange}
+              borderColor="gray.500"
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel htmlFor="dean">Imagen</FormLabel>
+            {event.img && (
+              <Image
+                display={"block"}
+                margin="auto"
+                width={"250px"}
+                src={event.img}
+              />
+            )}
+            <Input
+              type="file"
+              required={!id}
+              accept={[".png", ".jpeg", ".svg", ".jpg"]}
+              id="img"
+              name="img"
+              // value={event.img || ""}
+              onChange={async (e) => {
+                setEvent({ ...event, img: null });
+                const img = await handleFileChange(e);
+
+                setEvent({ ...event, img });
+              }}
+              borderColor="white"
+            />
+          </FormControl>
+
+          <Button type="submit" colorScheme="blue">
+            {id ? "Guardar cambios" : "Crear Evento"}
+          </Button>
+        </VStack>
+      </form>
+    </Box>
   );
 };
 
