@@ -2,10 +2,11 @@ import axios from "axios";
 import { API_BASEURL } from "../constants";
 import { buildURLWithQueryParams } from "../utils";
 
-export const getComments = async (skip, limit) => {
+export const getComments = async (skip, limit, populate) => {
   const url = buildURLWithQueryParams(`${API_BASEURL}/comment`, {
     skip,
     limit,
+    populate,
   });
   const { data } = await axios.get(url);
 

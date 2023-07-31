@@ -1,4 +1,5 @@
 import {
+  Button,
   IconButton,
   Menu,
   MenuButton,
@@ -14,7 +15,12 @@ import {
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { getTimeAgo } from "../utils";
 
-function CommentTable({ comments, handleEdit, handleDelete }) {
+function CommentTable({
+  comments,
+  handleEdit,
+  handleDelete,
+  maskAsHide = () => {},
+}) {
   return (
     <Table p={3} variant="simple">
       <Thead>
@@ -23,6 +29,7 @@ function CommentTable({ comments, handleEdit, handleDelete }) {
           <Th>Fecha creación</Th>
           <Th>Usuario</Th>
           <Th>Oculto</Th>
+          <Th>Acciones</Th>
         </Tr>
       </Thead>
       <Tbody>
@@ -30,10 +37,21 @@ function CommentTable({ comments, handleEdit, handleDelete }) {
           <Tr key={comment._id}>
             <Td>{comment.content || "-"}</Td>
             <Td>{getTimeAgo(comment.createdAt) || "-"} </Td>
-            <Td>{comment.user || "-"}</Td>
+            <Td>
+              {comment.user
+                ? `${comment.user.name} ${comment.user.lastname} (${comment.user.email})`.trim()
+                : "-"}
+            </Td>
             <Td>{comment.hide ? "Si" : "No"}</Td>
             <Td>
-              <Menu>
+              <Button
+                colorScheme="blue"
+                mb={4}
+                onClick={() => maskAsHide(comment._id, !comment.hide)}
+              >
+                {comment.hide ? "Mostrar" : "Ocultar"}
+              </Button>
+              {/* <Menu>
                 <MenuButton
                   as={IconButton}
                   icon={<BiDotsHorizontalRounded />}
@@ -41,14 +59,14 @@ function CommentTable({ comments, handleEdit, handleDelete }) {
                   size="sm"
                 />
                 <MenuList>
-                  <MenuItem onClick={() => handleEdit(comment._id)}>
-                    Editar
-                  </MenuItem>
+                  <MenuItem
+                    onClick={() => maskAsHide(comment._id, !comment.hide)}
+                  ></MenuItem>
                   <MenuItem onClick={() => handleDelete(comment._id)}>
                     Eliminar
                   </MenuItem>
                 </MenuList>
-              </Menu>
+              </Menu> */}
             </Td>
           </Tr>
         ))}

@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CommentTable from "../components/CommentTable";
-import { deleteCommentById } from "../services/commentServices";
+import {
+  deleteCommentById,
+  updateCommentById,
+} from "../services/commentServices";
 import { fetchComments } from "../store/actions/commentActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/commentSlice";
 
@@ -56,8 +59,17 @@ function Comments() {
     }
   };
 
-  const handleCreate = () => {
-    navigate("/create-comment");
+  const maskAsHide = async (id, hide = true) => {
+    try {
+      await updateCommentById(id, { hide });
+      toast.success("Actualización exitosa");
+
+      dispatch(fetchComments());
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "No se pudo ocultar el comentario"
+      );
+    }
   };
 
   return (
@@ -69,6 +81,7 @@ function Comments() {
         comments={comments}
         handleEdit={handleEdit}
         handleDelete={handleDelete}
+        maskAsHide={maskAsHide}
       />
       <Box mt={4}>
         {Array.from({ length: totalPages }, (_, index) => (
