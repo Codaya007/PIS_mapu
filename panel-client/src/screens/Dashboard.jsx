@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import MapContainerComponent from "../components/Map";
 import { getAllCoordinates } from "../services/nodeServices";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const {
@@ -22,9 +23,14 @@ function Dashboard() {
     totalBlock,
     totalCareer,
     totalCategory,
+    totalEvents,
+    totalInterestingNodes,
+    totalAccessNodes,
+    totalRouteNodes,
     // totalSector,
   } = useSelector((state) => state.dashboardReducer);
   const [markers, setMarkers] = useState([]);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -53,6 +59,7 @@ function Dashboard() {
           _hover={{
             boxShadow: "lg",
           }}
+          onClick={() => navigate("/user")}
         >
           <StatLabel fontSize={"xs"}>Total usuarios</StatLabel>
           <StatNumber color={"blue.500"}>{totalUser}</StatNumber>
@@ -65,6 +72,7 @@ function Dashboard() {
           _hover={{
             boxShadow: "lg",
           }}
+          onClick={() => navigate("/user")}
         >
           <StatLabel fontSize={"xs"}>
             Usuarios registrados en el último mes
@@ -79,6 +87,7 @@ function Dashboard() {
           _hover={{
             boxShadow: "lg",
           }}
+          onClick={() => navigate("/faculty")}
         >
           <StatLabel fontSize={"xs"}>Total de facultades</StatLabel>
           <StatNumber color={"blue.500"}>{totalFaculty}</StatNumber>
@@ -91,6 +100,7 @@ function Dashboard() {
           _hover={{
             boxShadow: "lg",
           }}
+          onClick={() => navigate("/block")}
         >
           <StatLabel fontSize={"xs"}>Total de bloques</StatLabel>
           <StatNumber color={"blue.500"}>{totalBlock}</StatNumber>
@@ -103,6 +113,7 @@ function Dashboard() {
           _hover={{
             boxShadow: "lg",
           }}
+          onClick={() => navigate("/career")}
         >
           <StatLabel fontSize={"xs"}>Total de carreras</StatLabel>
           <StatNumber color={"blue.500"}>{totalCareer}</StatNumber>
@@ -115,6 +126,7 @@ function Dashboard() {
           _hover={{
             boxShadow: "lg",
           }}
+          onClick={() => navigate("/category")}
         >
           <StatLabel fontSize={"xs"}>Total de categorías</StatLabel>
           <StatNumber color={"blue.500"}>{totalCategory}</StatNumber>
@@ -139,16 +151,69 @@ function Dashboard() {
           _hover={{
             boxShadow: "lg",
           }}
+          onClick={() => navigate("/campus")}
         >
           <StatLabel fontSize={"xs"}>Total de Campus</StatLabel>
           <StatNumber color={"blue.500"}>{totalCampus}</StatNumber>
+        </Stat>
+        <Stat
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="md"
+          _hover={{
+            boxShadow: "lg",
+          }}
+          onClick={() => navigate("/events")}
+        >
+          <StatLabel fontSize={"xs"}>Total de eventos</StatLabel>
+          <StatNumber color={"blue.500"}>{totalEvents}</StatNumber>
+        </Stat>
+        <Stat
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="md"
+          _hover={{
+            boxShadow: "lg",
+          }}
+          onClick={() => navigate("/access-node")}
+        >
+          <StatLabel fontSize={"xs"}>Total Nodos acceso</StatLabel>
+          <StatNumber color={"blue.500"}>{totalAccessNodes}</StatNumber>
+        </Stat>
+        <Stat
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="md"
+          _hover={{
+            boxShadow: "lg",
+          }}
+          onClick={() => navigate("/interesting-node")}
+        >
+          <StatLabel fontSize={"xs"}>Total Nodos de interés</StatLabel>
+          <StatNumber color={"blue.500"}>{totalInterestingNodes}</StatNumber>
+        </Stat>
+        <Stat
+          p={4}
+          bg="white"
+          borderRadius="lg"
+          boxShadow="md"
+          _hover={{
+            boxShadow: "lg",
+          }}
+          onClick={() => navigate("/route-node")}
+        >
+          <StatLabel fontSize={"xs"}>Total Nodos ruta</StatLabel>
+          <StatNumber color={"blue.500"}>{totalRouteNodes}</StatNumber>
         </Stat>
       </SimpleGrid>
       <Box p={4}>
         <Heading as="h1" size="lg" mb={4}>
           Mapa de nodos
         </Heading>
-        <MapContainerComponent markers={markers} circle />
+        <MapContainerComponent width="100%" markers={markers} circle />
       </Box>
     </Box>
   );

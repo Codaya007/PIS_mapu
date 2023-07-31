@@ -5,6 +5,10 @@ const blockService = require("../services/blockService");
 const careerService = require("../services/careerService");
 const categoryService = require("../services/categoryService");
 const sectorService = require("../services/sectorService");
+const eventService = require("../services/eventService");
+const accessNodeService = require("../services/accessNodeService");
+const routeNodeService = require("../services/routeNodeService");
+const interestingNodeService = require("../services/interestingNodeService");
 const { getStartOfMonth } = require("../helpers");
 
 module.exports = {
@@ -32,6 +36,19 @@ module.exports = {
     const totalSector = await sectorService.getCountSectors({
       deletedAt: null,
     });
+    const totalEvents = await eventService.getCountEvents({
+      deletedAt: null,
+    });
+    const totalRouteNodes = await routeNodeService.getCountRouteNodes({
+      deletedAt: null,
+    });
+    const totalInterestingNodes =
+      await interestingNodeService.getCountInterestingNodes({
+        deletedAt: null,
+      });
+    const totalAccessNodes = await accessNodeService.getCountAccessNodes({
+      deletedAt: null,
+    });
 
     res.json({
       totalUser,
@@ -42,6 +59,10 @@ module.exports = {
       totalCareer,
       totalCategory,
       totalSector,
+      totalEvents,
+      totalInterestingNodes,
+      totalAccessNodes,
+      totalRouteNodes,
     });
   },
 };

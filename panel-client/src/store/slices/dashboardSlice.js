@@ -9,6 +9,10 @@ const initialState = {
   totalCareer: null,
   totalCategory: null,
   totalSector: null,
+  totalEvents: null,
+  totalRouteNodes: null,
+  totalInterestingNodes: null,
+  totalAccessNodes: null,
 };
 
 export const dashboardSlice = createSlice({
@@ -24,6 +28,10 @@ export const dashboardSlice = createSlice({
       state.totalCareer = action.payload.totalCareer;
       state.totalCategory = action.payload.totalCategory;
       state.totalSector = action.payload.totalSector;
+      state.totalEvents = action.payload.totalEvents;
+      state.totalInterestingNodes = action.payload.totalInterestingNodes;
+      state.totalRouteNodes = action.payload.totalRouteNodes;
+      state.totalAccessNodes = action.payload.totalAccessNodes;
     },
   },
 });
