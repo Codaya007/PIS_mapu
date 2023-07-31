@@ -75,7 +75,12 @@ function App() {
     <>
       <Flex height={"100%"}>
         {shouldShowSidebar && <SidebarMenu />}
-        <Box flex="1" p={0} marginLeft={"70px"} height={"100vh"}>
+        <Box
+          flex="1"
+          p={0}
+          marginLeft={shouldShowSidebar ? "70px" : "0px"}
+          height={"100vh"}
+        >
           <Header />
           <Routes>
             <Route path="/" element={<Dashboard />} />
