@@ -11,8 +11,8 @@ const createDetailSchema = Joi.object({
   title: Joi.string().required().max(50).messages({
     "*": "El campo 'title' es requerido y debe tener hasta 50 caracteres",
   }),
-  description: Joi.string().required().max(150).messages({
-    "*": "El campo 'description' es requerido y debe tener hasta 150 caracteres",
+  description: Joi.string().allow(null).allow("").max(150).messages({
+    "*": "El campo 'description' debe tener hasta 150 caracteres",
   }),
   img: Joi.string().optional().uri().allow(null).messages({
     "*": "El campo 'img' debe ser una url válida o null",
@@ -29,7 +29,7 @@ const updateDetailSchema = Joi.object({
   title: Joi.string().optional().max(50).messages({
     "*": "El campo 'title' debe tener hasta 50 caracteres",
   }),
-  description: Joi.string().optional().max(150).messages({
+  description: Joi.string().optional().allow(null).allow("").max(150).messages({
     "*": "El campo 'description' debe tener hasta 150 caracteres",
   }),
   img: Joi.string().optional().uri().allow(null).messages({

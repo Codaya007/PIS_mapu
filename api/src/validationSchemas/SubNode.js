@@ -80,7 +80,7 @@ const createSubNodeSchema = Joi.object({
   name: Joi.string().required().messages({
     "*": "El campo name es requerido ",
   }),
-  description: Joi.string().optional().messages({
+  description: Joi.string().optional().allow(null).allow("").messages({
     "*": "El campo description es requerido ",
   }),
   img: Joi.string().optional().allow(null).uri().messages({
@@ -100,11 +100,11 @@ const createSubNodeSchema = Joi.object({
     floor: Joi.number().messages({
       "*": "El campo nomenclature.floor es requerido",
     }),
-    environment: Joi.number().required().messages({
+    environment: Joi.number().allow(null).required().messages({
       "*": "El campo nomenclature.environment es requerido",
     }),
-    subEnvironment: Joi.number().optional().messages({
-      "*": "El campo nomenclature.subEnvironment es requerido",
+    subEnvironment: Joi.number().allow(null).optional().messages({
+      "*": "El campo nomenclature.subEnvironment debe ser un número o null",
     }),
   })
     .required()
@@ -114,7 +114,10 @@ const createSubNodeSchema = Joi.object({
   .external(validateNomenclature);
 
 const updateSubNodeSchema = Joi.object({
-  id: Joi.string().required().messages({
+  id: Joi.string().optional().messages({
+    "*": "Id no válido",
+  }),
+  _id: Joi.string().optional().messages({
     "*": "Id no válido",
   }),
   latitude: Joi.number()
@@ -134,7 +137,7 @@ const updateSubNodeSchema = Joi.object({
   name: Joi.string().optional().messages({
     "*": "El campo name es requerido ",
   }),
-  description: Joi.string().optional().messages({
+  description: Joi.string().optional().allow(null).allow("").messages({
     "*": "El campo description debe ser un string ",
   }),
   img: Joi.string().optional().uri().allow(null).messages({
@@ -153,11 +156,11 @@ const updateSubNodeSchema = Joi.object({
     floor: Joi.number().messages({
       "*": "El campo nomenclature.floor es requerido",
     }),
-    environment: Joi.number().optional().messages({
-      "*": "El campo nomenclature.environment es requerido",
+    environment: Joi.number().optional().allow(null).messages({
+      "*": "El campo nomenclature.environment debe ser un número o null",
     }),
-    subEnvironment: Joi.number().optional().messages({
-      "*": "El campo nomenclature.subEnvironment es requerido",
+    subEnvironment: Joi.number().optional().allow(null).messages({
+      "*": "El campo nomenclature.subEnvironment debe ser un número o null",
     }),
   })
     .optional()
