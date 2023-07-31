@@ -1,5 +1,6 @@
 const { ADMIN_ROLE_NAME } = require("../constants");
 const { validateToken } = require("../helpers/tokenCreation");
+const Role = require("../models/Role");
 
 module.exports = async (req, res, next) => {
   try {
@@ -23,7 +24,9 @@ module.exports = async (req, res, next) => {
     }
     req.user = user;
 
-    if (user.role !== ADMIN_ROLE_NAME) {
+    const adminRole = await Role.findOne({ name: ADMIN_ROLE_NAME });
+
+    if (!adminRole || user?.role.toString() !== adminRole?._id.toString()) {
       return next({
         status: 401,
         message: "El acceso está restringido al administrador",

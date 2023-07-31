@@ -5,7 +5,10 @@ const User = require("../models/User");
 
 const getAllUser = async (where = {}, skip = 10, limit = 10) => {
   where.deletedAt = null;
-  const allUsers = await User.find(where).skip(skip).limit(limit);
+  const allUsers = await User.find(where)
+    .skip(skip)
+    .limit(limit)
+    .populate("role");
 
   return allUsers;
 };
@@ -19,7 +22,7 @@ const getUserById = async (_id) => {
   if (!isValidObjectId(_id))
     throw new ValidationError("El id debe ser un ObjectId");
 
-  const user = await User.findOne({ _id });
+  const user = await User.findOne({ _id }).populate("role");
 
   if (!user) throw new ValidationError("Usuario no encontrado");
 
@@ -27,7 +30,7 @@ const getUserById = async (_id) => {
 };
 
 const createUser = async (newUser) => {
-  const userExists = await User.find({ email: newUser.email });
+  const userExists = await User.findOne({ email: newUser.email });
 
   if (userExists) {
     throw new ValidationError(`El email ${newUser.email} ya está registrado`);

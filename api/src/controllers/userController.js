@@ -26,6 +26,12 @@ module.exports = {
     return res.json(user);
   },
 
+  createUser: async (req, res) => {
+    const user = await userService.createUser(req.body);
+
+    return res.json(user);
+  },
+
   deleteUser: async (req, res) => {
     const deletedUser = await userService.deleteUser(req.params.id);
 

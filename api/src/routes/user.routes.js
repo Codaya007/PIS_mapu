@@ -1,6 +1,9 @@
 const { Router } = require("express");
 const userController = require("../controllers/userController");
-const { editUserSchema } = require("../validationSchemas/user");
+const {
+  editUserSchema,
+  createUserSchema,
+} = require("../validationSchemas/user");
 const middlewares = require("../middlewares");
 const isAdmin = require("../policies/isAdmin");
 
@@ -19,6 +22,18 @@ userRouter.get("/", isAdmin, userController.getAllUsers);
  * @access Private Admin
  */
 userRouter.get("/:id", isAdmin, userController.getUserById);
+
+/**
+ * @route POST /
+ * @desc Crear usuario
+ * @access Private Admin
+ */
+userRouter.post(
+  "/",
+  middlewares.validateRequestBody(createUserSchema),
+  isAdmin,
+  userController.createUser
+);
 
 /**
  * @route PUT /:id

@@ -48,8 +48,9 @@ const userSchema = new Schema({
     },
   },
   role: {
-    type: String,
-    required: false,
+    type: Schema.Types.ObjectId,
+    ref: "Role",
+    required: true,
   },
   token: {
     type: String,
