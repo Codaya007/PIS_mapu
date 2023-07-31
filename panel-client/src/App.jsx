@@ -34,13 +34,16 @@ import CategoryForm from "./screens/CategoryForm";
 import RecoveryPasswordForm from "./screens/RecoveryPasswordForm-mobile";
 import UserForm from "./screens/UserForm";
 import Reports from "./screens/Reports";
+import ForgotPassword from "./screens/ForgotPassword";
 
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const shouldShowSidebar = location.pathname !== "/login";
+  // console.log(location);
+
+  const shouldShowSidebar = !["/login", "/forgot-password", "/recovery-password/:tokenQuery"].includes(location.pathname);
 
   useEffect(() => {
     let tokenQuery = "";
@@ -142,12 +145,15 @@ function App() {
               path="/edit-pasword-profile/:id"
               element={<ProfileChangePassword />}
             />
-
-            <Route path="/*" element={<NotFound />} />
             <Route
               path="/recovery-password/:tokenQuery"
               element={<RecoveryPasswordForm />}
             />
+            <Route
+              path="/forgot-password"
+              element={<ForgotPassword />}
+            />
+            <Route path="/*" element={<NotFound />} />
           </Routes>
         </Box>
       </Flex>

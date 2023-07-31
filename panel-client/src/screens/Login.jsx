@@ -11,7 +11,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { EMAIL_REGEX } from "../constants";
-import { loginUser } from "../store/actions/authActions";
+import { toast } from "react-toastify"
+import { loginUser } from "../services/authServices";
+import { login } from "../store/slices/authSlice";
 
 function LoginForm() {
   const { user } = useSelector((state) => state.authReducer);
@@ -33,14 +35,21 @@ function LoginForm() {
     return errors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí puedes realizar la lógica de autenticación
-    // utilizando los valores de email y password
-    const errors = validateForm();
 
-    if (!errors.email && !errors.password) {
-      dispatch(loginUser(email, password));
+    try {
+      const errors = validateForm();
+
+      if (!errors.email && !errors.password) {
+        const { data } = await loginUser(email, password)
+
+        dispatch(login(data));
+      } else {
+        toast.warning(errors.email || errors.password);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "No se pudo iniciar sesión")
     }
   };
 
@@ -58,6 +67,7 @@ function LoginForm() {
       minHeight="90vh"
     >
       <Box width="400px">
+        {/* <Heading p={4} color={"blue.400"}>Iniciar sesión</Heading> */}
         <form onSubmit={handleSubmit}>
           <Stack spacing={4}>
             <FormControl id="email" isInvalid={!!errors.email}>
@@ -82,6 +92,7 @@ function LoginForm() {
               Iniciar sesión
             </Button>
           </Stack>
+          <Box color={"blue.400"} p={4} fontSize={"sm"} style={{ textDecoration: "underline" }}><span onClick={() => navigate("/forgot-password")} style={{ cursor: "pointer" }}>¿Olvidaste la contraseña?</span></Box>
         </form>
       </Box>
     </Box>
