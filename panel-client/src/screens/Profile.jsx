@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { user } = useSelector((state) => state.authReducer);
-  const { name, lastname, email, avatar, role, settings } = user || {};
+  const { name, lastname, email, avatar, role, settings, _id } = user || {};
   const { notification, spam } = settings || {};
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -45,19 +45,13 @@ const Profile = () => {
     dispatch(fetchProfile());
   }, []);
 
-
-  const handleEditProfile = async(idProfile) => {
-    try {
-      navigate(`/edit-profile/${idProfile}`)
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Algo salio mal" );
-    }
-  }
+  const handleEditProfile = async () => {
+    navigate(`/edit-profile/${_id}`);
+  };
 
   return (
     <Box maxWidth="500px" mx="auto" p="4">
-      <Card p={5} bgColor={"#dcdcdc"} >
-        
+      <Card p={5} bgColor={"#dcdcdc"}>
         <VStack spacing="4" alignItems="start">
           <IconButton
             colorScheme="teal"
@@ -65,16 +59,13 @@ const Profile = () => {
             size="lg"
             icon={<LuSettings2 />}
             onClick={handleEditProfile}
-            // display={"flex"}
-            // justifyContent={"right"}
-            
           />
           <Avatar size="xl" src={avatar} alt="Avatar" />
           <Heading as="h2" size="lg">
             {name} {lastname}
           </Heading>
           <Text>Email: {email}</Text>
-          <Text>Rol: {role}</Text>
+          <Text>Rol: {role?.name}</Text>
           <Box>
             <Text>Activar notificaciones:</Text>
             <Switch

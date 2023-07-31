@@ -18,61 +18,42 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { putProfile } from "../services/authServices";
 import { fetchProfile } from "../store/actions/authActions";
-import { uploadImage } from "../services/imageService";
+import { handleFileChange } from "./BlockForm";
 
-const initialState = {
-  name: "",
-  lastname: "",
-  email: "",
-  avatar: "",
-  role: "",
-  settings: {
-    notification: false,
-    spam: false,
-  },
-};
+// const initialState = {
+//   name: "",
+//   lastname: "",
+//   email: "",
+//   avatar: "",
+//   role: "",
+//   settings: {
+//     notification: false,
+//     spam: false,
+//   },
+// };
 
 const ProfileEdit = () => {
-  const { user } = useSelector((state) => state.authReducer);
-  const { name, lastname, email, avatar, role, settings, _id } = user || {};
-  const { notification, spam } = settings || {};
-  const [userForm, setUserForm] = useState(initialState);
-  const [avatarUrl, setAvatarUrl] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user = {} } = useSelector((state) => state.authReducer);
+  const [userForm, setUserForm] = useState(user);
+  const { name, lastname, email, avatar, role, settings, _id } = userForm;
 
   const saveChange = async () => {
-    console.log("SaveChanges");
-    if (avatarUrl != null) {
-      try {
-        const imgU = await uploadImage(avatarUrl);
-        console.log(imgU);
-        const jsonString = JSON.stringify(imgU.imageUrl);
-        const stringWithoutQuotes = jsonString.slice(1, -1);
-        console.log(stringWithoutQuotes);
-        setUserForm({ ...userForm, avatar:  stringWithoutQuotes});
-        console.log(userForm.avatar);
-      } catch (error) {
-        toast.error(error.response?.data?.message || "Error al cargar la imagen");
-        console.log("error " + error);
-      }
-    }
     try {
       await putProfile(userForm);
       dispatch(fetchProfile());
+      navigate("/profile");
       toast.success("Perfil modificado");
     } catch (error) {
       toast.error(error.response?.data?.message || "Algo salió mal");
     }
   };
+
   const handleEdit = async (e) => {
     const { name, value, checked } = e.target;
-    if (name == "avatar") {
-      console.log(e.target.files[0]);
-      setAvatarUrl(e.target.files[0]);
-      console.log(avatarUrl);
-    }
-    if (name == "spam" || name == "notification") {
+
+    if (name === "spam" || name === "notification") {
       setUserForm({
         ...userForm,
         settings: {
@@ -84,6 +65,7 @@ const ProfileEdit = () => {
       setUserForm({ ...userForm, [name]: value });
     }
   };
+
   const changePassword = async () => {
     try {
       navigate(`/edit-pasword-profile/${_id}`);
@@ -93,23 +75,7 @@ const ProfileEdit = () => {
   };
 
   useEffect(() => {
-    const fectchData = async () => {
-      await dispatch(fetchProfile());
-      setUserForm({
-        ...userForm,
-        name: name,
-        lastname: lastname,
-        email: email,
-        avatar: avatar,
-        role: role,
-        settings: {
-          ...userForm.settings,
-          notification: notification,
-          spam: spam,
-        },
-      });
-    };
-    fectchData();
+    dispatch(fetchProfile());
   }, []);
 
   return (
@@ -122,7 +88,15 @@ const ProfileEdit = () => {
           </Heading>
           <FormControl>
             <FormLabel>Subir imagen</FormLabel>
-            <Input name="avatar" type="file" onChange={handleEdit} />
+            <Input
+              name="avatar"
+              type="file"
+              onChange={async (e) => {
+                const avatar = await handleFileChange(e);
+
+                setUserForm({ ...userForm, avatar });
+              }}
+            />
           </FormControl>
           <FormControl isRequired>
             <FormLabel>Nombre</FormLabel>

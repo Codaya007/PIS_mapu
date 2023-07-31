@@ -71,6 +71,31 @@ const blockInitialState = {
   // node: nodeInitialState,
 };
 
+export const handleFileChange = async (e) => {
+  const file = e.target.files[0];
+  const MAX_IMG_SIZE_MB = 2;
+  const maxSizeInBytes = MAX_IMG_SIZE_MB * 1024 * 1024;
+
+  console.log({ fileSize: file.size });
+
+  if (file && file.size > maxSizeInBytes) {
+    toast.error(
+      `El archivo es demasiado grande. El tamaño máximo permitido es de ${MAX_IMG_SIZE_MB} MB.`
+    );
+
+    e.target.value = null; // Limpia el campo de selección de archivo
+    return null;
+  }
+
+  // Procesa el archivo si está dentro del límite permitido
+  // (puedes implementar el envío al servidor aquí)
+  const imageURL = await uploadImageToS3(file);
+
+  console.log({ imageURL });
+
+  return imageURL;
+};
+
 const BlockForm = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -184,31 +209,6 @@ const BlockForm = () => {
     if (!fetchedCampus) dispatch(fetchCampuses());
     if (!fetchedCategories) dispatch(fetchCategories());
   }, []);
-
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    const MAX_IMG_SIZE_MB = 2;
-    const maxSizeInBytes = MAX_IMG_SIZE_MB * 1024 * 1024;
-
-    console.log({ fileSize: file.size });
-
-    if (file && file.size > maxSizeInBytes) {
-      toast.error(
-        `El archivo es demasiado grande. El tamaño máximo permitido es de ${MAX_IMG_SIZE_MB} MB.`
-      );
-
-      e.target.value = null; // Limpia el campo de selección de archivo
-      return null;
-    }
-
-    // Procesa el archivo si está dentro del límite permitido
-    // (puedes implementar el envío al servidor aquí)
-    const imageURL = await uploadImageToS3(file);
-
-    console.log({ imageURL });
-
-    return imageURL;
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

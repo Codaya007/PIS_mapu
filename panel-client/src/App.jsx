@@ -49,9 +49,9 @@ function App() {
     const setTokenRecoveryPass = () => {
       const pathNameChar = location.pathname;
       for (let i = 0; i < pathNameChar.length; i++) {
-        if(i <= 18) {
-          recoverPass = recoverPass + pathNameChar[i]; 
-        }else{
+        if (i <= 18) {
+          recoverPass = recoverPass + pathNameChar[i];
+        } else {
           tokenQuery = tokenQuery + pathNameChar[i];
         }
       }
@@ -59,13 +59,13 @@ function App() {
 
     const user = localStorage.getItem("user");
     const token = localStorage.getItem("token");
-        
+
     setTokenRecoveryPass();
-    if (recoverPass == "/recovery-password/"){
+    if (recoverPass == "/recovery-password/") {
       navigate(recoverPass + tokenQuery);
-    }else if (user && token) {
+    } else if (user && token) {
       dispatch(login({ user: JSON.parse(user), token: JSON.parse(token) }));
-      navigate("/");
+      // navigate("/");
     } else {
       navigate("/login");
     }
@@ -123,8 +123,8 @@ function App() {
             <Route path="/create-route-node" element={<RouteNodesForm />} />
             {/* Usuarios */}
             <Route path="/user" element={<Users />} />
-            <Route path="/edit-user/:id" element={ <UserForm/> } />
-            <Route path="/create-user" element={ <UserForm/> } />
+            <Route path="/edit-user/:id" element={<UserForm />} />
+            <Route path="/create-user" element={<UserForm />} />
 
             {/* Reportes */}
             {/* <Route path="/report" element={<Reports />} /> */}
@@ -137,9 +137,12 @@ function App() {
               path="/edit-pasword-profile/:id"
               element={<ProfileChangePassword />}
             />
-            
+
             <Route path="/*" element={<NotFound />} />
-            <Route path="/recovery-password/:tokenQuery" element={<RecoveryPasswordForm />} />
+            <Route
+              path="/recovery-password/:tokenQuery"
+              element={<RecoveryPasswordForm />}
+            />
           </Routes>
         </Box>
       </Flex>

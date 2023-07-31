@@ -28,6 +28,11 @@ export const deleteUserById = async (id) => {
 };
 
 export const createUser = async (user) => {
+  const { data } = await axios.post(`${API_BASEURL}/user`, user);
+  return data;
+};
+
+export const registerUser = async (user) => {
   const { data } = await axios.post(`${API_BASEURL}/auth/register`, user);
   return data;
 };
