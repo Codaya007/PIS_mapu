@@ -102,12 +102,14 @@ const getCountBlocks = async (where = {}) => {
   return await Block.count(where);
 };
 
-const updateBlockById = async (id, blockData) => {
+const updateBlockById = async (id, blockToUpdata) => {
   const existingBlock = await getBlockById(id);
 
   if (!existingBlock) throw new NotExist(`El bloque ${id} no existe`);
 
+  const { node, ...blockData } = blockToUpdata;
   const block = await Block.findByIdAndUpdate(id, blockData);
+  block.node = await blockNodeServices.updateBlockNodeById(node._id, node);
 
   return block;
 };

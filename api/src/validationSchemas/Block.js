@@ -35,6 +35,9 @@ const createBlockSchema = Joi.object({
 
 // Definir el esquema de validación para la actualización de un bloque
 const updateBlockSchema = Joi.object({
+  id: Joi.string().strip().required().messages({
+    "*": "El campo 'id' es requerido",
+  }),
   number: Joi.number().optional().messages({
     "*": "El campo 'number' es opcional", //? Posible error por usar una palabra reservada
   }),

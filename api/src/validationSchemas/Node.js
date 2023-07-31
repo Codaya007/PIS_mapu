@@ -71,7 +71,10 @@ const createNodeSchema = Joi.object({
 
 // Definir el esquema de validación para la actualización de un Nodo de interés
 const updateNodeSchema = Joi.object({
-  id: Joi.string().strip().messages({
+  id: Joi.string().strip().optional().messages({
+    "*": "El campo 'id' presente en la ruta de la petición",
+  }),
+  _id: Joi.string().strip().optional().messages({
     "*": "El campo 'id' presente en la ruta de la petición",
   }),
   latitude: Joi.number()

@@ -42,6 +42,10 @@ const createCampusSchema = Joi.object({
     "string.external": "Ya existe un Campus con ese nombre",
     "*": "El campo 'name' es requerido y debe tener un largo máximo de 20 caracteres",
   }),
+  symbol: Joi.string().required().max(2).external(symbolIsUnique).messages({
+    "name.external": "Ya existe un campus con este símbolo",
+    "*": "El campo 'symbol' es requerido y debe tener máximo 2 caracteres",
+  }),
   description: Joi.string().optional().max(200).messages({
     "*": "El campo 'description' debe tener un largo máximo de 200 caracteres",
   }),
@@ -63,7 +67,7 @@ const updateCampusSchema = Joi.object({
     "name.external": "Ya existe un campus con este nombre",
     "*": "El campo 'name' debe tener un largo máximo de 20 caracteres",
   }),
-  symbol: Joi.string().optional().max(2).external(nameIsUnique).messages({
+  symbol: Joi.string().optional().max(2).external(symbolIsUnique).messages({
     "name.external": "Ya existe un campus con este símbolo",
     "*": "El campo 'symbol' debe tener un largo máximo de 2 caracteres",
   }),
