@@ -33,7 +33,7 @@ import CareerForm from "./screens/CareerForm";
 import CategoryForm from "./screens/CategoryForm";
 import RecoveryPasswordForm from "./screens/RecoveryPasswordForm-mobile";
 import UserForm from "./screens/UserForm";
-// import Reports from "./screens/Reports";
+import Reports from "./screens/Reports";
 
 function App() {
   const location = useLocation();
@@ -127,7 +127,7 @@ function App() {
             <Route path="/create-user" element={<UserForm />} />
 
             {/* Reportes */}
-            {/* <Route path="/report" element={<Reports />} /> */}
+            <Route path="/report" element={<Reports />} />
             {/* Commentarios */}
             <Route path="/comment" element={<Comments />} />
             {/* Profile */}
