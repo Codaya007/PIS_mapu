@@ -2,11 +2,22 @@ import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { useEffect, useState } from "react";
 import { getAllNodes } from "../services/Nodes";
+import { useRoute } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import React from "react";
 
-export default function MapApi({ nodeSelected }) {
+export default function MapApi({route}) {
+  // const route = useRoute();
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  // const x = node;
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
 
+  // const { node } = route.params;
+  console.log("hola con route: ", route);
+ 
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
   };
@@ -22,6 +33,8 @@ export default function MapApi({ nodeSelected }) {
   };
 
   useEffect(() => {
+    // console.log("hola")
+    // console.log(nodeSelected)
     handleNodes();
   }, []);
 
@@ -56,7 +69,6 @@ export default function MapApi({ nodeSelected }) {
           longitudeDelta: 0.00026654452085494995,
         }}
       >
-        {/* {showLocationsOfInterest()} */}
         {showNodesOnMap()}
       </MapView>
       <StatusBar style="auto" />
@@ -67,8 +79,8 @@ export default function MapApi({ nodeSelected }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#333",
-    marginHorizontal: 10,
-    marginVertical: 5,
+    marginHorizontal: 0,
+    marginVertical: 0,
   },
   map: {
     width: "100%",

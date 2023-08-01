@@ -6,9 +6,8 @@ import ResultSearch from "../components/ResultSearch";
 import Filter from "../screens/Filter"
 import BeginRoute from "./BeginRoute";
 
-export default function Home() {
+export default function Home({route}) {
   return (
-
     <View style={styles.container}>
       <MapApi />
       <View style={styles.appBar}>

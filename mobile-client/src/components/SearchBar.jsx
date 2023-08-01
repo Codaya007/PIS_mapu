@@ -7,7 +7,7 @@ import {
   Icon,
   VStack,
   useColorModeValue,
-  LinkStyle
+  Link as LinkStyle,
 } from "native-base";
 import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getInterestingNodesByStringSearch } from "../services/Search";
 import { getAllNodes } from "../services/Nodes";
+import { FilterName} from "../constants";
 
 const SearchBar = () => {
   const navigate = useNavigation().navigate;
@@ -23,7 +24,6 @@ const SearchBar = () => {
   const [showResults, setShowResults] = useState(false);
 
   const colorIcon = useColorModeValue("#DADADA");
-  const colorLink = useColorModeValue("#FAFAFA");
 
   const handleSearch = async () => {
     try {
@@ -65,6 +65,7 @@ const SearchBar = () => {
           <FormControl
             // maxW="275"
             mr="2"
+            mt="1"
             isRequired
           >
             <Input
@@ -73,6 +74,7 @@ const SearchBar = () => {
               onChangeText={(text) => setSearchText(text)}
               placeholder="Laboratorio de electromecánica..."
               backgroundColor="white"
+              borderRadius="100px"
               InputRightElement={
                 <Button
                   bg="transparent"
@@ -110,12 +112,25 @@ const SearchBar = () => {
               }
               onSubmitEditing={handleSearch}
             />
-            
           </FormControl>
         </HStack>
+          <LinkStyle
+            onPress={() => navigate(FilterName)}
+            _text={{
+              fontSize: "sm",
+              fontWeight: "400",
+              color: "coolGray.500",
+            }}
+            alignSelf="flex-start"
+            mt="1"
+            ml="5"
+          >          
+            Búsqueda avanzada
+          </LinkStyle>
       </VStack>
     </Center>
   );
+  
 };
 
 export default SearchBar;

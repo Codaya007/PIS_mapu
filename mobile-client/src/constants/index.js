@@ -1,4 +1,4 @@
-export const API_BASEURL = "http://192.168.100.48:3000";
+export const API_BASEURL = "http://10.20.140.119:3000"; 
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
