@@ -49,7 +49,7 @@ const Event = ({ event = {} }) => {
               source={{
                 uri: img,
               }}
-              alt="img"
+              alt={`Imágen ${name}`}
             />
           </AspectRatio>
           {price ? (
