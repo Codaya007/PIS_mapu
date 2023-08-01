@@ -42,13 +42,14 @@ function LoginForm() {
       const errors = validateForm();
 
       if (!errors.email && !errors.password) {
-        const { data } = await loginUser(email, password)
+        const data = await loginUser(email, password)
 
         dispatch(login(data));
       } else {
         toast.warning(errors.email || errors.password);
       }
     } catch (error) {
+      // console.log({ error });
       toast.error(error.response?.data?.message || "No se pudo iniciar sesión")
     }
   };
