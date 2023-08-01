@@ -64,7 +64,7 @@ const createNodeSchema = Joi.object({
   // block: Joi.string().optional().allow(null).messages({
   //   "*": "El campo 'block' debe ser un id válido",
   // }),
-  adyacency: Joi.array().optional().items(Joi.string()),
+  adjacency: Joi.array().optional().items(Joi.string()),
 })
   .external(validateCampus)
   .external(validateCategory);
@@ -103,7 +103,7 @@ const updateNodeSchema = Joi.object({
   category: Joi.string().allow(null).optional().messages({
     "*": "El campo 'category' debe ser un id válido o null",
   }),
-  adyacency: Joi.array().optional().items(Joi.string()),
+  adjacency: Joi.array().optional().items(Joi.string()),
 })
   .external(validateCategory)
   .external(validateBlock)
