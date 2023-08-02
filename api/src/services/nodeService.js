@@ -1,8 +1,10 @@
 const Node = require("../models/Node");
-const Adyacency = require("../models/Adyacency");
+const Detail = require("../models/Detail");
+const Adjacency = require("../models/Adjacency");
 const ValidationError = require("../errors/ValidationError");
 const NotExist = require("../errors/NotExist");
 const detailService = require("../services/detailService");
+// const adjacencyService = require("../services/adjacencyService");
 const { isValidObjectId } = require("mongoose");
 const {
   timeBetweenCoordinates,
@@ -34,19 +36,19 @@ const nodeAlreadyExists = async (latitude, longitude) => {
 };
 
 const createNode = async (nodeData = {}) => {
-  // adyacency debe ser un array de ids de nodos (de cualquier tipo)
-  const { latitude, longitude, adyacency = [], ...restData } = nodeData;
-  const createdAdyacencies = [];
+  // adjacency debe ser un array de ids de nodos (de cualquier tipo)
+  const { latitude, longitude, adjacency = [], ...restData } = nodeData;
+  const createdAdjacencies = [];
   await nodeAlreadyExists(latitude, longitude);
 
   const node = await Node.create({ latitude, longitude, ...restData });
 
-  if (adyacency.length > 0) {
-    for (let i = 0; i < adyacency.length; i++) {
+  if (adjacency.length > 0) {
+    for (let i = 0; i < adjacency.length; i++) {
       // Busco el documento del nodo creado
-      let nodeAdyacency = await Node.findOne({
-        latitude: adyacency[i].latitude,
-        longitude: adyacency[i].longitude,
+      let nodeAdjacency = await Node.findOne({
+        latitude: adjacency[i].latitude,
+        longitude: adjacency[i].longitude,
         deletedAt: null,
       });
 
@@ -54,21 +56,21 @@ const createNode = async (nodeData = {}) => {
       const weight = getDistanceBetweenCoordinates(
         latitude,
         longitude,
-        nodeAdyacency.latitude,
-        nodeAdyacency.longitude
+        nodeAdjacency.latitude,
+        nodeAdjacency.longitude
       );
 
-      const adyacency = await Adyacency.create({
+      const adjacency = await Adjacency.create({
         origin: node.id,
-        destination: nodeAdyacency.id,
+        destination: nodeAdjacency.id,
         weight,
       });
 
-      createdAdyacencies.push(adyacency);
+      createdAdjacencies.push(adjacency);
     }
   }
 
-  node.adyacency = createdAdyacencies;
+  node.adjacency = createdAdjacencies;
 
   return node;
 };
@@ -118,7 +120,14 @@ const getNodes = async (where = {}, skip, limit, populate = true) => {
   return nodes;
 };
 
-const getAllNodesCoordinates = async (where = {}, skip, limit) => {
+const getAllNodesCoordinates = async (
+  where = {},
+  skip,
+  limit,
+  adjacencies = false,
+  // Para saber si envío todas las adyacencias del nodo o solo donde es destino
+  allAdjacencies = true
+) => {
   const nodes = await Node.find(where)
     .select(["latitude", "longitude", "type", "available"])
     .populate("type", ["name"])
@@ -126,16 +135,67 @@ const getAllNodesCoordinates = async (where = {}, skip, limit) => {
     .sort({ createdAt: -1 })
     .lean();
 
-  nodes.map((node) => {
-    node.type = node.type?.name || null;
-    node.name =
-      node.type === ROUTE_NODO_TYPE
-        ? "Nodo ruta"
-        : node?.detail?.title || "Sin datos";
-    node.color = COLORS_DICTIONARY[node.type];
-    node.coordinates = [node.latitude, node.longitude];
-    node.detail = undefined;
-  });
+  await Promise.all(
+    nodes.map(async (node) => {
+      node.type = node.type?.name || null;
+      node.name =
+        node.type === ROUTE_NODO_TYPE
+          ? "Nodo ruta"
+          : node?.detail?.title || "Sin datos";
+      node.color = COLORS_DICTIONARY[node.type];
+      node.coordinates = [node.latitude, node.longitude];
+      node.detail = undefined;
+
+      if (adjacencies) {
+        if (!allAdjacencies) {
+          node.adjacencies = await Adjacency.find({ origin: node._id })
+            .populate("destination")
+            .lean();
+        } else {
+          //
+          node.adjacencies = await Adjacency.find({
+            $or: [{ origin: node._id }, { destination: node._id }],
+          })
+            .populate("origin")
+            .populate("destination")
+            .lean();
+
+          node.adjacencies.map((adj) => {
+            if (node._id.toString() === adj.destination?._id.toString()) {
+              adj.destination = adj.origin;
+            }
+          });
+        }
+
+        await Promise.all(
+          node.adjacencies.map(async (adj) => {
+            if (adj.destination) {
+              adj.destinationCoordinates = [
+                adj.destination?.latitude,
+                adj.destination?.longitude,
+              ];
+
+              if (adj.destination.detail) {
+                const detail = await Detail.findOne({
+                  _id: adj.destination.detail,
+                });
+
+                adj.destinationName = detail?.title || "s/n";
+              } else {
+                adj.destinationName = "Nodo Ruta";
+              }
+            }
+
+            adj.destination = adj.destination?._id;
+            delete adj.createdAt;
+            delete adj.origin;
+            delete adj.deletedAt;
+            delete adj.__v;
+          })
+        );
+      }
+    })
+  );
 
   return nodes;
 };
@@ -146,7 +206,7 @@ const getCountNodes = async (where = {}) => {
   return countNodes;
 };
 
-const getNodeById = async (_id) => {
+const getNodeById = async (_id, adjacencies = true) => {
   if (!isValidObjectId(_id))
     throw new ValidationError("El id debe ser un ObjectId");
 
@@ -160,6 +220,27 @@ const getNodeById = async (_id) => {
   if (!node) throw new NotExist("Nodo no encontrado");
 
   node = await populateDetail(node);
+
+  if (adjacencies) {
+    node.adjacencies = await Adjacency.find({ origin: node._id })
+      .populate("destination")
+      .lean();
+
+    node.adjacencies.map((adj) => {
+      if (adj.destination) {
+        adj.destinationCoordinates = [
+          adj.destination?.latitude,
+          adj.destination?.longitude,
+        ];
+      }
+
+      adj.destination = adj.destination?._id;
+      delete adj.createdAt;
+      delete adj.origin;
+      delete adj.deletedAt;
+      delete adj.__v;
+    });
+  }
 
   return node;
 };

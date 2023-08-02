@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const adyacencySchema = new Schema({
+const adjacencySchema = new Schema({
   origin: {
     type: String,
     required: true,
@@ -19,6 +19,6 @@ const adyacencySchema = new Schema({
   },
 });
 
-const Adyacency = mongoose.model("Adyacency", adyacencySchema);
+const Adjacency = mongoose.model("Adjacency", adjacencySchema);
 
-module.exports = Adyacency;
+module.exports = Adjacency;

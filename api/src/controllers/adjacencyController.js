@@ -1,19 +1,19 @@
-const adyacencyService = require("../services/adyacencyService");
+const adjacencyService = require("../services/adjacencyService");
 const BadRequestError = require("../errors/BadRequestError");
 
 module.exports = {
-  getAdyacenciesByNode: async (req, res) => {
+  getAdjacenciesByNode: async (req, res) => {
     const { node } = req.params;
-    const results = await adyacencyService.getNodeAdyacencies(node);
+    const results = await adjacencyService.getNodeAdjacencies(node);
 
-    res.json({ totalCount: result.length, results });
+    res.json({ totalCount: results.length, results });
   },
 
-  getAllAdyacencies: async (req, res) => {
+  getAllAdjacencies: async (req, res) => {
     let { skip, limit, populate, ...where } = req.query;
 
-    const totalCount = await adyacencyService.getAllAdyacenciesCount(where);
-    const results = await adyacencyService.getAllAdyacencies(
+    const totalCount = await adjacencyService.getAllAdjacenciesCount(where);
+    const results = await adjacencyService.getAllAdjacencies(
       where,
       populate === "true"
     );
@@ -21,7 +21,7 @@ module.exports = {
     res.json({ totalCount, results });
   },
 
-  createAdyacency: async (req, res) => {
+  createAdjacency: async (req, res) => {
     const { origin, destination, nodes } = req.body;
 
     if (!nodes?.length && (!origin || !destination)) {
@@ -36,34 +36,34 @@ module.exports = {
       );
     }
 
-    let adyacencies = [];
+    let adjacencies = [];
 
     if (nodes?.length) {
-      adyacencies = await adyacencyService.createAdyacencies(nodes);
+      adjacencies = await adjacencyService.createAdjacencies(nodes);
     } else {
-      const newAdyacency = await adyacencyService.createAdyacency(
+      const newAdjacency = await adjacencyService.createAdjacency(
         origin,
         destination
       );
 
-      adyacencies.push(newAdyacency);
+      adjacencies.push(newAdjacency);
     }
 
-    return res.json(adyacencies);
+    return res.json(adjacencies);
   },
 
-  deleteAdyacencies: async (req, res) => {
-    const { adyacencies } = req.body;
+  deleteAdjacencies: async (req, res) => {
+    const { adjacencies } = req.body;
 
-    const deletedAdyacencies = await adyacencyService.deleteAdyacencies(
-      adyacencies
+    const deletedAdjacencies = await adjacencyService.deleteAdjacencies(
+      adjacencies
     );
 
-    res.json(deletedAdyacencies);
+    res.json(deletedAdjacencies);
   },
 
   masiveUpload: async (req, res, next) => {
-    const { valid, errorsURL, results } = await adyacencyService.masiveUpload(
+    const { valid, errorsURL, results } = await adjacencyService.masiveUpload(
       req.file
     );
 

@@ -10,7 +10,7 @@ const nodeIsValid = async (_id) => {
 };
 
 // Función para validar un archivo Excel y generar el archivo con errores
-async function validateAdyacenciesExcelFile(file) {
+async function validateAdjacenciesExcelFile(file) {
   try {
     const jsonData = readExcelFile(file);
 
@@ -84,4 +84,4 @@ async function validateAdyacenciesExcelFile(file) {
   }
 }
 
-module.exports = validateAdyacenciesExcelFile;
+module.exports = validateAdjacenciesExcelFile;

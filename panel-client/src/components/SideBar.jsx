@@ -15,6 +15,7 @@ import { useState } from "react";
 import { BiSolidCategory, BiSolidDoorOpen, BiSolidHome } from "react-icons/bi";
 import { GoAlertFill } from "react-icons/go";
 import { BsFillCalendarEventFill } from "react-icons/bs";
+import { PiPolygonDuotone } from "react-icons/pi";
 import {
   FaBuilding,
   FaCity,
@@ -163,6 +164,12 @@ function SidebarMenu() {
                 <Flex align="center">
                   <Icon as={BiSolidDoorOpen} mr={2} />
                   <Text>Nodos de acceso</Text>
+                </Flex>
+              </Link>
+              <Link as={NavLink} to="/adjacency" onClick={toggleMenu}>
+                <Flex align="center">
+                  <Icon as={PiPolygonDuotone} mr={2} />
+                  <Text>Adyacencias</Text>
                 </Flex>
               </Link>
               <Link as={NavLink} to="/report" onClick={toggleMenu}>

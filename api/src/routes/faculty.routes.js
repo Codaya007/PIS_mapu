@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const facultyController = require("../controllers/facultyController");
 const middlewares = require("../middlewares");
-const schemas = require("../ValidationSchemas/Faculty");
+const schemas = require("../validationSchemas/Faculty");
 
 const facultyRouter = Router();
 
