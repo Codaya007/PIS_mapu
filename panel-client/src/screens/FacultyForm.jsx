@@ -121,7 +121,7 @@ const FacultyForm = () => {
           {id ? "Edición" : "Creación"} de facultades
         </Heading>
       </Box>
-      <form onSubmit={handleSubmit}>
+      <form style={{ maxWidth: "700px", margin: "auto" }} onSubmit={handleSubmit}>
         <VStack spacing="4">
           <FormControl>
             <FormLabel htmlFor="name">Nombre</FormLabel>
@@ -160,43 +160,46 @@ const FacultyForm = () => {
             />
           </FormControl>
 
-          <Heading color={"blue.300"} size="md" mb={4}>
-            Póligonos De La Facultad
-          </Heading>
-          <Box display={"flex"} p={4} width={"100%"} >
-            {/* Mapa de polígonos */}
-            <MapContainer
-              style={{ width: "100%", height: "60vh" }}
-              center={center}
-              zoom={zoom}
-              scrollWheelZoom={false}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <MapWithDraw
-                faculty={faculty}
-                onPolygonDrawn={handlePolygonDrawn}
-                drawnPolygons={polygons}
-              />
-            </MapContainer>
-            {/* Tabla de polígonos y acciones */}
-            <Box>
-              <Box margin={"auto"} display={"flex"} justifyContent={"space-around"} p={4}>
-                <Button colorScheme="green" onClick={handleResetPolygons}>Resetear polígonos</Button>
-                <Button colorScheme="red" onClick={handleDeleteAllPolygon}>Limpiar polígonos</Button>
-              </Box>
-              <PolygonsTable polygons={polygons} onDeletePolygon={handleDeletePolygon} />
-            </Box>
-          </Box>
-
           <Button type="submit" colorScheme="blue">
             {id ? "Guardar cambios" : "Crear facultad"}
           </Button>
 
         </VStack>
       </form>
+
+      <Box>
+        <Heading color={"blue.300"} size="md" mb={4}>
+          Polígonos De La Facultad
+        </Heading>
+        <Box display={"flex"} p={4} width={"100%"} >
+          {/* Mapa de polígonos */}
+          <MapContainer
+            style={{ width: "100%", height: "60vh" }}
+            center={center}
+            zoom={zoom}
+            scrollWheelZoom={false}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MapWithDraw
+              faculty={faculty}
+              onPolygonDrawn={handlePolygonDrawn}
+              drawnPolygons={polygons}
+            />
+          </MapContainer>
+          {/* Tabla de polígonos y acciones */}
+          <Box>
+            <Box margin={"auto"} display={"flex"} justifyContent={"space-around"} p={4}>
+              <Button colorScheme="green" onClick={handleResetPolygons}>Resetear polígonos</Button>
+              <Button colorScheme="red" onClick={handleDeleteAllPolygon}>Limpiar polígonos</Button>
+            </Box>
+            <PolygonsTable polygons={polygons} onDeletePolygon={handleDeletePolygon} />
+          </Box>
+        </Box>
+
+      </Box>
     </Box>
   );
 };
