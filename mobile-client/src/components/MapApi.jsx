@@ -2,11 +2,25 @@ import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
 import { useEffect, useState } from "react";
 import { findNearestRoute, getAllNodes } from "../services/Nodes";
+import { Button } from "native-base";
+import Toast from "react-native-toast-message";
 
+const nodeState = {
+  origin: "",
+  destination: "",
+  type: "byNode",
+};
+
+const coordenate = {
+  latitude: null,
+  longitude: null,
+};
 export default function MapApi({ nodeSelected }) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
   const [path, setPath] = useState([]);
+  const [nodeMarkerStart, setNodeMarkerStart] = useState("");
+  const [nodeMarkerEnd, setNodeMarkerEnd] = useState("");
 
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
@@ -17,49 +31,73 @@ export default function MapApi({ nodeSelected }) {
       const { nodes } = await getAllNodes();
       setNodesPoint(nodes);
     } catch (error) {
-      // Mostrar error
+      Toast.show({
+        type: "error",
+        text1: "Error al cargar nodos",
+        position: "bottom",
+      });
       console.log({ error });
     }
   };
 
   useEffect(() => {
     handleNodes();
-    handleShortPath();
   }, []);
 
-  const node = {
-    origin: "64bdb67659c2ddc3c95f4159",
-    destination: "64bdb67659c2ddc3c95f415b",
-    type: "byNode",
+  useEffect(() => {
+    if ((nodeMarkerStart != "") & (nodeMarkerEnd != "")) {
+      const node = {
+        type: "byNode",
+        origin: nodeMarkerStart,
+        destination: nodeMarkerEnd,
+      };
+      handleShortPath(node);
+      setNodeMarkerStart("");
+      setNodeMarkerEnd("");
+    }
+  }, [nodeMarkerStart, nodeMarkerEnd]);
+
+  const handleShortPath = async (node) => {
+    try {
+      const information = await findNearestRoute(node);
+      drawPath(information.result.path);
+      Toast.show({
+        type: "success",
+        text1: "Ruta calculada",
+        position: "bottom",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Los nodos no estan conectados",
+        position: "bottom",
+      });
+    }
   };
 
-  const handleShortPath = async () => {
-    console.log("short path");
-    const information = await findNearestRoute(node);
-    drawPath(information.result.path);
-  };
   const drawPath = async (points) => {
-    //Aniadir las coordenadas par alel polyname
     const coordinates = [];
 
     for (let i = 0; i < points.length; i++) {
-      // console.log(path[i].coordinate);
       coordinates.push(points[i].coordinate);
     }
+
     const convertedCoordinates = coordinates.map((coordinate) => {
       return {
         latitude: coordinate[0],
         longitude: coordinate[1],
       };
     });
-    console.log('first')
     setPath(convertedCoordinates);
-    console.log(path);
-
-    // Trazar la ruta del polilyne
-    // polyline(coordinates).addTo(this.map);
   };
 
+  const handleNode = (node) => {
+    if (nodeMarkerStart == "") {
+      setNodeMarkerStart(node._id);
+    } else if (nodeMarkerEnd == "") {
+      setNodeMarkerEnd(node._id);
+    }
+  };
   const showNodesOnMap = () => {
     return nodesPoint.map((node) => {
       if (node.type !== "Ruta" && !onSelect) {
@@ -73,6 +111,7 @@ export default function MapApi({ nodeSelected }) {
             title={node?.name}
             description={node?.type}
             pinColor={node?.color}
+            onPress={() => handleNode(node)}
           />
         );
       }
@@ -91,12 +130,7 @@ export default function MapApi({ nodeSelected }) {
           longitudeDelta: 0.00026654452085494995,
         }}
       >
-        <Polyline
-          coordinates={path}
-          strokeColor="#238C23"
-          strokeWidth={6}
-        />
-
+        <Polyline coordinates={path} strokeColor="#238C23" strokeWidth={6} />
         {showNodesOnMap()}
       </MapView>
       <StatusBar style="auto" />
