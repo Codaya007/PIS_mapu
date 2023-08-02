@@ -6,6 +6,7 @@ import {
   Input,
   VStack,
   Heading,
+  Textarea,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -19,6 +20,7 @@ import {
 import { fetchFaculties } from "../store/actions/facultyActions";
 import MapWithDraw from "../components/MapWithDraw";
 import { MapContainer, TileLayer } from "react-leaflet";
+import PolygonsTable from "../components/PolygonsTable";
 
 const initialState = {
   name: "",
@@ -29,16 +31,30 @@ const initialState = {
 
 const FacultyForm = () => {
   const [faculty, setFaculty] = useState(initialState);
+  const [polygons, setPolygons] = useState([]);
   const dispacth = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
   const center = [-4.032747, -79.202405];
-  const zoom = 18;
+  const zoom = 15;
 
-  const handlePolygonDrawn = (polygonCoordinates) => {
-    const coordinates = polygonCoordinates.geometry.coordinates;
-    setFaculty({ ...faculty, polygons: coordinates });
+  const handlePolygonDrawn = (coordinates) => {
+    setPolygons([...polygons, coordinates])
   };
+
+  const handleDeletePolygon = (index) => {
+    const newPolygons = polygons.filter((e, i) => i !== index)
+
+    setPolygons(newPolygons)
+  }
+
+  const handleDeleteAllPolygon = () => {
+    setPolygons([])
+  }
+
+  const handleResetPolygons = () => {
+    setPolygons(faculty.polygons || [])
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,7 +66,6 @@ const FacultyForm = () => {
     if (id) {
       const getFaculty = async () => {
         const facultyDB = await fetchFacultyById(id);
-        console.log({ facultyDB });
 
         setFaculty({
           name: facultyDB.name,
@@ -58,6 +73,8 @@ const FacultyForm = () => {
           dean: facultyDB.dean,
           polygons: facultyDB.polygons,
         });
+
+        setPolygons(facultyDB.polygons || []);
       };
 
       getFaculty();
@@ -70,18 +87,19 @@ const FacultyForm = () => {
     try {
       // Aquí puedes hacer la llamada a tu API para guardar la nueva faculty
       if (id) {
-        await updateFacultyById(id, faculty);
+        await updateFacultyById(id, { ...faculty, polygons });
         navigate("/faculty");
         toast.success("Actualización exitosa");
       } else {
-        await createFaculty(faculty);
+        await createFaculty({ ...faculty, polygons });
         toast.success("Facultad creada");
       }
 
       dispacth(fetchFaculties());
       navigate("/faculty");
     } catch (error) {
-      toast.error(error.response?.data?.message);
+      console.log({ error });
+      toast.error(error.response?.data?.message || `No se pudo ${id ? "actualizar" : "crear"} la facultad`);
     }
   };
 
@@ -92,7 +110,6 @@ const FacultyForm = () => {
   return (
     <Box
       margin={"auto"}
-      maxWidth="750px"
       p="5"
       bg="white"
       boxShadow="lg"
@@ -104,7 +121,7 @@ const FacultyForm = () => {
           {id ? "Edición" : "Creación"} de facultades
         </Heading>
       </Box>
-      <form onSubmit={handleSubmit}>
+      <form style={{ maxWidth: "700px", margin: "auto" }} onSubmit={handleSubmit}>
         <VStack spacing="4">
           <FormControl>
             <FormLabel htmlFor="name">Nombre</FormLabel>
@@ -121,7 +138,7 @@ const FacultyForm = () => {
 
           <FormControl>
             <FormLabel htmlFor="description">Descripción</FormLabel>
-            <Input
+            <Textarea
               type="text"
               id="description"
               name="description"
@@ -143,39 +160,46 @@ const FacultyForm = () => {
             />
           </FormControl>
 
-          <Box p={4} width={"100%"}>
-            <Heading as="h1" size="lg" mb={4}>
-              Póligono De La Facultad
-            </Heading>
-
-            <MapContainer
-              style={{ width: "90%", height: "60vh" }}
-              center={center}
-              zoom={zoom}
-              scrollWheelZoom={false}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-              <MapWithDraw
-                faculty={faculty}
-                onPolygonDrawn={handlePolygonDrawn}
-              />
-            </MapContainer>
-          </Box>
-
-          {id ? (
-            <Button colorScheme="blue" onClick={deletePolygon}>
-              Eliminar Poligono
-            </Button>
-          ) : null}
-
           <Button type="submit" colorScheme="blue">
             {id ? "Guardar cambios" : "Crear facultad"}
           </Button>
+
         </VStack>
       </form>
+
+      <Box>
+        <Heading color={"blue.300"} size="md" mb={4}>
+          Polígonos De La Facultad
+        </Heading>
+        <Box display={"flex"} p={4} width={"100%"} >
+          {/* Mapa de polígonos */}
+          <MapContainer
+            style={{ width: "100%", height: "60vh" }}
+            center={center}
+            zoom={zoom}
+            scrollWheelZoom={false}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MapWithDraw
+              faculty={faculty}
+              onPolygonDrawn={handlePolygonDrawn}
+              drawnPolygons={polygons}
+            />
+          </MapContainer>
+          {/* Tabla de polígonos y acciones */}
+          <Box>
+            <Box margin={"auto"} display={"flex"} justifyContent={"space-around"} p={4}>
+              <Button colorScheme="green" onClick={handleResetPolygons}>Resetear polígonos</Button>
+              <Button colorScheme="red" onClick={handleDeleteAllPolygon}>Limpiar polígonos</Button>
+            </Box>
+            <PolygonsTable polygons={polygons} onDeletePolygon={handleDeletePolygon} />
+          </Box>
+        </Box>
+
+      </Box>
     </Box>
   );
 };

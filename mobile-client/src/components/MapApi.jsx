@@ -1,26 +1,29 @@
 import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
 import MapView, { Marker, Polyline } from "react-native-maps";
-import { useEffect, useState } from "react";
 import { findNearestRoute, getAllNodes } from "../services/Nodes";
-import { Button } from "native-base";
 import Toast from "react-native-toast-message";
+import { useEffect, useRef, useState } from "react";
+import * as Location from 'expo-location';
 
-const nodeState = {
-  origin: "",
-  destination: "",
-  type: "byNode",
+const initialState = {
+  coordinates: ["0", "0"],
+  latitude: "0",
+  longitude: "0",
+  latitudeDelta: "0.00005",
+  longitudeDelta: "0.00005",
+  name: "Mi Ubicación",
+  type: "Mi Ubicación"
 };
 
-const coordenate = {
-  latitude: null,
-  longitude: null,
-};
+
 export default function MapApi({ nodeSelected }) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
   const [path, setPath] = useState([]);
   const [nodeMarkerStart, setNodeMarkerStart] = useState("");
   const [nodeMarkerEnd, setNodeMarkerEnd] = useState("");
+  const [gpsNode, setGpsNode] = useState(initialState);
+  const mapRef = useRef(null);
 
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
@@ -40,8 +43,60 @@ export default function MapApi({ nodeSelected }) {
     }
   };
 
+  const handleGpsNode = (userLocation) => {
+    const { latitude, longitude } = userLocation.nativeEvent.coordinate;
+    const updatedGpsNode = {
+      ...gpsNode,
+      coordinates: [latitude.toString(), longitude.toString()],
+      latitude: latitude.toString(),
+      longitude: longitude.toString(),
+    };
+    setGpsNode(updatedGpsNode);
+    console.log(gpsNode);
+  };
+
+  const printNode = (node) => {
+    return (
+      <Marker
+            key={node?._id}
+            coordinate={{
+              latitude: node?.latitude,
+              longitude: node?.longitude,
+            }}
+            title={node?.name}
+            description={node?.type}
+            pinColor={node?.color}
+            onPress={() => handleNode(node)}
+          />
+    );
+  };
+
   useEffect(() => {
     handleNodes();
+
+    const handleInitialLocation = async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      const { latitude, longitude } = location.coords;
+      console.log("Initial position", latitude, longitude);
+      
+      if (mapRef.current) {
+        mapRef.current.animateToRegion({
+          latitude,
+          longitude,
+          latitudeDelta: "0.00005",
+          longitudeDelta: "0.00005"
+        });
+      }
+    };
+
+    handleInitialLocation();
   }, []);
 
   useEffect(() => {
@@ -101,19 +156,7 @@ export default function MapApi({ nodeSelected }) {
   const showNodesOnMap = () => {
     return nodesPoint.map((node) => {
       if (node.type !== "Ruta" && !onSelect) {
-        return (
-          <Marker
-            key={node?._id}
-            coordinate={{
-              latitude: node?.latitude,
-              longitude: node?.longitude,
-            }}
-            title={node?.name}
-            description={node?.type}
-            pinColor={node?.color}
-            onPress={() => handleNode(node)}
-          />
-        );
+        return printNode(node);
       }
     });
   };
@@ -121,14 +164,21 @@ export default function MapApi({ nodeSelected }) {
   return (
     <View style={styles.container}>
       <MapView
+        ref={mapRef}
         style={styles.map}
         onRegionChange={onRegionChange}
         initialRegion={{
-          latitude: -4.032768234697718,
-          latitudeDelta: 0.000546819178341984,
-          longitude: -79.20239863917232,
-          longitudeDelta: 0.00026654452085494995,
+          latitude: -0.19964851407494397,
+          latitudeDelta: 100,
+          longitude: -78.48328033483989,
+          longitudeDelta: 100,
         }}
+        showsUserLocation={true}
+        followsUserLocation={false}
+        userLocationPriority="high"
+        userLocationUpdateInterval={5000}
+        userLocationFastestInterval={5000}
+        onUserLocationChange={handleGpsNode}
       >
         <Polyline coordinates={path} strokeColor="#238C23" strokeWidth={6} />
         {showNodesOnMap()}

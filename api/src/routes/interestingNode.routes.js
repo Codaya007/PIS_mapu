@@ -17,6 +17,7 @@ const interestingNodeRouter = Router();
  */
 interestingNodeRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(createNodeWithDetailSchema),
   interestingNodeController.createInterestingNode
 );
@@ -45,6 +46,7 @@ interestingNodeRouter.get("/:id", interestingNodeController.getInterestingNode);
  */
 interestingNodeRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(updateNodeWithDetailSchema),
   interestingNodeController.updateInterestingNode
 );
@@ -56,6 +58,7 @@ interestingNodeRouter.put(
  */
 interestingNodeRouter.delete(
   "/:id",
+  isAdmin,
   interestingNodeController.deleteInterestingNode
 );
 
@@ -64,6 +67,6 @@ interestingNodeRouter.post(
   isAdmin,
   upload.single("file"),
   interestingNodeController.masiveUpload
-)
+);
 
 module.exports = interestingNodeRouter;

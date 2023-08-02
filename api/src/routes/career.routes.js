@@ -1,7 +1,11 @@
 const { Router } = require("express");
-const { createCareerSchema, updateCareerSchema } = require("../validationSchemas/Career");
+const {
+  createCareerSchema,
+  updateCareerSchema,
+} = require("../validationSchemas/Career");
 const careerController = require("../controllers/careerController");
 const middlewares = require("../middlewares");
+const isAdmin = require("../policies/isAdmin");
 
 const careerRouter = Router();
 
@@ -10,20 +14,14 @@ const careerRouter = Router();
  * @desc Devuelve todas las carreras registradas en la BDD
  * @access Public
  */
-careerRouter.get(
-  "/",
-  careerController.getAllCareers
-);
+careerRouter.get("/", careerController.getAllCareers);
 
 /**
  * @route GET /
  * @desc Devuelve una carrera buscada por Id
  * @access Public
  */
-careerRouter.get(
-  "/:id",
-  careerController.getCareerById
-);
+careerRouter.get("/:id", careerController.getCareerById);
 
 /**
  * @route POST /
@@ -32,6 +30,7 @@ careerRouter.get(
  */
 careerRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(createCareerSchema),
   careerController.createCareer
 );
@@ -43,6 +42,7 @@ careerRouter.post(
  */
 careerRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(updateCareerSchema),
   careerController.updateCareer
 );
@@ -52,9 +52,6 @@ careerRouter.put(
  * @desc Elimina una carrera buscándola por Id
  * @access Admin
  */
-careerRouter.delete(
-  "/:id",
-  careerController.deleteCareerById
-);
+careerRouter.delete("/:id", isAdmin, careerController.deleteCareerById);
 
 module.exports = careerRouter;

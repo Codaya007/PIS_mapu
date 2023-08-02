@@ -52,6 +52,7 @@ const createCampusSchema = Joi.object({
   address: Joi.string().required().max(300).messages({
     "*": "El campo 'address' es requerido y debe tener un largo máximo de 300 caracteres",
   }),
+  polygon: Joi.array().optional(),
   // accessPoints: Joi.array().required().messages({
   //   "*": "El campo accessPoint debe ser un array de coordenadas",
   // }),
@@ -77,7 +78,7 @@ const updateCampusSchema = Joi.object({
   address: Joi.string().optional().max(300).messages({
     "*": "El campo 'address' debe tener un largo máximo de 300 caracteres",
   }),
-
+  polygon: Joi.array().optional(),
   // accessPoints: Joi.array().optional().messages({
   //   "*": "El campo accessPoint debe ser un array",
   // }),

@@ -1,7 +1,11 @@
 const categoryController = require("../controllers/categoryController");
 const { Router } = require("express");
 const middlewares = require("../middlewares");
-const { createCategorySchema, updateCategorySchema } = require("../validationSchemas/Category");
+const {
+  createCategorySchema,
+  updateCategorySchema,
+} = require("../validationSchemas/Category");
+const isAdmin = require("../policies/isAdmin");
 
 const categoryRouter = Router();
 
@@ -10,20 +14,14 @@ const categoryRouter = Router();
  * @desc Devuelve todas las categorias registradas en la BDD
  * @access Public
  */
-categoryRouter.get(
-  "/",
-  categoryController.getAllCategories
-);
+categoryRouter.get("/", categoryController.getAllCategories);
 
 /**
  * @route GET /
  * @desc Devuelve una categoria buscada por Id
  * @access Public
  */
-categoryRouter.get(
-  "/:id",
-  categoryController.getCategoryById
-);
+categoryRouter.get("/:id", categoryController.getCategoryById);
 
 /**
  * @route POST /
@@ -32,6 +30,7 @@ categoryRouter.get(
  */
 categoryRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(createCategorySchema),
   categoryController.createCategory
 );
@@ -43,6 +42,7 @@ categoryRouter.post(
  */
 categoryRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(updateCategorySchema),
   categoryController.updateCategory
 );
@@ -52,9 +52,6 @@ categoryRouter.put(
  * @desc Elimina una categoria buscándola por Id
  * @access Admin
  */
-categoryRouter.delete(
-  "/:id",
-  categoryController.deleteCategoryById
-);
+categoryRouter.delete("/:id", isAdmin, categoryController.deleteCategoryById);
 
 module.exports = categoryRouter;

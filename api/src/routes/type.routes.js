@@ -7,6 +7,7 @@ const {
   createTypeSchema,
   updateTypeSchema,
 } = require("../validationSchemas/Type");
+const isAdmin = require("../policies/isAdmin");
 
 /**
  * @route POST/
@@ -15,6 +16,7 @@ const {
  */
 typeRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(createTypeSchema),
   typeController.createType
 );
@@ -51,6 +53,6 @@ typeRouter.get("/:id", typeController.getTypeById);
  * @des Eliminar por id (/:id)
  * @access Admin
  */
-typeRouter.delete("/:id", typeController.deleteType);
+// typeRouter.delete("/:id", typeController.deleteType);
 
 module.exports = typeRouter;

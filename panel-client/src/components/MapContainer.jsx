@@ -3,6 +3,7 @@ import { CircleMarker, MapContainer as Map, Marker, Popup, TileLayer, useMap } f
 import MapLine from "./MapLine";
 import { Box } from "@chakra-ui/react";
 import { useEffect } from "react";
+import "leaflet/dist/leaflet.css";
 
 function ChangeView({ center, zoom }) {
   const map = useMap();

@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Header from "./components/Header";
 import SidebarMenu from "./components/SideBar";
@@ -41,6 +41,7 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user } = useSelector(state => state.authReducer);
 
   // console.log(location);
 
@@ -74,6 +75,10 @@ function App() {
       navigate("/login");
     }
   }, []);
+
+  useEffect(() => {
+    if (!user) navigate("/login")
+  }, [user]);
 
   return (
     <>
