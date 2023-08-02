@@ -35,6 +35,7 @@ import RecoveryPasswordForm from "./screens/RecoveryPasswordForm-mobile";
 import UserForm from "./screens/UserForm";
 import Reports from "./screens/Reports";
 import ForgotPassword from "./screens/ForgotPassword";
+import Adjacencies from "./screens/Adjacencies";
 
 function App() {
   const location = useLocation();
@@ -134,6 +135,8 @@ function App() {
             <Route path="/edit-user/:id" element={<UserForm />} />
             <Route path="/create-user" element={<UserForm />} />
 
+            {/* Adyacencias */}
+            <Route path="/adjacency" element={<Adjacencies />} />
             {/* Reportes */}
             <Route path="/report" element={<Reports />} />
             {/* Commentarios */}

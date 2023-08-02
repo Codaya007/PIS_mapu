@@ -1,7 +1,7 @@
 const BadRequestError = require("../errors/BadRequestError");
 const accessNodeService = require("./accessNodeService");
 const nodeService = require("./nodeService");
-const adyacencyService = require("./adyacencyService");
+const adjacencyService = require("./adjacencyService");
 const routeNodeService = require("./routeNodeService");
 const Node = require("../models/Node");
 
@@ -67,7 +67,7 @@ async function findShortestRoute(type, origin, destination, nomenclature) {
   routeCampusNodesId.push(originNode._id.toString());
   routeCampusNodesId.push(destinityNode._id.toString());
 
-  const adyacencies = await adyacencyService.getAllAdyacencies({
+  const adjacencies = await adjacencyService.getAllAdjacencies({
     origin: { $in: routeCampusNodesId },
     destination: { $in: routeCampusNodesId },
   });
@@ -76,7 +76,7 @@ async function findShortestRoute(type, origin, destination, nomenclature) {
   let { path, totalDistance, distancesBetweenNodes } = findShortestPath(
     originNode._id.toString(),
     destinityNode._id.toString(),
-    adyacencies
+    adjacencies
   );
 
   path = path.map((id) => ({ node: id }));
@@ -101,14 +101,14 @@ async function findShortestRoute(type, origin, destination, nomenclature) {
 // const findShortestPath = (
 //   originNodeId,
 //   destinationNodeId,
-//   adyacencies = []
+//   adjacencies = []
 // ) => {
 //   try {
 //     // Construye un objeto de grafo para usar con Dijkstra
 //     const graph = {};
 
-//     adyacencies.forEach((adyacency) => {
-//       const { origin, destination, weight } = adyacency;
+//     adjacencies.forEach((adjacency) => {
+//       const { origin, destination, weight } = adjacency;
 //       graph[origin] = graph[origin] || {};
 //       graph[origin][destination] = weight;
 //     });
@@ -178,14 +178,14 @@ async function findShortestRoute(type, origin, destination, nomenclature) {
 const findShortestPath = (
   originNodeId,
   destinationNodeId,
-  adyacencies = []
+  adjacencies = []
 ) => {
   try {
     // Construye un objeto de grafo para usar con Dijkstra
     const graph = {};
 
-    adyacencies.forEach((adyacency) => {
-      const { origin, destination, weight } = adyacency;
+    adjacencies.forEach((adjacency) => {
+      const { origin, destination, weight } = adjacency;
       graph[origin] = graph[origin] || {};
       graph[origin][destination] = weight;
     });

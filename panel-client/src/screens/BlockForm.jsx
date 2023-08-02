@@ -59,7 +59,7 @@ const nodeInitialState = {
   // available: true,
   category: null,
   // campus: "",
-  adyacency: [],
+  adjacency: [],
   // detail: detailInitialState,
 };
 
@@ -467,7 +467,7 @@ const BlockForm = () => {
                   } catch (error) {
                     toast.error(
                       error.response?.data?.message ||
-                        "No se pudo eliminar el subnodo"
+                      "No se pudo eliminar el subnodo"
                     );
                   }
                 }}

@@ -47,7 +47,7 @@ const createNodeSchema = Joi.object({
   campus: Joi.string().required().messages({
     "*": "El campo 'campus' es requerido y debe ser un id válido o null",
   }),
-  adyacency: Joi.array().optional().items(Joi.string()),
+  adjacency: Joi.array().optional().items(Joi.string()),
 }).external(validateCampus);
 
 // Definir el esquema de validación para la actualización de un Nodo de interés
@@ -75,7 +75,7 @@ const updateNodeSchema = Joi.object({
   campus: Joi.string().optional().messages({
     "*": "El campo 'campus' debe ser un id válido",
   }),
-  adyacency: Joi.array().optional().items(Joi.string()),
+  adjacency: Joi.array().optional().items(Joi.string()),
 }).external(validateCampus);
 
 module.exports = {

@@ -11,7 +11,6 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 
 function CampusTable({ campuses, handleEdit, handleDelete }) {

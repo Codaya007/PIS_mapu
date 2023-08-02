@@ -35,8 +35,7 @@ function MapContainerComponent({
   height = "60vh",
 }) {
   return (
-    // <Box p={4}>
-    <Box p={4} width={width} height={height}>
+    <Box margin={0} p={4} width={width} height={height}>
       <MapContainer
         style={{ width: "100%", height: "100%" }}
         center={center}

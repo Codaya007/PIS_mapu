@@ -1,7 +1,7 @@
 const Joi = require("joi");
 const { OBJECT_ID_REGEX } = require("../constants");
 
-const createAdyacencySchema = Joi.object({
+const createAdjacencySchema = Joi.object({
   origin: Joi.string()
     .optional()
     .regex(OBJECT_ID_REGEX)
@@ -17,14 +17,15 @@ const createAdyacencySchema = Joi.object({
     .allow(null)
     .items(
       Joi.object({
-        node: Joi.string()
+        _id: Joi.string()
           .required()
           .regex(OBJECT_ID_REGEX)
           .messages({ "*": "Id de adyacencia no válido" }),
-        adyacencies: Joi.array()
+        toDelete: Joi.array(),
+        adjacencies: Joi.array()
           .required()
           .min(1)
-          .items(Joi.string().regex(OBJECT_ID_REGEX))
+          .items(Joi.object())
           .messages({
             "*": "El array de adyacencias debe tener al menos un id",
           }),
@@ -39,8 +40,8 @@ const createAdyacencySchema = Joi.object({
     "*": "Revise el cuerpo de la petición enviada",
   });
 
-const deleteAdyacenciesSchema = Joi.object({
-  adyacencies: Joi.array()
+const deleteAdjacenciesSchema = Joi.object({
+  adjacencies: Joi.array()
     .required()
     .items(
       Joi.string()
@@ -51,4 +52,4 @@ const deleteAdyacenciesSchema = Joi.object({
     .messages({ "*": "El array de adyacencias es requerido" }),
 });
 
-module.exports = { createAdyacencySchema, deleteAdyacenciesSchema };
+module.exports = { createAdjacencySchema, deleteAdjacenciesSchema };

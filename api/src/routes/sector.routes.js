@@ -2,7 +2,7 @@ const { Router } = require("express");
 const sectorController = require("../controllers/sectorController");
 // const middlewares = require("../middlewares");
 const isAdmin = require("../policies/isAdmin");
-// const schemas = require("../ValidationSchemas/Sector");
+// const schemas = require("../validationSchemas/Sector");
 
 const sectorRouter = Router();
 
