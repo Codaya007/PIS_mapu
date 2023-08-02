@@ -1,9 +1,10 @@
 const Node = require("../models/Node");
+const Detail = require("../models/Detail");
 const Adjacency = require("../models/Adjacency");
 const ValidationError = require("../errors/ValidationError");
 const NotExist = require("../errors/NotExist");
 const detailService = require("../services/detailService");
-const adjacencyService = require("../services/adjacencyService");
+// const adjacencyService = require("../services/adjacencyService");
 const { isValidObjectId } = require("mongoose");
 const {
   timeBetweenCoordinates,
@@ -123,7 +124,9 @@ const getAllNodesCoordinates = async (
   where = {},
   skip,
   limit,
-  adjacencies = false
+  adjacencies = false,
+  // Para saber si envío todas las adyacencias del nodo o solo donde es destino
+  allAdjacencies = true
 ) => {
   const nodes = await Node.find(where)
     .select(["latitude", "longitude", "type", "available"])
@@ -144,24 +147,52 @@ const getAllNodesCoordinates = async (
       node.detail = undefined;
 
       if (adjacencies) {
-        node.adjacencies = await Adjacency.find({ origin: node._id })
-          .populate("destination")
-          .lean();
+        if (!allAdjacencies) {
+          node.adjacencies = await Adjacency.find({ origin: node._id })
+            .populate("destination")
+            .lean();
+        } else {
+          //
+          node.adjacencies = await Adjacency.find({
+            $or: [{ origin: node._id }, { destination: node._id }],
+          })
+            .populate("origin")
+            .populate("destination")
+            .lean();
 
-        node.adjacencies.map((adj) => {
-          if (adj.destination) {
-            adj.destinationCoordinates = [
-              adj.destination?.latitude,
-              adj.destination?.longitude,
-            ];
-          }
+          node.adjacencies.map((adj) => {
+            if (node._id.toString() === adj.destination?._id.toString()) {
+              adj.destination = adj.origin;
+            }
+          });
+        }
 
-          adj.destination = adj.destination?._id;
-          delete adj.createdAt;
-          delete adj.origin;
-          delete adj.deletedAt;
-          delete adj.__v;
-        });
+        await Promise.all(
+          node.adjacencies.map(async (adj) => {
+            if (adj.destination) {
+              adj.destinationCoordinates = [
+                adj.destination?.latitude,
+                adj.destination?.longitude,
+              ];
+
+              if (adj.destination.detail) {
+                const detail = await Detail.findOne({
+                  _id: adj.destination.detail,
+                });
+
+                adj.destinationName = detail?.title || "s/n";
+              } else {
+                adj.destinationName = "Nodo Ruta";
+              }
+            }
+
+            adj.destination = adj.destination?._id;
+            delete adj.createdAt;
+            delete adj.origin;
+            delete adj.deletedAt;
+            delete adj.__v;
+          })
+        );
       }
     })
   );

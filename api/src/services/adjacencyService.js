@@ -22,7 +22,10 @@ const createAdjacencies = async (nodesWithAdjacencies) => {
     await Promise.all(
       nodesWithAdjacencies.map(async (node) => {
         // Cada adyacencia
-        const { adjacencies = [], _id: originId } = node;
+        const { adjacencies = [], _id: originId, toDelete = [] } = node;
+
+        // Elimino las adyacencias enviadas
+        await Adjacency.deleteMany({ _id: { $in: toDelete } });
 
         await Promise.all(
           adjacencies.map(async ({ destination, _id }) => {
