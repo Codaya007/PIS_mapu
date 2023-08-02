@@ -1,5 +1,7 @@
-// export const API_BASEURL = "http://192.168.16.101:3000";
-export const API_BASEURL = "http://10.20.136.210:3000";
+//! Usar esto para consultar a la api Deployada
+export const API_BASEURL = "https://mapupis.fly.dev";
+//! Descomentar para usar entorno local
+// export const API_BASEURL = "http://10.20.136.210:3000";
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
