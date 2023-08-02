@@ -1,7 +1,12 @@
 const { Router } = require("express");
 const commentController = require("../controllers/commentController");
 const middlewares = require("../middlewares");
-const { createCommentSchema, updateCommentSchema } = require("../validationSchemas/Comment");
+const {
+  createCommentSchema,
+  updateCommentSchema,
+} = require("../validationSchemas/Comment");
+const isLoggedIn = require("../policies/isLoggedIn");
+const isAdmin = require("../policies/isAdmin");
 
 const commentRouter = Router();
 
@@ -11,9 +16,10 @@ const commentRouter = Router();
  * @access User
  */
 commentRouter.post(
-    "/",
-    middlewares.validateRequestBody(createCommentSchema),
-    commentController.createComment
+  "/",
+  isLoggedIn,
+  middlewares.validateRequestBody(createCommentSchema),
+  commentController.createComment
 );
 
 /**
@@ -35,16 +41,13 @@ commentRouter.get("/:id", commentController.getComment);
  * @desc Actualizar la visibilidad de un comentario por ID
  * @access Admin
  */
-commentRouter.put("/:id", commentController.updateComment);
+commentRouter.put("/:id", isLoggedIn, commentController.updateComment);
 
 /**
  * @route DELETE /
  * @desc Eliminar un comentario mediante su id
  * @access Public
  */
-commentRouter.delete(
-    "/:id",
-    commentController.deleteComment
-);
+commentRouter.delete("/:id", isAdmin, commentController.deleteComment);
 
 module.exports = commentRouter;

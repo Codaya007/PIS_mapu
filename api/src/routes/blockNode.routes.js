@@ -5,6 +5,7 @@ const {
   createNodeWithDetailSchema,
   updateNodeWithDetailSchema,
 } = require("../validationSchemas/NodeWithDetail");
+const isAdmin = require("../policies/isAdmin");
 
 const blockNodeRouter = Router();
 
@@ -40,6 +41,7 @@ blockNodeRouter.get("/:id", blockNodeController.getBlockNode);
  */
 blockNodeRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(updateNodeWithDetailSchema),
   blockNodeController.updateBlockNode
 );
