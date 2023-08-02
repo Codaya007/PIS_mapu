@@ -12,3 +12,15 @@ export const getAllCoordinates = async (params = {}, skip, limit) => {
 
   return data;
 };
+
+export const updateNodeAdjacencies = async (_id, adjacencies, toDelete) => {
+  await axios.post(`${API_BASEURL}/adjacency`, {
+    nodes: [
+      {
+        _id,
+        adjacencies,
+        toDelete,
+      },
+    ],
+  });
+};
