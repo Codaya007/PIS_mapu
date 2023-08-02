@@ -37,7 +37,7 @@ const ProfileEdit = () => {
   const navigate = useNavigate();
   const { user = {} } = useSelector((state) => state.authReducer);
   const [userForm, setUserForm] = useState(user);
-  const { name, lastname, email, avatar, role, settings, _id } = userForm;
+  const { name, lastname, avatar } = userForm;
 
   const saveChange = async () => {
     try {

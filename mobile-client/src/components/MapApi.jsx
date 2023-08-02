@@ -1,11 +1,12 @@
 import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
 import { useEffect, useState } from "react";
-import { getAllNodes } from "../services/Nodes";
+import { findNearestRoute, getAllNodes } from "../services/Nodes";
 
 export default function MapApi({ nodeSelected }) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
+  const [path, setPath] = useState([]);
 
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
@@ -23,7 +24,41 @@ export default function MapApi({ nodeSelected }) {
 
   useEffect(() => {
     handleNodes();
+    handleShortPath();
   }, []);
+
+  const node = {
+    origin: "64bdb67659c2ddc3c95f4159",
+    destination: "64bdb67659c2ddc3c95f415b",
+    type: "byNode",
+  };
+
+  const handleShortPath = async () => {
+    console.log("short path");
+    const information = await findNearestRoute(node);
+    drawPath(information.result.path);
+  };
+  const drawPath = async (points) => {
+    //Aniadir las coordenadas par alel polyname
+    const coordinates = [];
+
+    for (let i = 0; i < points.length; i++) {
+      // console.log(path[i].coordinate);
+      coordinates.push(points[i].coordinate);
+    }
+    const convertedCoordinates = coordinates.map((coordinate) => {
+      return {
+        latitude: coordinate[0],
+        longitude: coordinate[1],
+      };
+    });
+    console.log('first')
+    setPath(convertedCoordinates);
+    console.log(path);
+
+    // Trazar la ruta del polilyne
+    // polyline(coordinates).addTo(this.map);
+  };
 
   const showNodesOnMap = () => {
     return nodesPoint.map((node) => {
@@ -56,7 +91,12 @@ export default function MapApi({ nodeSelected }) {
           longitudeDelta: 0.00026654452085494995,
         }}
       >
-        {/* {showLocationsOfInterest()} */}
+        <Polyline
+          coordinates={path}
+          strokeColor="#238C23"
+          strokeWidth={6}
+        />
+
         {showNodesOnMap()}
       </MapView>
       <StatusBar style="auto" />
