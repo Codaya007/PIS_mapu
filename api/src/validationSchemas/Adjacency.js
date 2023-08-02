@@ -21,6 +21,7 @@ const createAdjacencySchema = Joi.object({
           .required()
           .regex(OBJECT_ID_REGEX)
           .messages({ "*": "Id de adyacencia no válido" }),
+        toDelete: Joi.array(),
         adjacencies: Joi.array()
           .required()
           .min(1)
