@@ -12,7 +12,7 @@ import {
   Textarea,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -26,9 +26,12 @@ import { fetchFaculties } from "../store/actions/facultyActions";
 import { fetchCampuses } from "../store/actions/campusActions";
 import { fetchCategories } from "../store/actions/categoryActions";
 import { deleteDbFields } from "../utils";
-import MapSelector from "../components/MapToSelect";
+// import MapSelector from "../components/MapToSelect";
 import { uploadImageToS3 } from "../services/imageServices";
 import { deleteSubnodeById } from "../services/subnodesServices";
+import { MapContainer, TileLayer } from "react-leaflet";
+import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "../constants";
+import MapWithDrawNodes from "../components/MapWithDrawNodes";
 
 const subnodeBody = {
   latitude: "",
@@ -54,8 +57,8 @@ const detailInitialState = {
 const subnodesInitialState = [];
 
 const nodeInitialState = {
-  latitude: null,
-  longitude: null,
+  latitude: DEFAULT_MAP_CENTER[0],
+  longitude: DEFAULT_MAP_CENTER[1],
   // available: true,
   category: null,
   // campus: "",
@@ -76,8 +79,6 @@ export const handleFileChange = async (e) => {
   const MAX_IMG_SIZE_MB = 2;
   const maxSizeInBytes = MAX_IMG_SIZE_MB * 1024 * 1024;
 
-  console.log({ fileSize: file.size });
-
   if (file && file.size > maxSizeInBytes) {
     toast.error(
       `El archivo es demasiado grande. El tamaño máximo permitido es de ${MAX_IMG_SIZE_MB} MB.`
@@ -90,8 +91,6 @@ export const handleFileChange = async (e) => {
   // Procesa el archivo si está dentro del límite permitido
   // (puedes implementar el envío al servidor aquí)
   const imageURL = await uploadImageToS3(file);
-
-  console.log({ imageURL });
 
   return imageURL;
 };
@@ -113,6 +112,16 @@ const BlockForm = () => {
   const { campuses, fetched: fetchedCampus } = useSelector(
     (state) => state.campusReducer
   );
+  const markerRef = useRef();
+
+  const handleMarkerDrawn = (markerCoordinates) => {
+    const coordinates = markerCoordinates.geometry.coordinates;
+    setNode((prevState) => ({
+      ...prevState,
+      latitude: coordinates[1],
+      longitude: coordinates[0],
+    }));
+  };
 
   const handleChangeBlock = (e) => {
     const { name, value } = e.target;
@@ -133,9 +142,9 @@ const BlockForm = () => {
     setDetail({ ...detail, [name]: value });
   };
 
-  const handleChangePointer = (coordinates) => {
-    setNode({ ...node, latitude: coordinates.lat, longitude: coordinates.lng });
-  };
+  // const handleChangePointer = (coordinates) => {
+  //   setNode({ ...node, latitude: coordinates.lat, longitude: coordinates.lng });
+  // };
 
   const handleChangeSubnode = (e, index) => {
     const { name, value } = e.target;
@@ -235,8 +244,6 @@ const BlockForm = () => {
           detail: { ...detail, subnodes },
         },
       };
-
-      console.log({ data });
 
       // Aquí puedes hacer la llamada a tu API para guardar el nuevo bloque
       if (id) {
@@ -410,7 +417,25 @@ const BlockForm = () => {
             </FormControl>
           </Box>
 
-          <MapSelector handleChangePointer={handleChangePointer} />
+          {/* <MapSelector handleChangePointer={handleChangePointer} /> */}
+          <MapContainer
+            style={{ width: "100%", height: "60vh" }}
+            center={DEFAULT_MAP_CENTER}
+            zoom={DEFAULT_MAP_ZOOM}
+            scrollWheelZoom={false}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+
+            <MapWithDrawNodes
+              onMarkerDrawn={handleMarkerDrawn}
+              markerRef={markerRef}
+              latitude={node.latitude}
+              longitude={node.longitude}
+            />
+          </MapContainer>
 
           {/* Checkbox activo */}
           <FormControl>
@@ -559,6 +584,37 @@ const BlockForm = () => {
                 </FormControl>
               </Box>
 
+              <MapContainer
+                style={{ width: "100%", height: "40vh" }}
+                center={DEFAULT_MAP_CENTER}
+                zoom={DEFAULT_MAP_ZOOM}
+                scrollWheelZoom={false}
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+
+                <MapWithDrawNodes
+                  onMarkerDrawn={(markerCoordinates) => {
+                    const coordinates = markerCoordinates.geometry.coordinates;
+
+                    const newSubnodes = [...subnodes]
+                    const subnode = newSubnodes.find((e, i) => i === index);
+
+                    console.log(markerCoordinates, index);
+
+                    subnode.latitude = coordinates[1];
+                    subnode.longitude = coordinates[0];
+
+                    setSubnodes(newSubnodes)
+                  }}
+                  markerRef={null}
+                  latitude={subnode.latitude}
+                  longitude={subnode.longitude}
+                />
+              </MapContainer>
+
               <FormControl>
                 <FormLabel htmlFor="category">Categoría</FormLabel>
                 <Select
@@ -650,7 +706,7 @@ const BlockForm = () => {
             border={"2px"}
             color={"blue.400"}
             colorScheme="white"
-            onClick={() =>
+            onClick={() => {
               setSubnodes([
                 ...subnodes,
                 {
@@ -659,6 +715,7 @@ const BlockForm = () => {
                   longitude: node.longitude,
                 },
               ])
+            }
             }
           >
             Añadir subnodo +

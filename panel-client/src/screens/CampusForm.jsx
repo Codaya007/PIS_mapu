@@ -67,8 +67,8 @@ const CapusesForm = () => {
           symbol: campusDB.symbol,
           polygon: campusDB.polygon
         });
-
-        setPolygons(campusDB.polygon ? [campusDB.polygon] : [])
+        // console.log({ campusDB });
+        setPolygons(campusDB.polygon?.length ? [campusDB.polygon] : [])
       };
 
       getCampus();
