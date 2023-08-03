@@ -7,6 +7,7 @@ import { deleteFacultyById } from "../services/facultyServices";
 import { fetchFaculties } from "../store/actions/facultyActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/facultySlice";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function Faculties() {
   const {
@@ -16,6 +17,7 @@ function Faculties() {
     skip,
     currentSliceFaculties: faculties,
     fetched,
+    loading = true,
   } = useSelector((state) => state.facultyReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -74,24 +76,28 @@ function Faculties() {
         </Button>
       </Box>
 
-      <FacultyTable
-        faculties={faculties}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? <Loader /> :
+        <>
+          <FacultyTable
+            faculties={faculties}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                colorScheme={index + 1 === page ? "blue" : "gray"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>}
+
     </Box>
   );
 }

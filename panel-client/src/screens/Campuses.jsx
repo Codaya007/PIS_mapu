@@ -7,6 +7,7 @@ import { fetchCampuses } from "../store/actions/campusActions";
 import { toast } from "react-toastify";
 import { Box, Button, Heading } from "@chakra-ui/react";
 import CampusTable from "../components/CampusTable";
+import Loader from "../components/Loader";
 
 function Campuses() {
   const {
@@ -16,6 +17,7 @@ function Campuses() {
     skip,
     currentSliceCampus: campuses,
     fetched,
+    loading,
   } = useSelector((state) => state.campusReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -76,24 +78,26 @@ function Campuses() {
           Crear campus
         </Button>
       </Box>
-      <CampusTable
-        campuses={campuses}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? <Loader /> : <>
+        <CampusTable
+          campuses={campuses}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+        />
+        <Box mt={4}>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <Button
+              key={index + 1}
+              colorScheme={index + 1 === page ? "blue" : "gray"}
+              size="sm"
+              mr={2}
+              onClick={() => handlePageChange(index + 1)}
+            >
+              {index + 1}
+            </Button>
+          ))}
+        </Box>
+      </>}
     </Box>
   );
 }

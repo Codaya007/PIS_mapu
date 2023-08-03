@@ -7,6 +7,7 @@ import { fetchCategories } from "../store/actions/categoryActions";
 import { toast } from "react-toastify";
 import { Box, Button, Heading } from "@chakra-ui/react";
 import CategoryTable from "../components/CategoryTable";
+import Loader from "../components/Loader";
 
 function Categories() {
   const {
@@ -16,13 +17,13 @@ function Categories() {
     skip,
     currentSliceCategory: categories,
     fetched,
+    loading,
   } = useSelector((state) => state.categoryReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!fetched) {
-      console.log(fetchCategories());
       dispatch(fetchCategories());
     }
   }, []);
@@ -76,24 +77,30 @@ function Categories() {
           Crear categoría
         </Button>
       </Box>
-      <CategoryTable
-        categories={categories}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+
+      {loading ? <Loader /> :
+        <>
+          <CategoryTable
+            categories={categories}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                colorScheme={index + 1 === page ? "blue" : "gray"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>
+      }
+
     </Box>
   );
 }

@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { getComments } from "../../services/commentServices";
-import { getAll, getSlice } from "../slices/commentSlice";
+import { getAll, getSlice, updateLoading } from "../slices/commentSlice";
 
 export const fetchComments =
   (skip, limit, populate = true) =>
@@ -8,7 +8,6 @@ export const fetchComments =
     try {
       const data = await getComments(skip, limit, populate);
 
-      console.log("En action: ", data);
       if (skip || limit) {
         dispatch(getSlice(data));
       } else {
@@ -16,6 +15,10 @@ export const fetchComments =
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response?.data?.message || "Algo salio mal 2");
+      toast.error(
+        error.response?.data?.message || "No se pudieron cargar los comentarios"
+      );
+    } finally {
+      dispatch(updateLoading(false));
     }
   };

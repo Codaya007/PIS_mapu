@@ -7,6 +7,7 @@ import { deleteAccessNodeById } from "../services/accessNodeServices";
 import { fetchAccessNodes } from "../store/actions/accessNodeActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/accessNodeSlice";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function AccessNodes() {
   const {
@@ -14,6 +15,7 @@ function AccessNodes() {
     currentPage: page,
     currentSliceAccessNodes: accessNodes,
     fetched,
+    loading,
   } = useSelector((state) => state.accessNodeReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -52,7 +54,7 @@ function AccessNodes() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "No se pudo eliminar el punto de interés"
+        "No se pudo eliminar el punto de interés"
       );
     }
   };
@@ -77,24 +79,28 @@ function AccessNodes() {
         </Button>
       </Box>
 
-      <AccessNodeTable
-        accessNodes={accessNodes}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? <Loader /> :
+        <>
+          <AccessNodeTable
+            accessNodes={accessNodes}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                colorScheme={index + 1 === page ? "blue" : "gray"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>
+      }
     </Box>
   );
 }

@@ -7,6 +7,7 @@ import { fetchCareers } from "../store/actions/careerActions";
 import { toast } from "react-toastify";
 import { Box, Button, Heading } from "@chakra-ui/react";
 import CareerTable from "../components/CareerTable";
+import Loader from "../components/Loader";
 
 function Careers() {
   const {
@@ -16,6 +17,7 @@ function Careers() {
     skip,
     currentSliceCareer: careers,
     fetched,
+    loading,
   } = useSelector((state) => state.careerReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -76,24 +78,28 @@ function Careers() {
           Crear carrera
         </Button>
       </Box>
-      <CareerTable
-        careers={careers}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? <Loader /> :
+        <>
+          <CareerTable
+            careers={careers}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                colorScheme={index + 1 === page ? "blue" : "gray"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>
+      }
     </Box>
   );
 }

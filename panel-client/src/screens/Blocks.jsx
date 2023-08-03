@@ -7,6 +7,7 @@ import { deleteBlockById } from "../services/blockServices";
 import { fetchBlocks } from "../store/actions/blockActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/blockSlice";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function Blocks() {
   const {
@@ -16,6 +17,7 @@ function Blocks() {
     skip,
     currentSliceBlocks: blocks,
     fetched,
+    loading,
   } = useSelector((state) => state.blockReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -74,24 +76,28 @@ function Blocks() {
         </Button>
       </Box>
 
-      <BlockTable
-        blocks={blocks}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? <Loader /> :
+        <>
+          <BlockTable
+            blocks={blocks}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                colorScheme={index + 1 === page ? "blue" : "gray"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>
+      }
     </Box>
   );
 }

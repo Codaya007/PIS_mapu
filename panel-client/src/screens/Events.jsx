@@ -7,6 +7,7 @@ import EventTable from "../components/EventTable";
 import { deleteEventById } from "../services/eventServices";
 import { fetchEvents } from "../store/actions/eventActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/eventSlice";
+import Loader from "../components/Loader";
 
 function Events() {
   const {
@@ -16,6 +17,7 @@ function Events() {
     skip,
     currentSliceEvent: events,
     fetched,
+    loading,
   } = useSelector((state) => state.eventReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,24 +77,30 @@ function Events() {
           Crear evento
         </Button>
       </Box>
-      <EventTable
-        events={events}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {
+        loading ?
+          <Loader /> :
+          <>
+            <EventTable
+              events={events}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
+            <Box mt={4}>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <Button
+                  key={index + 1}
+                  colorScheme={index + 1 === page ? "blue" : "gray"}
+                  size="sm"
+                  mr={2}
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </Button>
+              ))}
+            </Box>
+          </>
+      }
     </Box>
   );
 }

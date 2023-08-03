@@ -6,6 +6,7 @@ import { deleteReportById, updateReportById } from "../services/reportServices";
 import { fetchReports } from "../store/actions/reportActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/reportSlice";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function Reports() {
   const {
@@ -15,6 +16,7 @@ function Reports() {
     skip,
     currentSliceReports: reports,
     fetched,
+    loading,
   } = useSelector((state) => state.reportReducer);
   const dispatch = useDispatch();
 
@@ -65,20 +67,25 @@ function Reports() {
         Reportes de usuarios
       </Heading>
 
-      <ReportTable reports={reports} maskAsReviewed={maskAsReviewed} />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {
+        loading ? <Loader /> :
+          <>
+            <ReportTable reports={reports} maskAsReviewed={maskAsReviewed} />
+            <Box mt={4}>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <Button
+                  key={index + 1}
+                  colorScheme={index + 1 === page ? "blue" : "gray"}
+                  size="sm"
+                  mr={2}
+                  onClick={() => handlePageChange(index + 1)}
+                >
+                  {index + 1}
+                </Button>
+              ))}
+            </Box>
+          </>
+      }
     </Box>
   );
 }

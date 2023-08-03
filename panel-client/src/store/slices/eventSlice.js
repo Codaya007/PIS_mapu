@@ -9,6 +9,7 @@ const initialState = {
   skip: 0,
   limit: 6,
   fetched: false,
+  loading: true,
 };
 
 export const eventslice = createSlice({
@@ -26,11 +27,13 @@ export const eventslice = createSlice({
         state.skip,
         state.skip + state.limit
       );
+      state.loading = false;
     },
     getSlice: (state, action) => {
       state.currentSliceEvent = action.payload.results;
       state.totalCount = action.payload.totalCount;
       state.pages = Math.ceil(state.totalCount / state.limit);
+      state.loading = false;
     },
     // En base a skip y limit edita el currentSliceFaculties
     getWithoutFetchSlice: (state, action) => {
@@ -38,11 +41,15 @@ export const eventslice = createSlice({
         state.skip,
         state.skip + state.limit
       );
+      state.loading = false;
     },
     //Cambia currentPage y skip
     setPage: (state, action) => {
       state.currentPage = action.payload;
       state.skip = (state.currentPage - 1) * state.limit;
+    },
+    updateLoading: (state, action) => {
+      state.loading = action.payload || false;
     },
     // createEvent: (state, action) => {},
     // updateEvent: (state, action) => {},
@@ -58,6 +65,7 @@ export const {
   // deleteEvent
   setPage,
   getWithoutFetchSlice,
+  updateLoading,
 } = eventslice.actions;
 
 export default eventslice.reducer;

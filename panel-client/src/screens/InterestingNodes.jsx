@@ -10,6 +10,7 @@ import {
   setPage,
 } from "../store/slices/interestingNodeSlice";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function InterestingNodes() {
   const {
@@ -19,6 +20,7 @@ function InterestingNodes() {
     skip,
     currentSliceInterestingNodes: interestingNodes,
     fetched,
+    loading,
   } = useSelector((state) => state.interestingNodeReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -57,7 +59,7 @@ function InterestingNodes() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "No se pudo eliminar el punto de interés"
+        "No se pudo eliminar el punto de interés"
       );
     }
   };
@@ -82,24 +84,28 @@ function InterestingNodes() {
         </Button>
       </Box>
 
-      <InterestingNodeTable
-        interestingNodes={interestingNodes}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? <Loader /> :
+        <>
+          <InterestingNodeTable
+            interestingNodes={interestingNodes}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                colorScheme={index + 1 === page ? "blue" : "gray"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>
+      }
     </Box>
   );
 }

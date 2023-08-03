@@ -7,6 +7,7 @@ import { deleteRouteNodeById } from "../services/routeNodeServices";
 import { fetchRouteNodes } from "../store/actions/routeNodeActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/routeNodeSlice";
 import { toast } from "react-toastify";
+import Loader from "../components/Loader";
 
 function RouteNodes() {
   const {
@@ -16,6 +17,7 @@ function RouteNodes() {
     skip,
     currentSliceRouteNodes: routeNodes,
     fetched,
+    loading,
   } = useSelector((state) => state.routeNodeReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -54,7 +56,7 @@ function RouteNodes() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "No se pudo eliminar el punto de interés"
+        "No se pudo eliminar el punto de interés"
       );
     }
   };
@@ -79,24 +81,27 @@ function RouteNodes() {
         </Button>
       </Box>
 
-      <RouteNodeTable
-        routeNodes={routeNodes}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? <Loader /> :
+        <>
+          <RouteNodeTable
+            routeNodes={routeNodes}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                colorScheme={index + 1 === page ? "blue" : "gray"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>}
     </Box>
   );
 }

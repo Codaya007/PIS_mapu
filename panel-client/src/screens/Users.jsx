@@ -7,6 +7,7 @@ import { fetchUsers } from "../store/actions/userActions";
 import { toast } from "react-toastify";
 import { Box, Button, Heading } from "@chakra-ui/react";
 import UserTable from "../components/UserTable";
+import Loader from "../components/Loader";
 
 function Users() {
   const {
@@ -16,6 +17,7 @@ function Users() {
     // skip,
     currentSliceUser: users,
     fetched,
+    loading,
   } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,24 +77,28 @@ function Users() {
           Crear usuario
         </Button>
       </Box>
-      <UserTable
-        users={users}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? <Loader /> :
+        <>
+          <UserTable
+            users={users}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                colorScheme={index + 1 === page ? "blue" : "gray"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>
+      }
     </Box>
   );
 }

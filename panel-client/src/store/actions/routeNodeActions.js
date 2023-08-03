@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { getRouteNodes } from "../../services/routeNodeServices";
-import { getAll, getSlice } from "../slices/routeNodeSlice";
+import { getAll, getSlice, updateLoading } from "../slices/routeNodeSlice";
 
 export const fetchRouteNodes = (skip, limit) => async (dispatch) => {
   try {
@@ -16,5 +16,7 @@ export const fetchRouteNodes = (skip, limit) => async (dispatch) => {
       error.response?.data?.message ||
         "No se pudieron solicitar los puntos de interés"
     );
+  } finally {
+    dispatch(updateLoading(false));
   }
 };
