@@ -38,16 +38,16 @@ const symbolIsUnique = async (value, helpers) => {
 };
 
 const createCampusSchema = Joi.object({
-  name: Joi.string().required().max(20).messages({
+  name: Joi.string().required().max(70).messages({
     "string.external": "Ya existe un Campus con ese nombre",
-    "*": "El campo 'name' es requerido y debe tener un largo máximo de 20 caracteres",
+    "*": "El campo 'name' es requerido y debe tener un largo máximo de 70 caracteres",
   }),
   symbol: Joi.string().required().max(2).external(symbolIsUnique).messages({
     "name.external": "Ya existe un campus con este símbolo",
     "*": "El campo 'symbol' es requerido y debe tener máximo 2 caracteres",
   }),
-  description: Joi.string().optional().max(200).messages({
-    "*": "El campo 'description' debe tener un largo máximo de 200 caracteres",
+  description: Joi.string().optional().max(300).messages({
+    "*": "El campo 'description' debe tener un largo máximo de 300 caracteres",
   }),
   address: Joi.string().required().max(300).messages({
     "*": "El campo 'address' es requerido y debe tener un largo máximo de 300 caracteres",
@@ -64,16 +64,16 @@ const updateCampusSchema = Joi.object({
   id: Joi.string().required().custom(isValidObjectId).messages({
     "*": "Id no válido",
   }),
-  name: Joi.string().optional().max(20).external(nameIsUnique).messages({
+  name: Joi.string().optional().max(70).external(nameIsUnique).messages({
     "name.external": "Ya existe un campus con este nombre",
-    "*": "El campo 'name' debe tener un largo máximo de 20 caracteres",
+    "*": "El campo 'name' debe tener un largo máximo de 70 caracteres",
   }),
   symbol: Joi.string().optional().max(2).external(symbolIsUnique).messages({
     "name.external": "Ya existe un campus con este símbolo",
     "*": "El campo 'symbol' debe tener un largo máximo de 2 caracteres",
   }),
-  description: Joi.string().optional().max(200).messages({
-    "*": "El campo 'description' debe tener un largo máximo de 200 caracteres",
+  description: Joi.string().optional().max(300).messages({
+    "*": "El campo 'description' debe tener un largo máximo de 300 caracteres",
   }),
   address: Joi.string().optional().max(300).messages({
     "*": "El campo 'address' debe tener un largo máximo de 300 caracteres",
