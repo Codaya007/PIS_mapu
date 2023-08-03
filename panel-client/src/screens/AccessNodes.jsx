@@ -2,12 +2,12 @@ import { Box, Button, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import AccessNodeTable from "../components/AccessNodeTable";
+import Loader from "../components/Loader";
 import { deleteAccessNodeById } from "../services/accessNodeServices";
 import { fetchAccessNodes } from "../store/actions/accessNodeActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/accessNodeSlice";
-import { toast } from "react-toastify";
-import Loader from "../components/Loader";
 
 function AccessNodes() {
   const {
@@ -54,7 +54,7 @@ function AccessNodes() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-        "No se pudo eliminar el punto de interés"
+          "No se pudo eliminar el punto de interés"
       );
     }
   };
@@ -65,12 +65,13 @@ function AccessNodes() {
 
   return (
     <Box mx={4} my={8}>
-      <Heading as="h1" size="lg" mb={4}>
+      <Heading as="h1" size="lg" color="blue.600" mb={4}>
         Puntos de acceso a campus UNL
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button
-          colorScheme="blue"
+          bgColor="blue.600"
+          color="white"
           onClick={handleCreate}
           mb={4}
           alignSelf={"flex-end"}
@@ -79,7 +80,9 @@ function AccessNodes() {
         </Button>
       </Box>
 
-      {loading ? <Loader /> :
+      {loading ? (
+        <Loader />
+      ) : (
         <>
           <AccessNodeTable
             accessNodes={accessNodes}
@@ -90,7 +93,8 @@ function AccessNodes() {
             {Array.from({ length: totalPages }, (_, index) => (
               <Button
                 key={index + 1}
-                colorScheme={index + 1 === page ? "blue" : "gray"}
+                bgColor={index + 1 === page ? "blue.700" : "gray.100"}
+                color={index + 1 === page ? "white" : "black"}
                 size="sm"
                 mr={2}
                 onClick={() => handlePageChange(index + 1)}
@@ -100,7 +104,7 @@ function AccessNodes() {
             ))}
           </Box>
         </>
-      }
+      )}
     </Box>
   );
 }

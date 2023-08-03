@@ -13,9 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { BiSolidCategory, BiSolidDoorOpen, BiSolidHome } from "react-icons/bi";
-import { GoAlertFill } from "react-icons/go";
 import { BsFillCalendarEventFill } from "react-icons/bs";
-import { PiPolygonDuotone } from "react-icons/pi";
 import {
   FaBuilding,
   FaCity,
@@ -27,6 +25,8 @@ import {
 } from "react-icons/fa";
 import { FaHashnode } from "react-icons/fa6";
 import { FiLogIn, FiLogOut, FiMenu } from "react-icons/fi";
+import { GoAlertFill } from "react-icons/go";
+import { PiPolygonDuotone } from "react-icons/pi";
 // import { PiPolygonFill } from "react-icons/pi";
 // import { TbZoomReplace } from "react-icons/tb";
 import { useDispatch, useSelector } from "react-redux";
@@ -59,7 +59,7 @@ function SidebarMenu() {
       bg="gray.200"
       p="0"
     >
-      <Box bg="blue.100" h="100vh">
+      <Box h="100vh">
         <Flex align="center" justify="center" p={3}>
           <IconButton
             icon={<FiMenu />}

@@ -3,24 +3,24 @@ import {
   Button,
   FormControl,
   FormLabel,
-  Input,
-  VStack,
   Heading,
+  Input,
   Textarea,
+  VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import MapWithDraw from "../components/MapWithDraw";
+import PolygonsTable from "../components/PolygonsTable";
 import {
   createFaculty,
   fetchFacultyById,
   updateFacultyById,
 } from "../services/facultyServices";
 import { fetchFaculties } from "../store/actions/facultyActions";
-import MapWithDraw from "../components/MapWithDraw";
-import { MapContainer, TileLayer } from "react-leaflet";
-import PolygonsTable from "../components/PolygonsTable";
 
 const initialState = {
   name: "",
@@ -39,22 +39,22 @@ const FacultyForm = () => {
   const zoom = 15;
 
   const handlePolygonDrawn = (coordinates) => {
-    setPolygons([...polygons, coordinates])
+    setPolygons([...polygons, coordinates]);
   };
 
   const handleDeletePolygon = (index) => {
-    const newPolygons = polygons.filter((e, i) => i !== index)
+    const newPolygons = polygons.filter((e, i) => i !== index);
 
-    setPolygons(newPolygons)
-  }
+    setPolygons(newPolygons);
+  };
 
   const handleDeleteAllPolygon = () => {
-    setPolygons([])
-  }
+    setPolygons([]);
+  };
 
   const handleResetPolygons = () => {
-    setPolygons(faculty.polygons || [])
-  }
+    setPolygons(faculty.polygons || []);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,7 +99,10 @@ const FacultyForm = () => {
       navigate("/faculty");
     } catch (error) {
       console.log({ error });
-      toast.error(error.response?.data?.message || `No se pudo ${id ? "actualizar" : "crear"} la facultad`);
+      toast.error(
+        error.response?.data?.message ||
+          `No se pudo ${id ? "actualizar" : "crear"} la facultad`
+      );
     }
   };
 
@@ -117,11 +120,14 @@ const FacultyForm = () => {
       borderColor="gray.300"
     >
       <Box p="4">
-        <Heading textAlign={"center"} color={"blue.400"}>
+        <Heading textAlign={"center"} color={"blue.500"}>
           {id ? "Edición" : "Creación"} de facultades
         </Heading>
       </Box>
-      <form style={{ maxWidth: "700px", margin: "auto" }} onSubmit={handleSubmit}>
+      <form
+        style={{ maxWidth: "700px", margin: "auto" }}
+        onSubmit={handleSubmit}
+      >
         <VStack spacing="4">
           <FormControl>
             <FormLabel htmlFor="name">Nombre</FormLabel>
@@ -160,18 +166,17 @@ const FacultyForm = () => {
             />
           </FormControl>
 
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" bgColor="blue.600" color="white">
             {id ? "Guardar cambios" : "Crear facultad"}
           </Button>
-
         </VStack>
       </form>
 
       <Box>
-        <Heading color={"blue.300"} size="md" mb={4}>
+        <Heading color={"blue.400"} size="md" mb={4}>
           Polígonos De La Facultad
         </Heading>
-        <Box display={"flex"} p={4} width={"100%"} >
+        <Box display={"flex"} p={4} width={"100%"}>
           {/* Mapa de polígonos */}
           <MapContainer
             style={{ width: "100%", height: "60vh" }}
@@ -191,14 +196,25 @@ const FacultyForm = () => {
           </MapContainer>
           {/* Tabla de polígonos y acciones */}
           <Box>
-            <Box margin={"auto"} display={"flex"} justifyContent={"space-around"} p={4}>
-              <Button colorScheme="green" onClick={handleResetPolygons}>Resetear polígonos</Button>
-              <Button colorScheme="red" onClick={handleDeleteAllPolygon}>Limpiar polígonos</Button>
+            <Box
+              margin={"auto"}
+              display={"flex"}
+              justifyContent={"space-around"}
+              p={4}
+            >
+              <Button colorScheme="green" onClick={handleResetPolygons}>
+                Resetear polígonos
+              </Button>
+              <Button colorScheme="red" onClick={handleDeleteAllPolygon}>
+                Limpiar polígonos
+              </Button>
             </Box>
-            <PolygonsTable polygons={polygons} onDeletePolygon={handleDeletePolygon} />
+            <PolygonsTable
+              polygons={polygons}
+              onDeletePolygon={handleDeletePolygon}
+            />
           </Box>
         </Box>
-
       </Box>
     </Box>
   );

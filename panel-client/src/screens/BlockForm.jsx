@@ -22,16 +22,16 @@ import {
   updateBlockById,
 } from "../services/blockServices";
 import { fetchBlocks } from "../store/actions/blockActions";
-import { fetchFaculties } from "../store/actions/facultyActions";
 import { fetchCampuses } from "../store/actions/campusActions";
 import { fetchCategories } from "../store/actions/categoryActions";
+import { fetchFaculties } from "../store/actions/facultyActions";
 import { deleteDbFields } from "../utils";
 // import MapSelector from "../components/MapToSelect";
+import { MapContainer, TileLayer } from "react-leaflet";
+import MapWithDrawNodes from "../components/MapWithDrawNodes";
+import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "../constants";
 import { uploadImageToS3 } from "../services/imageServices";
 import { deleteSubnodeById } from "../services/subnodesServices";
-import { MapContainer, TileLayer } from "react-leaflet";
-import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "../constants";
-import MapWithDrawNodes from "../components/MapWithDrawNodes";
 
 const subnodeBody = {
   latitude: "",
@@ -273,13 +273,13 @@ const BlockForm = () => {
       borderColor="gray.300"
     >
       <Box p="4">
-        <Heading textAlign={"center"} color={"blue.400"}>
+        <Heading textAlign={"center"} color={"blue.500"}>
           {id ? "Edición" : "Creación"} de bloques
         </Heading>
       </Box>
 
       <form onSubmit={handleSubmit}>
-        <Heading fontSize={"lg"} color={"blue.300"}>
+        <Heading fontSize={"lg"} color={"blue.400"}>
           Información general
         </Heading>
 
@@ -337,7 +337,7 @@ const BlockForm = () => {
           </FormControl>
         </VStack>
 
-        <Heading fontSize={"lg"} color={"blue.300"}>
+        <Heading fontSize={"lg"} color={"blue.400"}>
           Información adicional
         </Heading>
 
@@ -459,7 +459,7 @@ const BlockForm = () => {
           </FormControl>
         </VStack>
 
-        <Heading fontSize={"larger"} color={"blue.300"}>
+        <Heading fontSize={"larger"} color={"blue.400"}>
           Subnodos del bloque
         </Heading>
         <Box margin={4}>
@@ -472,7 +472,7 @@ const BlockForm = () => {
 
           return (
             <VStack key={index} spacing={4} margin={4}>
-              <Heading fontSize={"lg"} color={"blue.300"}>
+              <Heading fontSize={"lg"} color={"blue.400"}>
                 Información subnodo {index + 1}
               </Heading>
               <Button
@@ -480,7 +480,7 @@ const BlockForm = () => {
                 display={"block"}
                 alignSelf={"self-end"}
                 border={"2px"}
-                color={"red.500"}
+                color={"red.600"}
                 colorScheme="white"
                 onClick={async () => {
                   try {
@@ -492,7 +492,7 @@ const BlockForm = () => {
                   } catch (error) {
                     toast.error(
                       error.response?.data?.message ||
-                      "No se pudo eliminar el subnodo"
+                        "No se pudo eliminar el subnodo"
                     );
                   }
                 }}
@@ -599,7 +599,7 @@ const BlockForm = () => {
                   onMarkerDrawn={(markerCoordinates) => {
                     const coordinates = markerCoordinates.geometry.coordinates;
 
-                    const newSubnodes = [...subnodes]
+                    const newSubnodes = [...subnodes];
                     const subnode = newSubnodes.find((e, i) => i === index);
 
                     console.log(markerCoordinates, index);
@@ -607,7 +607,7 @@ const BlockForm = () => {
                     subnode.latitude = coordinates[1];
                     subnode.longitude = coordinates[0];
 
-                    setSubnodes(newSubnodes)
+                    setSubnodes(newSubnodes);
                   }}
                   markerRef={null}
                   latitude={subnode.latitude}
@@ -704,7 +704,7 @@ const BlockForm = () => {
           <Button
             fontSize={"sm"}
             border={"2px"}
-            color={"blue.400"}
+            color={"blue.500"}
             colorScheme="white"
             onClick={() => {
               setSubnodes([
@@ -714,9 +714,8 @@ const BlockForm = () => {
                   latitude: node.latitude,
                   longitude: node.longitude,
                 },
-              ])
-            }
-            }
+              ]);
+            }}
           >
             Añadir subnodo +
           </Button>
@@ -726,7 +725,8 @@ const BlockForm = () => {
           display={"block"}
           margin={"auto"}
           type="submit"
-          colorScheme="blue"
+          bgColor="blue.600"
+          color="white"
         >
           {id ? "Guardar cambios" : "Crear bloque"}
         </Button>

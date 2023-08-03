@@ -1,20 +1,20 @@
 import {
-  Box,
-  Card,
-  VStack,
   Avatar,
+  Box,
+  Button,
+  Card,
   FormControl,
   FormLabel,
   Input,
-  Button,
   InputGroup,
   InputRightElement,
+  VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 import { putProfile } from "../services/authServices";
 import { fetchProfile } from "../store/actions/authActions";
-import { toast } from "react-toastify";
 
 const initialState = {
   newPassword: "",
@@ -32,7 +32,6 @@ const ProfileChangePassword = () => {
   const handleClick = () => setShow(!show);
   const handleClick2 = () => setShow2(!show2);
 
-
   const handleEdit = async (e) => {
     const { name, value } = e.target;
     setPasswordForm({ ...passwordForm, [name]: value });
@@ -40,13 +39,13 @@ const ProfileChangePassword = () => {
   };
   const saveChange = async () => {
     console.log("SaveChanges");
-    if(passwordForm.newPassword == passwordForm.rewriteNewPassword){
-      if(passwordForm.newPassword.length < 8){
+    if (passwordForm.newPassword == passwordForm.rewriteNewPassword) {
+      if (passwordForm.newPassword.length < 8) {
         toast.error("La contraseña debe tener mas de 8 caracteres");
-        return ;
+        return;
       }
     }
-    if(passwordForm.newPassword != passwordForm.rewriteNewPassword){
+    if (passwordForm.newPassword != passwordForm.rewriteNewPassword) {
       toast.error("Las contreseñas no son iguales");
       return;
     }
@@ -81,7 +80,7 @@ const ProfileChangePassword = () => {
               </InputRightElement>
             </InputGroup>
           </FormControl>
-          <FormControl> 
+          <FormControl>
             <FormLabel>Escribir nuevamente la contraseña:</FormLabel>
             <InputGroup size="md">
               <Input
@@ -101,7 +100,8 @@ const ProfileChangePassword = () => {
 
           <Box display="flex" justifyContent="flex-end" mb={4}>
             <Button
-              colorScheme="blue"
+              bgColor="blue.600"
+              color="white"
               onClick={saveChange}
               mb={4}
               alignSelf={"flex-end"}

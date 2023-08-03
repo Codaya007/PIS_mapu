@@ -4,13 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CommentTable from "../components/CommentTable";
+import Loader from "../components/Loader";
 import {
   deleteCommentById,
   updateCommentById,
 } from "../services/commentServices";
 import { fetchComments } from "../store/actions/commentActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/commentSlice";
-import Loader from "../components/Loader";
 
 function Comments() {
   const {
@@ -76,10 +76,12 @@ function Comments() {
 
   return (
     <Box mx={4} my={8}>
-      <Heading as="h1" size="lg" mb={4}>
+      <Heading as="h1" size="lg" color="blue.600" mb={4}>
         Comentarios
       </Heading>
-      {loading ? <Loader /> :
+      {loading ? (
+        <Loader />
+      ) : (
         <>
           <CommentTable
             comments={comments}
@@ -91,7 +93,8 @@ function Comments() {
             {Array.from({ length: totalPages }, (_, index) => (
               <Button
                 key={index + 1}
-                colorScheme={index + 1 === page ? "blue" : "gray"}
+                bgColor={index + 1 === page ? "blue.700" : "gray.100"}
+                color={index + 1 === page ? "white" : "black"}
                 size="sm"
                 mr={2}
                 onClick={() => handlePageChange(index + 1)}
@@ -100,7 +103,8 @@ function Comments() {
               </Button>
             ))}
           </Box>
-        </>}
+        </>
+      )}
     </Box>
   );
 }

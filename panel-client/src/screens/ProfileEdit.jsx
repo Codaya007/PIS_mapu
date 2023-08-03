@@ -7,8 +7,6 @@ import {
   FormLabel,
   Heading,
   Input,
-  Switch,
-  Text,
   VStack,
 } from "@chakra-ui/react";
 
@@ -79,7 +77,7 @@ const ProfileEdit = () => {
   }, []);
 
   return (
-    <Box maxWidth="500px" mx="auto" p="4">
+    <Box maxWidth="700px" mx="auto" p="4">
       <Card p={5} bgColor={"#dcdcdc"}>
         <VStack spacing="4" alignItems="start">
           <Avatar size="xl" src={avatar} alt="Avatar" />
@@ -98,24 +96,26 @@ const ProfileEdit = () => {
               }}
             />
           </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Nombre</FormLabel>
-            <Input
-              name="name"
-              placeholder="First name"
-              defaultValue={userForm.name}
-              onChange={handleEdit}
-            />
-          </FormControl>
-          <FormControl isRequired>
-            <FormLabel>Apellido</FormLabel>
-            <Input
-              name="lastname"
-              placeholder="First name"
-              defaultValue={userForm.lastname}
-              onChange={handleEdit}
-            />
-          </FormControl>
+          <Box display={"flex"} width={"100%"} justifyContent={"space-between"}>
+            <FormControl isRequired>
+              <FormLabel>Nombre</FormLabel>
+              <Input
+                name="name"
+                placeholder="First name"
+                defaultValue={userForm.name}
+                onChange={handleEdit}
+              />
+            </FormControl>
+            <FormControl isRequired>
+              <FormLabel>Apellido</FormLabel>
+              <Input
+                name="lastname"
+                placeholder="First name"
+                defaultValue={userForm.lastname}
+                onChange={handleEdit}
+              />
+            </FormControl>
+          </Box>
           <FormControl isRequired>
             <FormLabel>Email:</FormLabel>
             <Input
@@ -125,7 +125,7 @@ const ProfileEdit = () => {
               onChange={handleEdit}
             />
           </FormControl>
-          <Box>
+          {/* <Box>
             <Text>Activar notificaciones:</Text>
             <Switch
               name="notification"
@@ -140,12 +140,13 @@ const ProfileEdit = () => {
               isChecked={userForm.settings.spam}
               onChange={handleEdit}
             />
-          </Box>
+          </Box> */}
 
-          <Box display="flex" justifyContent="flex-end" mb={4} padding={10}>
+          <Box display="flex" justifyContent="space-evenly" width={"100%"}>
             <Button
               margin={2}
-              colorScheme="blue"
+              bgColor="blue.600"
+              color="white"
               onClick={saveChange}
               mb={4}
               alignSelf={"flex-end"}
@@ -154,7 +155,8 @@ const ProfileEdit = () => {
             </Button>
             <Button
               margin={2}
-              colorScheme="orange"
+              color={"white"}
+              bgColor={"red.600"}
               onClick={changePassword}
               mb={4}
               alignSelf={"flex-end"}
