@@ -1,24 +1,23 @@
 import {
   Box,
   Button,
-  Container,
+  Checkbox,
   FormControl,
   FormLabel,
-  Input,
-  Checkbox,
-  VStack,
   HStack,
-  Select,
   Heading,
+  Input,
+  Select,
+  VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   createRouteNode,
-  updateRouteNodeById,
   fetchRouteNodeById,
+  updateRouteNodeById,
 } from "../services/routeNodeServices";
 
 import { getCampuses } from "../services/campusServices";
@@ -129,7 +128,7 @@ const RouteNodesForm = () => {
       borderColor="gray.300"
     >
       <Box p="4">
-        <Heading textAlign={"center"} color={"blue.400"}>
+        <Heading textAlign={"center"} color={"blue.500"}>
           {id ? "Edición" : "Creación"} de nodos ruta
         </Heading>
       </Box>
@@ -198,7 +197,7 @@ const RouteNodesForm = () => {
           </FormControl>
 
           <Box p={4} width={"100%"}>
-            <Heading as="h1" size="lg" mb={4}>
+            <Heading as="h1" size="lg" color="blue.600" mb={4}>
               Nodo Ruta
             </Heading>
 
@@ -225,7 +224,7 @@ const RouteNodesForm = () => {
           {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
           {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}
 
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" bgColor="blue.600" color="white">
             {id ? "Guardar cambios" : "Crear Nodo Ruta"}
           </Button>
         </VStack>

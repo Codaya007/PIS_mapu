@@ -50,3 +50,13 @@ export const deleteDbFields = (obj) => {
   delete obj.deletedAt;
   delete obj.updatedAt;
 };
+
+export const getRandomIntInRange = (i, f) => {
+  // Calcula el rango del número aleatorio dentro de [i, f]
+  const range = f - i + 1;
+
+  // Genera un número entero aleatorio dentro del rango y luego suma i para desplazarlo al rango correcto
+  const randomNumber = i + Math.floor(Math.random() * range);
+
+  return randomNumber;
+};

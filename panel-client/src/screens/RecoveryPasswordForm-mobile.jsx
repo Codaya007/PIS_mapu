@@ -6,7 +6,6 @@ import {
   FormLabel,
   Input,
   VStack,
-  Heading,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -28,7 +27,7 @@ const RecoveryPasswordForm = () => {
 
   const validateData = () => {
     setRecoverPassword({ ...recoveryPassword, token: tokenQuery });
-    if(recoveryPassword.newPassword != recoveryPassword.newPasswordAgain) {
+    if (recoveryPassword.newPassword != recoveryPassword.newPasswordAgain) {
       toast.error("Las contraseñas no coinciden");
       return false;
     }
@@ -43,9 +42,9 @@ const RecoveryPasswordForm = () => {
 
   useEffect(() => {
     const setToken = () => {
-      setRecoverPassword({...recoveryPassword, token: tokenQuery});
+      setRecoverPassword({ ...recoveryPassword, token: tokenQuery });
     };
-    
+
     setToken();
   }, []);
 
@@ -59,14 +58,16 @@ const RecoveryPasswordForm = () => {
           navigate("/login");
           toast.success("Actualización exitosa");
         } else {
-          toast.error("Token invalido, asegurese de copiar correctamente el link enviado por correo");
+          toast.error(
+            "Token invalido, asegurese de copiar correctamente el link enviado por correo"
+          );
         }
-  
+
         navigate("/login");
       } catch (error) {
         toast.error(error.response?.data?.message);
       }
-    }    
+    }
   };
 
   return (
@@ -95,7 +96,9 @@ const RecoveryPasswordForm = () => {
             </FormControl>
 
             <FormControl>
-              <FormLabel htmlFor="newPasswordAgain">Repita la contraseña</FormLabel>
+              <FormLabel htmlFor="newPasswordAgain">
+                Repita la contraseña
+              </FormLabel>
               <Input
                 type="text"
                 token="newPasswordAgain"
@@ -106,7 +109,7 @@ const RecoveryPasswordForm = () => {
               />
             </FormControl>
 
-            <Button type="submit" colorScheme="blue">
+            <Button type="submit" bgColor="blue.600" color="white">
               Guardar cambios
             </Button>
           </VStack>

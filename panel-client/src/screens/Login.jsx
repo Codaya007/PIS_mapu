@@ -10,8 +10,8 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { EMAIL_REGEX } from "../constants";
-import { toast } from "react-toastify"
 import { loginUser } from "../services/authServices";
 import { login } from "../store/slices/authSlice";
 
@@ -42,7 +42,7 @@ function LoginForm() {
       const errors = validateForm();
 
       if (!errors.email && !errors.password) {
-        const data = await loginUser(email, password)
+        const data = await loginUser(email, password);
 
         dispatch(login(data));
       } else {
@@ -50,7 +50,7 @@ function LoginForm() {
       }
     } catch (error) {
       // console.log({ error });
-      toast.error(error.response?.data?.message || "No se pudo iniciar sesión")
+      toast.error(error.response?.data?.message || "No se pudo iniciar sesión");
     }
   };
 
@@ -68,7 +68,7 @@ function LoginForm() {
       minHeight="90vh"
     >
       <Box width="400px">
-        {/* <Heading p={4} color={"blue.400"}>Iniciar sesión</Heading> */}
+        {/* <Heading p={4} color={"blue.500"}>Iniciar sesión</Heading> */}
         <form onSubmit={handleSubmit}>
           <Stack spacing={4}>
             <FormControl id="email" isInvalid={!!errors.email}>
@@ -89,11 +89,23 @@ function LoginForm() {
               />
               <FormErrorMessage>{errors.password}</FormErrorMessage>
             </FormControl>
-            <Button type="submit" colorScheme="blue">
+            <Button type="submit" bgColor="blue.600" color="white">
               Iniciar sesión
             </Button>
           </Stack>
-          <Box color={"blue.400"} p={4} fontSize={"sm"} style={{ textDecoration: "underline" }}><span onClick={() => navigate("/forgot-password")} style={{ cursor: "pointer" }}>¿Olvidaste la contraseña?</span></Box>
+          <Box
+            color={"blue.500"}
+            p={4}
+            fontSize={"sm"}
+            style={{ textDecoration: "underline" }}
+          >
+            <span
+              onClick={() => navigate("/forgot-password")}
+              style={{ cursor: "pointer" }}
+            >
+              ¿Olvidaste la contraseña?
+            </span>
+          </Box>
         </form>
       </Box>
     </Box>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -36,6 +36,12 @@ function MapWithDrawNodes({ onMarkerDrawn, markerRef, latitude, longitude }) {
     const handleDrawnMarker = (e) => {
       const { layer } = e;
 
+      map.eachLayer((layer) => {
+        if (layer instanceof L.Marker) {
+          map.removeLayer(layer);
+        }
+      });
+
       if (currentMarker) {
         map.removeLayer(currentMarker);
       }
@@ -51,6 +57,7 @@ function MapWithDrawNodes({ onMarkerDrawn, markerRef, latitude, longitude }) {
         currentMarker.setLatLng([latitude, longitude]);
       } else {
         const marker = L.marker([latitude, longitude]);
+
         marker.addTo(map);
         setCurrentMarker(marker);
       }

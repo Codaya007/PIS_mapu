@@ -16,3 +16,6 @@ export const ROUTE_NODO_TYPE = "Ruta";
 export const INTEREST_NODO_TYPE = "Interés";
 export const ACCESS_NODO_TYPE = "Acceso";
 export const BLOCK_NODO_TYPE = "Bloque";
+
+export const DEFAULT_MAP_CENTER = [-4.032747, -79.202405];
+export const DEFAULT_MAP_ZOOM = 18;

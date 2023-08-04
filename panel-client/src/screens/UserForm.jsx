@@ -16,13 +16,13 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { getRoles } from "../services/roleServices";
 import {
   createUser,
   fetchUserById,
   updateUserById,
 } from "../services/userServices";
 import { fetchUsers } from "../store/actions/userActions";
-import { getRoles } from "../services/roleServices";
 import { handleFileChange } from "./BlockForm";
 
 const initialState = {
@@ -157,7 +157,7 @@ const UserForm = () => {
       borderColor="gray.300"
     >
       <Box p="4">
-        <Heading textAlign={"center"} color={"blue.400"}>
+        <Heading textAlign={"center"} color={"blue.500"}>
           {id ? "Edición" : "Creación"} de usuarios
         </Heading>
       </Box>
@@ -298,7 +298,7 @@ const UserForm = () => {
             </FormControl>
           )}
 
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" bgColor="blue.600" color="white">
             {id ? "Guardar cambios" : "Crear Usuario"}
           </Button>
         </VStack>

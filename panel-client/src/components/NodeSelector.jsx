@@ -1,10 +1,13 @@
 import { Box, Button, Select } from "@chakra-ui/react";
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getAllNodeTypes } from "../services/nodeServices";
 
 const filterInitialState = "all";
-const NodeSelector = ({ nodes = [], onSelectNode, clearSelection = () => { } }) => {
+const NodeSelector = ({
+  nodes = [],
+  onSelectNode,
+  clearSelection = () => {},
+}) => {
   const [selectedNodeId, setSelectedNodeId] = useState("");
   const [filter, setFilter] = useState(filterInitialState);
   const [nodeTypes, setNodeTypes] = useState([]);
@@ -19,12 +22,12 @@ const NodeSelector = ({ nodes = [], onSelectNode, clearSelection = () => { } }) 
 
   useEffect(() => {
     if (filter === filterInitialState) {
-      setNodesToShow(nodes)
+      setNodesToShow(nodes);
     } else if (nodeTypes.length) {
-      const type = nodeTypes.find(type => type._id === filter)
+      const type = nodeTypes.find((type) => type._id === filter);
 
-      const nodesByType = nodes.filter(node => node.type === type?.name);
-      setNodesToShow(nodesByType)
+      const nodesByType = nodes.filter((node) => node.type === type?.name);
+      setNodesToShow(nodesByType);
     }
   }, [nodes, filter]);
 
@@ -33,14 +36,14 @@ const NodeSelector = ({ nodes = [], onSelectNode, clearSelection = () => { } }) 
       const { results } = await getAllNodeTypes();
 
       setNodeTypes(results);
-    }
+    };
 
     getNodeTypes();
   }, []);
 
   return (
     <Box margin={"auto"} p={4} display={"flex"}>
-      <Select onChange={e => setFilter(e.target.value)} value={filter}>
+      <Select onChange={(e) => setFilter(e.target.value)} value={filter}>
         <option value={filterInitialState}>Todos los nodos</option>
         {nodeTypes.map((type) => (
           <option key={type._id} value={type._id}>
@@ -56,12 +59,15 @@ const NodeSelector = ({ nodes = [], onSelectNode, clearSelection = () => { } }) 
           </option>
         ))}
       </Select>
-      <Button minW={"150px"} colorScheme="gray"
+      <Button
+        minW={"150px"}
+        colorScheme="gray"
         disabled={!selectedNodeId}
         onClick={() => {
           setSelectedNodeId("");
-          clearSelection()
-        }}>
+          clearSelection();
+        }}
+      >
         Limpiar selección
       </Button>
     </Box>

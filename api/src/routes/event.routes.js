@@ -1,7 +1,11 @@
 const { Router } = require("express");
 const eventController = require("../controllers/eventController");
 const middlewares = require("../middlewares");
-const { createEventSchema, updateEventSchema } = require("../validationSchemas/Event");
+const {
+  createEventSchema,
+  updateEventSchema,
+} = require("../validationSchemas/Event");
+const isAdmin = require("../policies/isAdmin");
 
 const eventRouter = Router();
 
@@ -11,9 +15,10 @@ const eventRouter = Router();
  * @access Admin
  */
 eventRouter.post(
-    "/",
-    middlewares.validateRequestBody(createEventSchema),
-    eventController.createEvent
+  "/",
+  isAdmin,
+  middlewares.validateRequestBody(createEventSchema),
+  eventController.createEvent
 );
 
 /**
@@ -36,9 +41,10 @@ eventRouter.get("/", eventController.getAllEvents);
  * @access Admin
  */
 eventRouter.put(
-    "/:id",
-    middlewares.validateRequestBody(updateEventSchema),
-    eventController.updateEvent
+  "/:id",
+  isAdmin,
+  middlewares.validateRequestBody(updateEventSchema),
+  eventController.updateEvent
 );
 
 /**
@@ -46,9 +52,6 @@ eventRouter.put(
  * @desc Eliminar un evento mediante id
  * @access Admin
  */
-eventRouter.delete(
-    "/:id",
-    eventController.deleteEvent
-);
+eventRouter.delete("/:id", isAdmin, eventController.deleteEvent);
 
 module.exports = eventRouter;

@@ -1,10 +1,9 @@
 import { toast } from "react-toastify";
 import { getCareers } from "../../services/careerServices";
-import { getAll, getSlice } from "../slices/careerSlice";
+import { getAll, getSlice, updateLoading } from "../slices/careerSlice";
 
 export const fetchCareers = (skip, limit) => async (dispatch) => {
   try {
-    console.log("fechCareer");
     const data = await getCareers(skip, limit);
     if (skip || limit) {
       dispatch(getSlice(data));
@@ -13,6 +12,10 @@ export const fetchCareers = (skip, limit) => async (dispatch) => {
     }
     console.log(data);
   } catch (error) {
-    toast.error(error.response?.data?.message || "Algo salio mal");
+    toast.error(
+      error.response?.data?.message || "No se pudieron cargar las carreras"
+    );
+  } finally {
+    dispatch(updateLoading(false));
   }
 };

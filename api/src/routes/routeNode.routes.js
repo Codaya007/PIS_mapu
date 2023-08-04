@@ -17,6 +17,7 @@ const routeNodeRouter = Router();
  */
 routeNodeRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(createNodeSchema),
   routeNodeController.createRouteNode
 );
@@ -53,6 +54,7 @@ routeNodeRouter.get("/:id", routeNodeController.getRouteNodeById);
  */
 routeNodeRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(updateNodeSchema),
   routeNodeController.updateRouteNode
 );
@@ -62,6 +64,6 @@ routeNodeRouter.put(
  * @desc Eliminar un nodo por id
  * @route Admin
  */
-routeNodeRouter.delete("/:id", routeNodeController.deleteRouteNode);
+routeNodeRouter.delete("/:id", isAdmin, routeNodeController.deleteRouteNode);
 
 module.exports = routeNodeRouter;

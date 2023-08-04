@@ -3,7 +3,7 @@ const ValidationError = require("../errors/ValidationError");
 const User = require("../models/User");
 const { JWT_SECRET } = process.env;
 
-const generateNewToken = (payload, expiresIn = "5d") => {
+const generateNewToken = (payload, expiresIn = "7d") => {
   return new Promise((resolve, reject) => {
     jwt.sign(
       payload,

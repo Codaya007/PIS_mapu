@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
-import { getFaculties} from "../../services/facultyServices";
-import { getAll, getSlice } from "../slices/facultySlice";
+import { getFaculties } from "../../services/facultyServices";
+import { getAll, getSlice, updateLoading } from "../slices/facultySlice";
 
 export const fetchFaculties = (skip, limit) => async (dispatch) => {
   try {
@@ -13,5 +13,7 @@ export const fetchFaculties = (skip, limit) => async (dispatch) => {
     }
   } catch (error) {
     toast.error(error.response?.data?.message || "Algo salió mal");
+  } finally {
+    dispatch(updateLoading(false));
   }
 };

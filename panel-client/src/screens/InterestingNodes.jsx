@@ -2,14 +2,15 @@ import { Box, Button, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import InterestingNodeTable from "../components/InterestingNodeTable";
+import Loader from "../components/Loader";
 import { deleteInterestingNodeById } from "../services/interestingNodeServices";
 import { fetchInterestingNodes } from "../store/actions/interestingNodeActions";
 import {
   getWithoutFetchSlice,
   setPage,
 } from "../store/slices/interestingNodeSlice";
-import { toast } from "react-toastify";
 
 function InterestingNodes() {
   const {
@@ -19,6 +20,7 @@ function InterestingNodes() {
     skip,
     currentSliceInterestingNodes: interestingNodes,
     fetched,
+    loading,
   } = useSelector((state) => state.interestingNodeReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -68,12 +70,13 @@ function InterestingNodes() {
 
   return (
     <Box mx={4} my={8}>
-      <Heading as="h1" size="lg" mb={4}>
+      <Heading as="h1" size="lg" color="blue.600" mb={4}>
         Puntos de interés UNL
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button
-          colorScheme="blue"
+          bgColor="blue.600"
+          color="white"
           onClick={handleCreate}
           mb={4}
           alignSelf={"flex-end"}
@@ -82,24 +85,31 @@ function InterestingNodes() {
         </Button>
       </Box>
 
-      <InterestingNodeTable
-        interestingNodes={interestingNodes}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <InterestingNodeTable
+            interestingNodes={interestingNodes}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                bgColor={index + 1 === page ? "blue.700" : "gray.100"}
+                color={index + 1 === page ? "white" : "black"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>
+      )}
     </Box>
   );
 }

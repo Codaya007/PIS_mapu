@@ -11,14 +11,14 @@ const campusSchema = new Schema({
   name: {
     type: String,
     required: true,
-    maxlength: 20,
+    maxlength: 70,
     unique: true,
   },
   description: {
     type: String,
     required: false,
     default: null,
-    maxlength: 200,
+    maxlength: 300,
   },
   address: {
     type: String,

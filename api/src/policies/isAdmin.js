@@ -35,6 +35,15 @@ module.exports = async (req, res, next) => {
 
     return next();
   } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return next({
+        status: 401,
+        message:
+          "Su token de autenticación ha vencido. Vuelva a iniciar sesión",
+        code: "jwtExpired",
+      });
+    }
+
     next({
       status: 401,
       message: error.message,

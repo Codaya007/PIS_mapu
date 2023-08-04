@@ -3,11 +3,11 @@ import {
   Button,
   FormControl,
   FormLabel,
+  Heading,
   Input,
-  VStack,
   Select,
   Textarea,
-  Heading,
+  VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -18,8 +18,8 @@ import {
   fetchCareerById,
   updateCareerById,
 } from "../services/careerServices";
-import { fetchCareers } from "../store/actions/careerActions";
 import { getFaculties } from "../services/facultyServices";
+import { fetchCareers } from "../store/actions/careerActions";
 
 const initialState = {
   name: "",
@@ -122,7 +122,7 @@ const CareerForm = () => {
       borderColor="gray.300"
     >
       <Box p="4">
-        <Heading textAlign={"center"} color={"blue.400"}>
+        <Heading textAlign={"center"} color={"blue.500"}>
           {id ? "Edición" : "Creación"} de carreras
         </Heading>
       </Box>
@@ -185,7 +185,7 @@ const CareerForm = () => {
             </Select>
           </FormControl>
 
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" bgColor="blue.600" color="white">
             {id ? "Guardar cambios" : "Crear carrera"}
           </Button>
         </VStack>

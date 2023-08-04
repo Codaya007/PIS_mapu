@@ -2,6 +2,7 @@ const { Router } = require("express");
 const facultyController = require("../controllers/facultyController");
 const middlewares = require("../middlewares");
 const schemas = require("../validationSchemas/Faculty");
+const isAdmin = require("../policies/isAdmin");
 
 const facultyRouter = Router();
 
@@ -26,6 +27,7 @@ facultyRouter.get("/:id", facultyController.getFacultyById);
  */
 facultyRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(schemas.createFacultySchema),
   facultyController.createFaculty
 );
@@ -37,6 +39,7 @@ facultyRouter.post(
  */
 facultyRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(schemas.updateFacultySchema),
   facultyController.updateFaculty
 );
@@ -46,6 +49,6 @@ facultyRouter.put(
  * @desc Eliminar facultad por id
  * @access Admin
  */
-facultyRouter.delete("/:id", facultyController.deleteFacultyById);
+facultyRouter.delete("/:id", isAdmin, facultyController.deleteFacultyById);
 
 module.exports = facultyRouter;

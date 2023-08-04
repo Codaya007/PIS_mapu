@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { FeatureGroup, useMap, GeoJSON } from "react-leaflet";
+import React, { useEffect } from "react";
+import { FeatureGroup, useMap, Polygon, Tooltip } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import 'leaflet-draw';
+import { getRandomIntInRange } from "../utils";
 
-function MapWithDraw({ faculty, onPolygonDrawn}) {
+const allowedColors = ["red", "purple", "blue", "yellow", "pink", "black"]
+
+function MapWithDraw({ onPolygonDrawn, drawnPolygons = [] }) {
   const map = useMap();
-  const [drawnPolygons, setDrawnPolygons] = useState([]);
 
   useEffect(() => {
     const drawnItems = new L.FeatureGroup();
@@ -33,8 +35,13 @@ function MapWithDraw({ faculty, onPolygonDrawn}) {
 
     const handleDrawnPolygon = (e) => {
       const { layer } = e;
-      setDrawnPolygons((prevPolygons) => [...prevPolygons, layer.toGeoJSON()]);
-      onPolygonDrawn(layer.toGeoJSON());
+      const newPolygon = layer.toGeoJSON();
+
+      const coordinates = newPolygon.geometry.coordinates[0];
+
+      const mapedCoordinates = coordinates.map(c => [c[1], c[0]])
+
+      onPolygonDrawn(mapedCoordinates);
     };
 
     map.on(L.Draw.Event.CREATED, handleDrawnPolygon);
@@ -46,43 +53,44 @@ function MapWithDraw({ faculty, onPolygonDrawn}) {
   }, [map, onPolygonDrawn]);
 
   useEffect(() => {
-    if (faculty.polygons.length > 0) {
-      const coordinatesPolygon = () => {
-        var latAux;
-        var lngAux;
-        var latlngs = [];
+    // Eliminar todos los polígonos existentes en el mapa
+    map.eachLayer((layer) => {
+      if (layer instanceof L.Polygon) {
+        map.removeLayer(layer);
+      }
+    });
 
-        for (let i = 0; i < faculty.polygons[0].length; i++) {
-          latAux = faculty.polygons[0][i][1];
-          lngAux = faculty.polygons[0][i][0];
-          latlngs.push([latAux, lngAux]);
-        }
-        return latlngs;
+    if (drawnPolygons.length > 0) {
+      let i = 1;
+      for (const polygonCoordinates of drawnPolygons) {
 
-      };
+        const color = allowedColors[getRandomIntInRange(0, allowedColors.length - 1)]
+        const polygon = L.polygon(polygonCoordinates, { color }).addTo(map);
 
-      const coordinates = coordinatesPolygon();
-      var polygon = L.polygon(coordinates).addTo(map);
-      map.fitBounds(polygon.getBounds());
+        // polygon.on("click", () => {
+        //   console.log("evento");
+        //   polygon.remove()
+        // })
+
+        polygon.bindTooltip(`Polígono ${i}`)
+        i++;
+        map.fitBounds(polygon.getBounds());
+      }
     }
     // else{
     // 	var polygon = L.polygon().removeFrom(map);
     // 	map.fitBounds(polygon.getBounds());
     // }
-  }, [faculty]);
+  }, [drawnPolygons]);
 
   return (
-      <FeatureGroup>
-        {/* {initialCoordinates.length > 0 &&
-        <GeoJSON
-          key="initial-polygon"
-          data={{ type: "Polygon", coordinates: initialCoordinates }}
-        />
-      } */}
-        {drawnPolygons.map((polygon, index) => (
-          <GeoJSON key={index} data={polygon} />
-        ))}
-      </FeatureGroup>
+    <FeatureGroup>
+      {drawnPolygons.map((polygon, index) => {
+        return <Polygon pathOptions={{ color: "purple" }} key={index} positions={polygon}>
+          <Tooltip>Polígono {index + 1}</Tooltip>
+        </Polygon>
+      })}
+    </FeatureGroup>
   );
 };
 

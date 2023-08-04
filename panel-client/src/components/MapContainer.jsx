@@ -3,13 +3,25 @@ import { CircleMarker, MapContainer as Map, Marker, Popup, TileLayer, useMap } f
 import MapLine from "./MapLine";
 import { Box } from "@chakra-ui/react";
 import { useEffect } from "react";
+import "leaflet/dist/leaflet.css";
+import L from 'leaflet';
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
+import iconUrl from 'leaflet/dist/images/marker-icon.png'
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl,
+  iconUrl,
+  shadowUrl,
+});
 
 function ChangeView({ center, zoom }) {
   const map = useMap();
   map.setView(center, zoom);
   return null;
 }
-
 
 const MapContainer = ({
   nodes,

@@ -17,8 +17,8 @@ import {
   fetchCategoryById,
   updateCategoryById,
 } from "../services/categoryServices";
-import { fetchCategories } from "../store/actions/categoryActions";
 import { updateImageToS3 } from "../services/imageServices";
+import { fetchCategories } from "../store/actions/categoryActions";
 
 const initialState = {
   name: "",
@@ -115,7 +115,7 @@ const CategoryForm = () => {
       borderColor="gray.300"
     >
       <Box p="4">
-        <Heading textAlign={"center"} color={"blue.400"}>
+        <Heading textAlign={"center"} color={"blue.500"}>
           {id ? "Edición" : "Creación"} de categorías
         </Heading>
       </Box>
@@ -175,7 +175,7 @@ const CategoryForm = () => {
             </FormControl>
           )}
 
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" bgColor="blue.600" color="white">
             {id ? "Guardar cambios" : "Crear categoría"}
           </Button>
         </VStack>
