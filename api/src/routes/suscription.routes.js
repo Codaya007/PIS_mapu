@@ -17,8 +17,8 @@ const suscriptionRouter = Router();
  */
 suscriptionRouter.post(
   "/",
-  middlewares.validateRequestBody(createSuscriptionSchema),
   isLoggedIn,
+  middlewares.validateRequestBody(createSuscriptionSchema),
   suscriptionController.createSuscription
 );
 

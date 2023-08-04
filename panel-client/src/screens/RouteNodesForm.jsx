@@ -1,23 +1,23 @@
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   FormLabel,
-  Input,
-  Checkbox,
-  VStack,
   HStack,
-  Select,
   Heading,
+  Input,
+  Select,
+  VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   createRouteNode,
-  updateRouteNodeById,
   fetchRouteNodeById,
+  updateRouteNodeById,
 } from "../services/routeNodeServices";
 
 import { getCampuses } from "../services/campusServices";
@@ -138,7 +138,7 @@ const RouteNodesForm = () => {
       borderColor="gray.300"
     >
       <Box p="4">
-        <Heading textAlign={"center"} color={"blue.400"}>
+        <Heading textAlign={"center"} color={"blue.500"}>
           {id ? "Edición" : "Creación"} de nodos ruta
         </Heading>
       </Box>
@@ -232,10 +232,36 @@ const RouteNodesForm = () => {
               />
             </HStack>
           </FormControl>
+
+          {/* <Box p={4} width={"100%"}>
+            <Heading as="h1" size="lg" color="blue.600" mb={4}>
+              Nodo Ruta
+            </Heading>
+
+            <MapContainer
+              style={{ width: "100%", height: "60vh" }}
+              center={center}
+              zoom={zoom}
+              scrollWheelZoom={false}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+
+              <MapWithDrawNodes
+                onMarkerDrawn={handleMarkerDrawn}
+                markerRef={markerRef}
+                latitude={routeNode.latitude}
+                longitude={routeNode.longitude}
+              />
+            </MapContainer>
+          </Box> */}
+
           {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
           {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}
 
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" bgColor="blue.600" color="white">
             {id ? "Guardar cambios" : "Crear Nodo Ruta"}
           </Button>
         </VStack>

@@ -5,6 +5,7 @@ const {
   createCampusSchema,
   updateCampusSchema,
 } = require("../validationSchemas/Campus");
+const isAdmin = require("../policies/isAdmin");
 
 const campusRouter = Router();
 
@@ -29,6 +30,7 @@ campusRouter.get("/:id", campusController.getCampusById);
  */
 campusRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(createCampusSchema),
   campusController.createCampus
 );
@@ -41,6 +43,7 @@ campusRouter.post(
  */
 campusRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(updateCampusSchema),
   campusController.updateCampusById
 );
@@ -50,6 +53,6 @@ campusRouter.put(
  * @desc Elimina un campus donde el id brindado coincida
  * @access Admin
  */
-campusRouter.delete("/:id", campusController.deleteCampusById);
+campusRouter.delete("/:id", isAdmin, campusController.deleteCampusById);
 
 module.exports = campusRouter;

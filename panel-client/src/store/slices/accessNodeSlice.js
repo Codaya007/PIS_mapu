@@ -9,6 +9,7 @@ const initialState = {
   skip: 0,
   limit: 6,
   fetched: false,
+  loading: true,
 };
 
 export const accessNodeSlice = createSlice({
@@ -26,6 +27,7 @@ export const accessNodeSlice = createSlice({
         state.skip,
         state.skip + state.limit
       );
+      state.loading = false;
     },
     getSlice: (state, action) => {
       const { results, totalCount } = action.payload;
@@ -33,6 +35,7 @@ export const accessNodeSlice = createSlice({
       state.currentSliceAccessNodes = results;
       state.totalCount = totalCount;
       state.pages = Math.ceil(state.totalCount / state.limit);
+      state.loading = false;
     },
     // En base a skip y limit edita el currentSliceAccessNodes
     getWithoutFetchSlice: (state, action) => {
@@ -40,11 +43,15 @@ export const accessNodeSlice = createSlice({
         state.skip,
         state.skip + state.limit
       );
+      state.loading = false;
     },
     // Cambia currentPage y skip
     setPage: (state, action) => {
       state.currentPage = action.payload;
       state.skip = (state.currentPage - 1) * state.limit;
+    },
+    updateLoading: (state, action) => {
+      state.loading = action.payload || false;
     },
     // createInterestNode: (state, action) => {},
     // updateInterestNode: (state, action) => {},
@@ -61,6 +68,7 @@ export const {
   // deleteInterestNode,
   setPage,
   getWithoutFetchSlice,
+  updateLoading,
 } = accessNodeSlice.actions;
 
 export default accessNodeSlice.reducer;

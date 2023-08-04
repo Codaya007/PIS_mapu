@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import CommentTable from "../components/CommentTable";
+import Loader from "../components/Loader";
 import {
   deleteCommentById,
   updateCommentById,
@@ -19,6 +20,7 @@ function Comments() {
     skip,
     currentSliceComment: comments,
     fetched,
+    loading,
   } = useSelector((state) => state.commentReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -74,28 +76,35 @@ function Comments() {
 
   return (
     <Box mx={4} my={8}>
-      <Heading as="h1" size="lg" mb={4}>
+      <Heading as="h1" size="lg" color="blue.600" mb={4}>
         Comentarios
       </Heading>
-      <CommentTable
-        comments={comments}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-        maskAsHide={maskAsHide}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <CommentTable
+            comments={comments}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            maskAsHide={maskAsHide}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                bgColor={index + 1 === page ? "blue.700" : "gray.100"}
+                color={index + 1 === page ? "white" : "black"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>
+      )}
     </Box>
   );
 }

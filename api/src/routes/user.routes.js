@@ -30,8 +30,8 @@ userRouter.get("/:id", isAdmin, userController.getUserById);
  */
 userRouter.post(
   "/",
-  middlewares.validateRequestBody(createUserSchema),
   isAdmin,
+  middlewares.validateRequestBody(createUserSchema),
   userController.createUser
 );
 
@@ -42,8 +42,8 @@ userRouter.post(
  */
 userRouter.put(
   "/:id",
-  middlewares.validateRequestBody(editUserSchema),
   isAdmin,
+  middlewares.validateRequestBody(editUserSchema),
   userController.updateUser
 );
 

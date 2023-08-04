@@ -1,12 +1,13 @@
+import { Box, Button, Heading } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteCareerById } from "../services/careerServices";
-import { getWithoutFetchSlice, setPage } from "../store/slices/careerSlice";
-import { fetchCareers } from "../store/actions/careerActions";
 import { toast } from "react-toastify";
-import { Box, Button, Heading } from "@chakra-ui/react";
 import CareerTable from "../components/CareerTable";
+import Loader from "../components/Loader";
+import { deleteCareerById } from "../services/careerServices";
+import { fetchCareers } from "../store/actions/careerActions";
+import { getWithoutFetchSlice, setPage } from "../store/slices/careerSlice";
 
 function Careers() {
   const {
@@ -16,6 +17,7 @@ function Careers() {
     skip,
     currentSliceCareer: careers,
     fetched,
+    loading,
   } = useSelector((state) => state.careerReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -63,12 +65,13 @@ function Careers() {
 
   return (
     <Box mx={4} my={8}>
-      <Heading as="h1" size="lg" mb={4}>
+      <Heading as="h1" size="lg" color="blue.600" mb={4}>
         Carreras UNL
       </Heading>
       <Box display="flex" justifyContent="flex-end" mb={4}>
         <Button
-          colorScheme="blue"
+          bgColor="blue.600"
+          color="white"
           onClick={handleCreate}
           mb={4}
           alignSelf={"flex-end"}
@@ -76,24 +79,31 @@ function Careers() {
           Crear carrera
         </Button>
       </Box>
-      <CareerTable
-        careers={careers}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-      />
-      <Box mt={4}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index + 1}
-            colorScheme={index + 1 === page ? "blue" : "gray"}
-            size="sm"
-            mr={2}
-            onClick={() => handlePageChange(index + 1)}
-          >
-            {index + 1}
-          </Button>
-        ))}
-      </Box>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <CareerTable
+            careers={careers}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+          />
+          <Box mt={4}>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <Button
+                key={index + 1}
+                bgColor={index + 1 === page ? "blue.700" : "gray.100"}
+                color={index + 1 === page ? "white" : "black"}
+                size="sm"
+                mr={2}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Button>
+            ))}
+          </Box>
+        </>
+      )}
     </Box>
   );
 }

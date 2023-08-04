@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { getCampuses } from "../../services/campusServices";
-import { getAll, getSlice } from "../slices/campusSlice";
+import { getAll, getSlice, updateLoading } from "../slices/campusSlice";
 
 export const fetchCampuses = (skip, limit) => async (dispatch) => {
   try {
@@ -13,6 +13,11 @@ export const fetchCampuses = (skip, limit) => async (dispatch) => {
     }
     console.log(data);
   } catch (error) {
-    toast.error(error.response?.data?.message || "Algo salio mal");
+    console.log({ error });
+    toast.error(
+      error.response?.data?.message || "No se pudieron cargar los campus"
+    );
+  } finally {
+    dispatch(updateLoading(false));
   }
 };

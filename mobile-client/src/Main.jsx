@@ -26,11 +26,13 @@ import {
   ResultSearchName,
   ReportLostPointName,
   MapName,
+  FacultiesName,
 } from "./constants";
 import ReportLostPoint from "./screens/ReportLostPoint";
 import Comment from "./screens/Comment";
 import EditProfile from "./screens/EditProfile";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
+import Faculties from "./screens/Faculties";
 
 const Drawer = createDrawerNavigator();
 
@@ -40,6 +42,7 @@ const Main = () => {
       <NavigationContainer>
         <Drawer.Navigator initialRouteName="Home">
           <Drawer.Screen name={HomeName} component={Home} />
+          <Drawer.Screen name={FacultiesName} component={Faculties} />
           <Drawer.Screen name={LoginName} component={LoginForm} />
           <Drawer.Screen name={RegisterName} component={Register} />
           <Drawer.Screen name={AboutName} component={About} />

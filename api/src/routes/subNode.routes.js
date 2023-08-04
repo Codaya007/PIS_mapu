@@ -11,6 +11,7 @@ const subNodeRouter = Router();
 
 subNodeRouter.post(
   "/",
+  isAdmin,
   middlewares.validateRequestBody(createSubNodeSchema),
   subNodeController.createSubNode
 );
@@ -28,6 +29,7 @@ subNodeRouter.get("/:id", subNodeController.getSubNodeById);
 
 subNodeRouter.put(
   "/:id",
+  isAdmin,
   middlewares.validateRequestBody(updateSubNodeSchema),
   subNodeController.updateSubNode
 );
