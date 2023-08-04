@@ -104,7 +104,7 @@ const EventsForm = () => {
       borderColor="gray.300"
     >
       <Box p="4">
-        <Heading textAlign={"center"} color={"blue.400"}>
+        <Heading textAlign={"center"} color={"blue.500"}>
           {id ? "Edición" : "Creación"} de eventos
         </Heading>
       </Box>
@@ -200,7 +200,7 @@ const EventsForm = () => {
             />
           </FormControl>
 
-          <Button type="submit" colorScheme="blue">
+          <Button type="submit" bgColor="blue.600" color="white">
             {id ? "Guardar cambios" : "Crear Evento"}
           </Button>
         </VStack>

@@ -9,6 +9,7 @@ const initialState = {
   skip: 0,
   limit: 6,
   fetched: false,
+  loading: true,
 };
 
 export const careerSlice = createSlice({
@@ -24,11 +25,13 @@ export const careerSlice = createSlice({
         state.skip,
         state.skip + state.limit
       );
+      state.loading = false;
     },
     getSlice: (state, action) => {
       state.currentSliceCareer = action.payload.results;
       state.totalCount = action.payload.totalCount;
       state.pages = Math.ceil(state.totalCount / state.limit);
+      state.loading = false;
     },
     // En base a skip y limit edita el currentSliceFaculties
     getWithoutFetchSlice: (state, action) => {
@@ -36,11 +39,15 @@ export const careerSlice = createSlice({
         state.skip,
         state.skip + state.limit
       );
+      state.loading = false;
     },
     //Cambia currentPage y skip
     setPage: (state, action) => {
       state.currentPage = action.payload;
       state.skip = (state.currentPage - 1) * state.limit;
+    },
+    updateLoading: (state, action) => {
+      state.loading = action.payload || false;
     },
     // createCareer: (state, action) => {},
     // updateCareer: (state, action) => {},
@@ -56,6 +63,7 @@ export const {
   // deleteCareer
   setPage,
   getWithoutFetchSlice,
+  updateLoading,
 } = careerSlice.actions;
 
 export default careerSlice.reducer;

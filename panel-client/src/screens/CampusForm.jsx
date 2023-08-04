@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   FormControl,
   FormLabel,
   Heading,
@@ -10,17 +9,17 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import MapWithDraw from "../components/MapWithDraw";
 import {
   createCampus,
   fetchCampusById,
   updateCampusById,
 } from "../services/campusServices";
 import { fetchCampuses } from "../store/actions/campusActions";
-import { MapContainer, TileLayer } from "react-leaflet";
-import MapWithDraw from "../components/MapWithDraw";
 
 const initialState = {
   name: "",
@@ -36,18 +35,17 @@ const CapusesForm = () => {
   const [polygons, setPolygons] = useState([]);
   const { id } = useParams();
 
-
   const handlePolygonDrawn = (coordinates) => {
-    setPolygons([coordinates])
+    setPolygons([coordinates]);
   };
 
   const handleDeletePolygon = (index) => {
-    setPolygons([])
-  }
+    setPolygons([]);
+  };
 
   const handleResetPolygons = () => {
-    setPolygons(campus.polygon?.length ? [campus.polygon] : [])
-  }
+    setPolygons(campus.polygon?.length ? [campus.polygon] : []);
+  };
 
   //REVISAR
   const handleChange = (e) => {
@@ -65,10 +63,10 @@ const CapusesForm = () => {
           description: campusDB.description,
           address: campusDB.address,
           symbol: campusDB.symbol,
-          polygon: campusDB.polygon
+          polygon: campusDB.polygon,
         });
-
-        setPolygons(campusDB.polygon ? [campusDB.polygon] : [])
+        // console.log({ campusDB });
+        setPolygons(campusDB.polygon?.length ? [campusDB.polygon] : []);
       };
 
       getCampus();
@@ -79,10 +77,16 @@ const CapusesForm = () => {
     e.preventDefault();
     try {
       if (id) {
-        await updateCampusById(id, { ...campus, polygon: polygons.length ? polygons[0] : [] });
+        await updateCampusById(id, {
+          ...campus,
+          polygon: polygons.length ? polygons[0] : [],
+        });
         toast.success("Actualizacion exitosa");
       } else {
-        await createCampus({ ...campus, polygon: polygons.length ? polygons[0] : [] });
+        await createCampus({
+          ...campus,
+          polygon: polygons.length ? polygons[0] : [],
+        });
         toast.success("Campus creado");
       }
 
@@ -90,7 +94,10 @@ const CapusesForm = () => {
       navigate("/campus");
     } catch (error) {
       console.log({ error });
-      toast.error(error.response?.data?.message || `No se ha podido ${id ? "actualizar" : "crear"} el campus`);
+      toast.error(
+        error.response?.data?.message ||
+          `No se ha podido ${id ? "actualizar" : "crear"} el campus`
+      );
     }
   };
 
@@ -103,7 +110,7 @@ const CapusesForm = () => {
       borderRadius="md"
       borderColor="gray.300"
     >
-      <Heading textAlign={"center"} color={"blue.400"}>
+      <Heading textAlign={"center"} color={"blue.500"}>
         {id ? "Edición" : "Creación"} de campus
       </Heading>
 
@@ -160,7 +167,7 @@ const CapusesForm = () => {
               />
             </FormControl>
 
-            <Button type="submit" colorScheme="blue">
+            <Button type="submit" bgColor="blue.600" color="white">
               {id ? "Guardar cambios" : "Crear campus"}
             </Button>
           </VStack>
@@ -168,15 +175,22 @@ const CapusesForm = () => {
 
         {/* Parte del mapa */}
         <Box width={"60%"}>
-
-          {/* <Heading textAlign={"center"} color={"blue.300"} size="md" mb={4} p={4}>
+          {/* <Heading textAlign={"center"} color={"blue.400"} size="md" mb={4} p={4}>
             Polígono geográfico del campus {campus.name && `'${campus.name}'`}
           </Heading> */}
 
-          <Box p={4} width={"100%"} >
-            <Box display={"flex"} justifyContent={"space-evenly"} paddingBottom={4}>
-              <Button colorScheme="green" onClick={handleResetPolygons}>Resetear polígono</Button>
-              <Button colorScheme="red" onClick={handleDeletePolygon}>Limpiar mapa</Button>
+          <Box p={4} width={"100%"}>
+            <Box
+              display={"flex"}
+              justifyContent={"space-evenly"}
+              paddingBottom={4}
+            >
+              <Button colorScheme="green" onClick={handleResetPolygons}>
+                Resetear polígono
+              </Button>
+              <Button colorScheme="red" onClick={handleDeletePolygon}>
+                Limpiar mapa
+              </Button>
             </Box>
             {/* Mapa de polígonos */}
             <MapContainer
@@ -195,11 +209,8 @@ const CapusesForm = () => {
               />
             </MapContainer>
           </Box>
-
         </Box>
-
       </Box>
-
     </Box>
   );
 };

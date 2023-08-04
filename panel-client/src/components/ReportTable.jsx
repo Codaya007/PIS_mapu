@@ -40,7 +40,8 @@ function ReportTable({ reports, maskAsReviewed }) {
                 <Td>{revised ? "Sí" : "No"}</Td>
                 <Td>
                   <Button
-                    colorScheme="blue"
+                    bgColor="blue.600"
+                    color="white"
                     mb={4}
                     onClick={() => maskAsReviewed(_id, !revised)}
                   >

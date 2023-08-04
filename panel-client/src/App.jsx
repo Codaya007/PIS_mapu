@@ -43,51 +43,37 @@ function App() {
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.authReducer);
 
-  // console.log(location);
-
-  const shouldShowSidebar = !["/login", "/forgot-password", "/recovery-password/:tokenQuery"].includes(location.pathname);
+  const isLoginPage = ["/login", "/forgot-password", "/recovery-password/:tokenQuery"].includes(location.pathname);
 
   useEffect(() => {
-    let tokenQuery = "";
-    let recoverPass = "";
+    const userLS = localStorage.getItem("user");
 
-    const setTokenRecoveryPass = () => {
-      const pathNameChar = location.pathname;
-      for (let i = 0; i < pathNameChar.length; i++) {
-        if (i <= 18) {
-          recoverPass = recoverPass + pathNameChar[i];
-        } else {
-          tokenQuery = tokenQuery + pathNameChar[i];
-        }
-      }
-    };
-
-    const user = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
-
-    setTokenRecoveryPass();
-    if (recoverPass == "/recovery-password/") {
-      navigate(recoverPass + tokenQuery);
-    } else if (user && token) {
-      dispatch(login({ user: JSON.parse(user), token: JSON.parse(token) }));
-      // navigate("/");
-    } else {
+    if (!user && !userLS && !isLoginPage) {
       navigate("/login");
     }
-  }, []);
+  }, [user, isLoginPage, navigate]);
 
   useEffect(() => {
-    if (!user) navigate("/login")
-  }, [user]);
+    const userLS = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+
+    if (location.pathname.startsWith("/recovery-password/") && token) {
+      navigate(location.pathname);
+    } else if (userLS && token) {
+      dispatch(login({ user: JSON.parse(userLS), token: JSON.parse(token) }));
+    } else if (!isLoginPage) {
+      navigate("/login");
+    }
+  }, [dispatch, location.pathname]);
 
   return (
     <>
       <Flex height={"100%"}>
-        {shouldShowSidebar && <SidebarMenu />}
+        {!isLoginPage && <SidebarMenu />}
         <Box
           flex="1"
           p={0}
-          marginLeft={shouldShowSidebar ? "70px" : "0px"}
+          marginLeft={!isLoginPage ? "70px" : "0px"}
           height={"100vh"}
         >
           <Header />

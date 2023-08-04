@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
 import { Box, Button, Heading } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import AdjacencyTable from "../components/AdjacencyTable";
+import AdjacencyToDeleteTable from "../components/AdjacencyToDeleteTable";
 import MapContainer from "../components/MapContainer";
 import NodeSelector from "../components/NodeSelector";
-import AdjacencyTable from "../components/AdjacencyTable";
-import { getAllCoordinates, updateNodeAdjacencies } from "../services/nodeServices";
 import { ROUTE_NODO_TYPE } from "../constants";
-import { toast } from "react-toastify";
-import AdjacencyToDeleteTable from "../components/AdjacencyToDeleteTable";
+import {
+  getAllCoordinates,
+  updateNodeAdjacencies,
+} from "../services/nodeServices";
 
 function App() {
   const [nodesData, setNodesData] = useState([]);
@@ -17,7 +20,7 @@ function App() {
 
   useEffect(() => {
     if (selectedNode) {
-      setAdjacencies(selectedNode.adjacencies)
+      setAdjacencies(selectedNode.adjacencies);
     }
   }, [selectedNode]);
 
@@ -29,38 +32,44 @@ function App() {
     setAdjacencies((prevAdjacencies) =>
       prevAdjacencies.filter((adjacency) => adjacency !== adjacencyToDelete)
     );
-    setToDelete([...toDelete, adjacencyToDelete])
+    setToDelete([...toDelete, adjacencyToDelete]);
   };
 
   const handleAddAdjacency = (node) => {
-    const newAdjacency = { destination: node._id, destinationName: node.name, destinationCoordinates: node.coordinates }
+    const newAdjacency = {
+      destination: node._id,
+      destinationName: node.name,
+      destinationCoordinates: node.coordinates,
+    };
 
     setAdjacencies([...adjacencies, newAdjacency]);
   };
 
   const handleRestoreAdjacency = (adj) => {
     setToDelete((prevAdjacencies) =>
-      prevAdjacencies.filter((adjacency) => adjacency.destination !== adj?.destination)
+      prevAdjacencies.filter(
+        (adjacency) => adjacency.destination !== adj?.destination
+      )
     );
-    setAdjacencies([...adjacencies, adj])
+    setAdjacencies([...adjacencies, adj]);
   };
 
   const handleResetNodes = () => {
-    setSelectedNode(null)
-    setAdjacencies([])
-    setToDelete([])
+    setSelectedNode(null);
+    setAdjacencies([]);
+    setToDelete([]);
   };
 
   const handleSaveAdjacencies = async () => {
     try {
       // Aquí debes enviar las adyacencias y los nodos seleccionados al servidor para guardarlos.
-      const mapedToDelete = toDelete.map(adj => adj?._id).filter(e => e)
+      const mapedToDelete = toDelete.map((adj) => adj?._id).filter((e) => e);
 
-      await updateNodeAdjacencies(selectedNode._id, adjacencies, mapedToDelete)
-      toast.info("Adyacencias actualizadas exitosamente")
+      await updateNodeAdjacencies(selectedNode._id, adjacencies, mapedToDelete);
+      toast.info("Adyacencias actualizadas exitosamente");
     } catch (error) {
       console.log({ error });
-      toast.error("No se pudieron actualizar las adyacencias :(")
+      toast.error("No se pudieron actualizar las adyacencias :(");
     }
   };
 
@@ -69,8 +78,8 @@ function App() {
       try {
         const { results } = await getAllCoordinates({ adjacencies: true });
 
-        setAllNodes(results)
-        setNodesData(results.filter(node => node.type !== ROUTE_NODO_TYPE));
+        setAllNodes(results);
+        setNodesData(results.filter((node) => node.type !== ROUTE_NODO_TYPE));
       } catch (error) {
         toast.error("No se han podido obtener las coordenadas");
       }
@@ -80,24 +89,53 @@ function App() {
 
   return (
     <Box>
-      <NodeSelector nodes={nodesData} onSelectNode={handleSelectNode} clearSelection={handleResetNodes} />
+      <NodeSelector
+        nodes={nodesData}
+        onSelectNode={handleSelectNode}
+        clearSelection={handleResetNodes}
+      />
 
       <Box display={"flex"} justifyContent={"flex-end"}>
-        <Button margin={2} colorScheme="blue" onClick={handleSaveAdjacencies}>Guardar adyacencias</Button>
+        <Button
+          margin={2}
+          bgColor="blue.600"
+          color="white"
+          onClick={handleSaveAdjacencies}
+        >
+          Guardar adyacencias
+        </Button>
       </Box>
 
       <Box display={"flex"} margin={4} justifyContent={"space-evenly"}>
-        <MapContainer height="65vh" nodes={allNodes} selectedNode={selectedNode} onSelectNode={handleSelectNode} handleAddAdjacency={handleAddAdjacency} adjacencies={adjacencies} />
+        <MapContainer
+          height="65vh"
+          nodes={allNodes}
+          selectedNode={selectedNode}
+          onSelectNode={handleSelectNode}
+          handleAddAdjacency={handleAddAdjacency}
+          adjacencies={adjacencies}
+        />
         {selectedNode && (
           <Box>
-            <Heading p={3} color={"blue.400"} fontSize={"md"}>Adyacencias del nodo {selectedNode.name}</Heading>
-            <AdjacencyTable adjacencies={adjacencies} onDeleteAdjacency={handleDeleteAdjacency} />
+            <Heading p={3} color={"blue.500"} fontSize={"md"}>
+              Adyacencias del nodo {selectedNode.name}
+            </Heading>
+            <AdjacencyTable
+              adjacencies={adjacencies}
+              onDeleteAdjacency={handleDeleteAdjacency}
+            />
             <br />
-            {!!toDelete.length && <>
-              <Heading p={3} color={"blue.400"} fontSize={"md"}>Adyacencias a eliminar</Heading>
-              <AdjacencyToDeleteTable adjacencies={toDelete} onRestoreAdjacency={handleRestoreAdjacency} />
-            </>
-            }
+            {!!toDelete.length && (
+              <>
+                <Heading p={3} color={"blue.500"} fontSize={"md"}>
+                  Adyacencias a eliminar
+                </Heading>
+                <AdjacencyToDeleteTable
+                  adjacencies={toDelete}
+                  onRestoreAdjacency={handleRestoreAdjacency}
+                />
+              </>
+            )}
           </Box>
         )}
       </Box>

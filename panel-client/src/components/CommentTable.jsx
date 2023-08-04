@@ -1,18 +1,4 @@
-import {
-  Button,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { getTimeAgo } from "../utils";
 
 function CommentTable({
@@ -45,7 +31,8 @@ function CommentTable({
             <Td>{comment.hide ? "Si" : "No"}</Td>
             <Td>
               <Button
-                colorScheme="blue"
+                bgColor="blue.600"
+                color="white"
                 mb={4}
                 onClick={() => maskAsHide(comment._id, !comment.hide)}
               >

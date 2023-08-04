@@ -12,7 +12,7 @@ function Header() {
       justify="space-between"
       py={4}
       px={8}
-      bg="blue.500"
+      bg="blue.800"
       color="white"
     >
       <Link to={"/"}>

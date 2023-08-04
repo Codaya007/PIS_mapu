@@ -6,13 +6,13 @@ import {
   StatLabel,
   StatNumber,
 } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
-import { getInfoDashboard } from "../store/actions/dashboardActions";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import MapContainerComponent from "../components/Map";
 import { getAllCoordinates } from "../services/nodeServices";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { getInfoDashboard } from "../store/actions/dashboardActions";
 
 function Dashboard() {
   const {
@@ -62,7 +62,7 @@ function Dashboard() {
           onClick={() => navigate("/user")}
         >
           <StatLabel fontSize={"xs"}>Total usuarios</StatLabel>
-          <StatNumber color={"blue.500"}>{totalUser}</StatNumber>
+          <StatNumber color={"red.400"}>{totalUser}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -77,7 +77,7 @@ function Dashboard() {
           <StatLabel fontSize={"xs"}>
             Usuarios registrados en el último mes
           </StatLabel>
-          <StatNumber color={"blue.500"}>{totalUserLastMonth}</StatNumber>
+          <StatNumber color={"red.400"}>{totalUserLastMonth}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -90,7 +90,7 @@ function Dashboard() {
           onClick={() => navigate("/faculty")}
         >
           <StatLabel fontSize={"xs"}>Total de facultades</StatLabel>
-          <StatNumber color={"blue.500"}>{totalFaculty}</StatNumber>
+          <StatNumber color={"red.400"}>{totalFaculty}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -103,7 +103,7 @@ function Dashboard() {
           onClick={() => navigate("/block")}
         >
           <StatLabel fontSize={"xs"}>Total de bloques</StatLabel>
-          <StatNumber color={"blue.500"}>{totalBlock}</StatNumber>
+          <StatNumber color={"red.400"}>{totalBlock}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -116,7 +116,7 @@ function Dashboard() {
           onClick={() => navigate("/career")}
         >
           <StatLabel fontSize={"xs"}>Total de carreras</StatLabel>
-          <StatNumber color={"blue.500"}>{totalCareer}</StatNumber>
+          <StatNumber color={"red.400"}>{totalCareer}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -129,7 +129,7 @@ function Dashboard() {
           onClick={() => navigate("/category")}
         >
           <StatLabel fontSize={"xs"}>Total de categorías</StatLabel>
-          <StatNumber color={"blue.500"}>{totalCategory}</StatNumber>
+          <StatNumber color={"red.400"}>{totalCategory}</StatNumber>
         </Stat>
         {/* <Stat
           p={4}
@@ -141,7 +141,7 @@ function Dashboard() {
           }}
         >
           <StatLabel>Total de sectores</StatLabel>
-          <StatNumber color={"blue.500"}>{totalSector}</StatNumber>
+          <StatNumber color={"red.400"}>{totalSector}</StatNumber>
         </Stat> */}
         <Stat
           p={4}
@@ -154,7 +154,7 @@ function Dashboard() {
           onClick={() => navigate("/campus")}
         >
           <StatLabel fontSize={"xs"}>Total de Campus</StatLabel>
-          <StatNumber color={"blue.500"}>{totalCampus}</StatNumber>
+          <StatNumber color={"red.400"}>{totalCampus}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -167,7 +167,7 @@ function Dashboard() {
           onClick={() => navigate("/events")}
         >
           <StatLabel fontSize={"xs"}>Total de eventos</StatLabel>
-          <StatNumber color={"blue.500"}>{totalEvents}</StatNumber>
+          <StatNumber color={"red.400"}>{totalEvents}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -180,7 +180,7 @@ function Dashboard() {
           onClick={() => navigate("/access-node")}
         >
           <StatLabel fontSize={"xs"}>Total Nodos acceso</StatLabel>
-          <StatNumber color={"blue.500"}>{totalAccessNodes}</StatNumber>
+          <StatNumber color={"red.400"}>{totalAccessNodes}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -193,7 +193,7 @@ function Dashboard() {
           onClick={() => navigate("/interesting-node")}
         >
           <StatLabel fontSize={"xs"}>Total Nodos de interés</StatLabel>
-          <StatNumber color={"blue.500"}>{totalInterestingNodes}</StatNumber>
+          <StatNumber color={"red.400"}>{totalInterestingNodes}</StatNumber>
         </Stat>
         <Stat
           p={4}
@@ -206,11 +206,11 @@ function Dashboard() {
           onClick={() => navigate("/route-node")}
         >
           <StatLabel fontSize={"xs"}>Total Nodos ruta</StatLabel>
-          <StatNumber color={"blue.500"}>{totalRouteNodes}</StatNumber>
+          <StatNumber color={"red.400"}>{totalRouteNodes}</StatNumber>
         </Stat>
       </SimpleGrid>
       <Box p={4}>
-        <Heading as="h1" size="lg" mb={4}>
+        <Heading as="h1" size="lg" color="blue.600" mb={4}>
           Mapa de nodos
         </Heading>
         <MapContainerComponent width="100%" markers={markers} circle />

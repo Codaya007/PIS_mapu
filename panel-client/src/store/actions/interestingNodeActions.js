@@ -1,6 +1,10 @@
 import { toast } from "react-toastify";
 import { getInterestingNodes } from "../../services/interestingNodeServices";
-import { getAll, getSlice } from "../slices/interestingNodeSlice";
+import {
+  getAll,
+  getSlice,
+  updateLoading,
+} from "../slices/interestingNodeSlice";
 
 export const fetchInterestingNodes = (skip, limit) => async (dispatch) => {
   try {
@@ -16,5 +20,7 @@ export const fetchInterestingNodes = (skip, limit) => async (dispatch) => {
       error.response?.data?.message ||
         "No se pudieron solicitar los puntos de interés"
     );
+  } finally {
+    dispatch(updateLoading(false));
   }
 };

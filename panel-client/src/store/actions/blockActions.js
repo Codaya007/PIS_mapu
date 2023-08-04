@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 import { getBlocks } from "../../services/blockServices";
-import { getAll, getSlice } from "../slices/blockSlice";
+import { getAll, getSlice, updateLoading } from "../slices/blockSlice";
 
 export const fetchBlocks = (skip, limit) => async (dispatch) => {
   try {
@@ -12,6 +12,10 @@ export const fetchBlocks = (skip, limit) => async (dispatch) => {
       dispatch(getAll(data));
     }
   } catch (error) {
-    toast.error(error.response?.data?.message || "Algo salió mal");
+    toast.error(
+      error.response?.data?.message || "No se pudieron cargar los bloques"
+    );
+  } finally {
+    dispatch(updateLoading(false));
   }
 };
