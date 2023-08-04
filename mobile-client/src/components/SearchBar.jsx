@@ -5,6 +5,7 @@ import {
   HStack,
   Input,
   Icon,
+  Box,
   VStack,
   useColorModeValue,
   Link as LinkStyle,
@@ -37,15 +38,15 @@ const SearchBar = () => {
     }
   };
 
-  const handleNodes = async () => {
-    try {
-      const { nodes } = await getAllNodes();
-      console.log(nodes)
-    } catch (error) {
-      // Mostrar error
-      console.log({ error });
-    }
-  };
+  // const handleNodes = async () => {
+  //   try {
+  //     const { nodes } = await getAllNodes();
+  //     console.log(nodes)
+  //   } catch (error) {
+  //     // Mostrar error
+  //     console.log({ error });
+  //   }
+  // };
 
   useEffect(() => {
     if (showResults) {
@@ -93,12 +94,12 @@ const SearchBar = () => {
                 </Button>
               }
               InputLeftElement={
-                <Button
+                <Box
                   bg="transparent"
                   // onPress={handleSearch}
-                  onPress={handleNodes}
-                  _pressed={{ bg: "transparent" }}
-                  _text={{ color: "gray" }}
+                  // onPress={handleNodes}
+                  // _pressed={{ bg: "transparent" }}
+                  // _text={{ color: "gray" }}
                   py={1}
                   px={2}
                   left={1}
@@ -108,7 +109,7 @@ const SearchBar = () => {
                     size={6}
                     color={colorIcon}
                   />
-                </Button>
+                </Box>
               }
               onSubmitEditing={handleSearch}
             />

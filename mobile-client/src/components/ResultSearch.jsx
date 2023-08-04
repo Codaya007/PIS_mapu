@@ -38,7 +38,7 @@ const ResultSearch = ({ route, navigation }) => {
 
 
   const handleNodePress = (nodeSelected) => {
-    navigate(HomeName, nodeSelected );
+    navigate(HomeName, nodeSelected);
   };
 
   // useEffect(() => {
@@ -85,21 +85,6 @@ const ResultSearch = ({ route, navigation }) => {
           </VStack>
         </Box>
       </ScrollView>
-      <VStack alignItems="flex-start" mb="4" ml="2">
-        <LinkStyle
-          onPress={() => navigate(FilterName)}
-          _text={{
-            fontSize: "sm",
-            fontWeight: "400",
-            color: { colorLink },
-          }}
-          alignSelf="flex-start"
-          mt="1"
-        >
-          {/* TODO poner la Búsqueda avanzada dentro del cuadro de resultados */}
-          Búsqueda avanzada
-        </LinkStyle>
-      </VStack>
     </VStack>
   );
 };

@@ -11,7 +11,6 @@ export default function MapApi({route}) {
   // const route = useRoute();
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  // const x = node;
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
 
