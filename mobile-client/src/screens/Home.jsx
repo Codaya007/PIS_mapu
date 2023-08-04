@@ -5,6 +5,7 @@ import SearchBar from "../components/SearchBar";
 import ResultSearch from "../components/ResultSearch";
 import Filter from "../screens/Filter"
 import BeginRoute from "./BeginRoute";
+import { Button } from "native-base";
 
 export default function Home() {
   return (

@@ -1,7 +1,8 @@
 import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
+import { findNearestRoute, getAllNodes } from "../services/Nodes";
+import Toast from "react-native-toast-message";
 import { useEffect, useRef, useState } from "react";
-import { getAllNodes } from "../services/Nodes";
 import * as Location from 'expo-location';
 
 const initialState = {
@@ -14,9 +15,13 @@ const initialState = {
   type: "Mi Ubicación"
 };
 
+
 export default function MapApi({ nodeSelected }) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
+  const [path, setPath] = useState([]);
+  const [nodeMarkerStart, setNodeMarkerStart] = useState("");
+  const [nodeMarkerEnd, setNodeMarkerEnd] = useState("");
   const [gpsNode, setGpsNode] = useState(initialState);
   const mapRef = useRef(null);
 
@@ -29,7 +34,11 @@ export default function MapApi({ nodeSelected }) {
       const { nodes } = await getAllNodes();
       setNodesPoint(nodes);
     } catch (error) {
-      // Mostrar error
+      Toast.show({
+        type: "error",
+        text1: "Error al cargar nodos",
+        position: "bottom",
+      });
       console.log({ error });
     }
   };
@@ -49,15 +58,16 @@ export default function MapApi({ nodeSelected }) {
   const printNode = (node) => {
     return (
       <Marker
-        key={node?._id}
-        coordinate={{
-          latitude: node?.latitude,
-          longitude: node?.longitude,
-        }}
-        title={node?.name}
-        description={node?.type}
-        pinColor={node?.color}
-      />
+            key={node?._id}
+            coordinate={{
+              latitude: node?.latitude,
+              longitude: node?.longitude,
+            }}
+            title={node?.name}
+            description={node?.type}
+            pinColor={node?.color}
+            onPress={() => handleNode(node)}
+          />
     );
   };
 
@@ -89,6 +99,60 @@ export default function MapApi({ nodeSelected }) {
     handleInitialLocation();
   }, []);
 
+  useEffect(() => {
+    if ((nodeMarkerStart != "") & (nodeMarkerEnd != "")) {
+      const node = {
+        type: "byNode",
+        origin: nodeMarkerStart,
+        destination: nodeMarkerEnd,
+      };
+      handleShortPath(node);
+      setNodeMarkerStart("");
+      setNodeMarkerEnd("");
+    }
+  }, [nodeMarkerStart, nodeMarkerEnd]);
+
+  const handleShortPath = async (node) => {
+    try {
+      const information = await findNearestRoute(node);
+      drawPath(information.result.path);
+      Toast.show({
+        type: "success",
+        text1: "Ruta calculada",
+        position: "bottom",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Los nodos no estan conectados",
+        position: "bottom",
+      });
+    }
+  };
+
+  const drawPath = async (points) => {
+    const coordinates = [];
+
+    for (let i = 0; i < points.length; i++) {
+      coordinates.push(points[i].coordinate);
+    }
+
+    const convertedCoordinates = coordinates.map((coordinate) => {
+      return {
+        latitude: coordinate[0],
+        longitude: coordinate[1],
+      };
+    });
+    setPath(convertedCoordinates);
+  };
+
+  const handleNode = (node) => {
+    if (nodeMarkerStart == "") {
+      setNodeMarkerStart(node._id);
+    } else if (nodeMarkerEnd == "") {
+      setNodeMarkerEnd(node._id);
+    }
+  };
   const showNodesOnMap = () => {
     return nodesPoint.map((node) => {
       if (node.type !== "Ruta" && !onSelect) {
@@ -116,6 +180,7 @@ export default function MapApi({ nodeSelected }) {
         userLocationFastestInterval={5000}
         onUserLocationChange={handleGpsNode}
       >
+        <Polyline coordinates={path} strokeColor="#238C23" strokeWidth={6} />
         {showNodesOnMap()}
       </MapView>
       <StatusBar style="auto" />
