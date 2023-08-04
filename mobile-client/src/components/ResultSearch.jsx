@@ -1,42 +1,51 @@
 import {
   Box,
   Button,
-  Center,
-  FormControl,
-  HStack,
-  Heading,
-  Input,
   Link as LinkStyle,
   Text,
   VStack,
   useColorModeValue,
   ScrollView,
 } from "native-base";
-
-//----------
-import { Alert } from "native-base";
-import { IconButton } from "native-base";
 import React from "react";
-import { CloseIcon } from "native-base";
-//----------
-
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-
+import { useDispatch } from "react-redux";
 import { FilterName, HomeName, MapName } from "../constants";
-import { useNavigation } from "@react-navigation/native";
 
-const ResultSearch = ({ route }) => {
+const initialState = {
+  hola: "holaskdfljsdfalk"
+};
+
+const ResultSearch = ({ route, navigation }) => {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
+  // const [chooseResult, setChooseResult] = useState(false);
+  // const [node, setNode] = useState();
+  // const navigation = useNavigation();
 
   const navigate = (to) => navigation.navigate(to);
 
   const { nodes } = route.params;
 
+  // const handleSearch = (node) => {
+  //   try {
+  //     console.log("nodooo: ", node)
+  //     setNode(node)
+  //     setChooseResult(true);
+  //   } catch (error) {
+  //     // Mostrar error
+  //     console.log({ error });
+  //   }
+  // };
+
+
   const handleNodePress = (nodeSelected) => {
-    navigation.navigate(MapName, { nodeSelected });
+    navigate(HomeName, nodeSelected);
   };
+
+  // useEffect(() => {
+  //   if (chooseResult) {
+  //     navigate(MapName, { node }); // Redirigir y pasar los nodos como parámetro
+  //   }
+  // }, [chooseResult]);
 
   const pressedColor = useColorModeValue("#EAEAEA");
   const colorLink = useColorModeValue("#FAFAFA");
@@ -48,8 +57,9 @@ const ResultSearch = ({ route }) => {
           <VStack space={1} mt="5">
             {nodes.map((node) => (
               <Button
-                key={node.id}
+                key={node._id}
                 onPress={() => handleNodePress(node)}
+                // onPress={() => handleSearch(node)}
                 justifyContent="flex-start"
                 w="100%"
                 maxW="500"
@@ -75,21 +85,6 @@ const ResultSearch = ({ route }) => {
           </VStack>
         </Box>
       </ScrollView>
-      <VStack alignItems="flex-start" mb="4" ml="2">
-        <LinkStyle
-          onPress={() => navigate(FilterName)}
-          _text={{
-            fontSize: "sm",
-            fontWeight: "400",
-            color: { colorLink },
-          }}
-          alignSelf="flex-start"
-          mt="1"
-        >
-          {/* TODO poner la Búsqueda avanzada dentro del cuadro de resultados */}
-          Búsqueda avanzada
-        </LinkStyle>
-      </VStack>
     </VStack>
   );
 };

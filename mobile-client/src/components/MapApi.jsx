@@ -1,4 +1,10 @@
 import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
+import { useEffect, useState } from "react";
+import { getAllNodes } from "../services/Nodes";
+import { useRoute } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import React from "react";
 import MapView, { Marker, Polygon, Polyline } from "react-native-maps";
 import { findNearestRoute, getAllNodes } from "../services/Nodes";
 import Toast from "react-native-toast-message";
@@ -17,6 +23,9 @@ const initialState = {
 const allowedColors = ["rgba(255, 0, 0, 0.5)", "rgba(252, 236, 80 , 0.5)", "rgba(70, 144, 250, 0.5)", "rgba(21, 254, 67, 0.5)", "rgba(241, 53, 244, 0.5)", "rgba(17, 16, 17, 0.5)"]
 
 export default function MapApi({ nodeSelected, faculty }) {
+  // const route = useRoute();
+  // const dispatch = useDispatch();
+  // const navigation = useNavigation();
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
   const [path, setPath] = useState([]);
@@ -78,6 +87,8 @@ export default function MapApi({ nodeSelected, faculty }) {
   };
 
   useEffect(() => {
+    // console.log("hola")
+    // console.log(nodeSelected)
     handleNodes();
 
     const handleInitialLocation = async () => {
@@ -234,8 +245,8 @@ export default function MapApi({ nodeSelected, faculty }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#333",
-    marginHorizontal: 10,
-    marginVertical: 5,
+    marginHorizontal: 0,
+    marginVertical: 0,
   },
   map: {
     width: "100%",

@@ -23,8 +23,12 @@ import {
 
 import { getCampuses } from "../services/campusServices";
 
-import { MapContainer, TileLayer } from "react-leaflet";
-import MapWithDrawNodes from "../components/MapWithDrawNodes";
+// import { MapContainer, TileLayer } from "react-leaflet";
+// import MapWithDrawNodes from "../components/MapWithDrawNodes";
+
+import MapSelector from "../components/MapToSelect";
+
+import { updateImageToS3 } from "../services/imageServices";
 
 import { fetchAccessNodes } from "../store/actions/accessNodeActions";
 
@@ -40,24 +44,29 @@ const initialState = {
   },
 };
 
+const detailInitialState = {
+  img: "",
+};
+
 const AccessNodesForm = () => {
   const [accessNode, setAccessNode] = useState(initialState);
+  const [detail, setDetail] = useState(detailInitialState);
   const [campuses, setCampuses] = useState([]);
   const dispacth = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const center = [-4.032747, -79.202405];
-  const zoom = 18;
-  const markerRef = useRef();
+  // const center = [-4.032747, -79.202405];
+  // const zoom = 18;
+  // const markerRef = useRef();
 
-  const handleMarkerDrawn = (markerCoordinates) => {
-    const coordinates = markerCoordinates.geometry.coordinates;
-    setAccessNode((prevState) => ({
-      ...prevState,
-      latitude: coordinates[1],
-      longitude: coordinates[0],
-    }));
-  };
+  // const handleMarkerDrawn = (markerCoordinates) => {
+  //   const coordinates = markerCoordinates.geometry.coordinates;
+  //   setAccessNode((prevState) => ({
+  //     ...prevState,
+  //     latitude: coordinates[1],
+  //     longitude: coordinates[0],
+  //   }));
+  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -73,6 +82,28 @@ const AccessNodesForm = () => {
     } else {
       setAccessNode({ ...accessNode, [name]: value });
     }
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    const url = await updateImageToS3(file);
+    setDetail({ ...detail, img: url });
+    setAccessNode({
+      ...accessNode,
+      detail: {
+        ...accessNode.detail,
+        img: url,
+      },
+    });
+  };
+
+
+  const handleChangePointer = (coordinates) => {
+    setAccessNode((prevNode) => ({
+      ...prevNode,
+      latitude: coordinates.lat,
+      longitude: coordinates.lng,
+    }));
   };
 
   const fetchCampuses = async () => {
@@ -179,6 +210,25 @@ const AccessNodesForm = () => {
           </FormControl>
 
           <FormControl>
+            <FormLabel htmlFor="campus">Campus</FormLabel>
+            <Select
+              name="campus"
+              value={accessNode.campus}
+              onChange={handleChange}
+              required
+              borderColor="gray.500"
+            >
+              <option value="">Seleccionar campus</option>
+              {campuses.length > 0 &&
+                campuses.map((campus) => (
+                  <option key={campus._id} value={campus._id}>
+                    {campus.symbol} - {campus.name}
+                  </option>
+                ))}
+            </Select>
+          </FormControl>
+
+          <FormControl>
             <FormLabel htmlFor="latitude">Latitud</FormLabel>
             <Input
               type="number"
@@ -207,6 +257,10 @@ const AccessNodesForm = () => {
               Nodo de acceso
             </Heading>
 
+            <MapSelector handleChangePointer={handleChangePointer} />
+
+
+            {/* 
             <MapContainer
               style={{ width: "100%", height: "60vh" }}
               center={center}
@@ -223,26 +277,36 @@ const AccessNodesForm = () => {
                 latitude={accessNode.latitude}
                 longitude={accessNode.longitude}
               />
-            </MapContainer>
+            </MapContainer> */}
           </Box>
-          <FormControl>
-            <FormLabel htmlFor="campus">Campus</FormLabel>
-            <Select
-              name="campus"
-              value={accessNode.campus}
-              onChange={handleChange}
-              required
-              borderColor="gray.500"
-            >
-              <option value="">Seleccionar campus</option>
-              {campuses.length > 0 &&
-                campuses.map((campus) => (
-                  <option key={campus._id} value={campus._id}>
-                    {campus.symbol} - {campus.name}
-                  </option>
-                ))}
-            </Select>
-          </FormControl>
+
+
+          {detail.img.length > 0 ? (
+            <FormControl>
+              <FormLabel htmlFor="image">Imagen</FormLabel>
+              <Input
+                type="file"
+                id="image"
+                name="image"
+                accept=".png, .jpg, .jpeg, .svg"
+                onChange={handleImageChange}
+                borderColor="gray.500"
+              />
+            </FormControl>
+          ) : (
+            <FormControl>
+              <FormLabel htmlFor="icon">Imagen</FormLabel>
+              <Input
+                type="file"
+                id="image"
+                name="image"
+                accept=".png, .jpg, .jpeg, .svg"
+                onChange={handleImageChange}
+                required
+                borderColor="gray.500"
+              />
+            </FormControl>
+          )}
 
           <FormControl>
             <HStack alignItems="center">

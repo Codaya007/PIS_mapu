@@ -24,10 +24,13 @@ import {
 import { getCampuses } from "../services/campusServices";
 import { getCategories } from "../services/categoryServices";
 
-import { MapContainer, TileLayer } from "react-leaflet";
-import MapWithDrawNodes from "../components/MapWithDrawNodes";
+// import { MapContainer, TileLayer } from "react-leaflet";
+// import MapWithDrawNodes from "../components/MapWithDrawNodes";
+import MapSelector from "../components/MapToSelect";
 
 import { fetchInterestingNodes } from "../store/actions/interestingNodeActions";
+
+import { updateImageToS3 } from "../services/imageServices";
 
 const initialState = {
   latitude: 0,
@@ -42,42 +45,83 @@ const initialState = {
   },
 };
 
-/*
-detail -> img
-detail -> name
-coordinate
-detail -> title
-detail -> description
-campus -> symbol
-campus -> name
-category -> name
-avaible
-*/
+const detailInitialState = {
+  img: "",
+};
+
+// export const handleFileChange = async (e) => {
+//   const file = e.target.files[0];
+//   const MAX_IMG_SIZE_MB = 2;
+//   const maxSizeInBytes = MAX_IMG_SIZE_MB * 1024 * 1024;
+
+//   console.log({ fileSize: file.size });
+
+//   if (file && file.size > maxSizeInBytes) {
+//     toast.error(
+//       `El archivo es demasiado grande. El tamaño máximo permitido es de ${MAX_IMG_SIZE_MB} MB.`
+//     );
+
+//     e.target.value = null; // Limpia el campo de selección de archivo
+//     return null;
+//   }
+
+// Procesa el archivo si está dentro del límite permitido
+// (puedes implementar el envío al servidor aquí)
+// const imageURL = await uploadImageToS3(file);
+
+//   console.log({ imageURL });
+
+//   return imageURL;
+// };
 
 const InterestingNodesForm = () => {
   const [interestingNode, setInterestingNode] = useState(initialState);
+  const [detail, setDetail] = useState(detailInitialState);
   const [campuses, setCampuses] = useState([]);
   const [categories, setCategories] = useState([]);
   const dispacth = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const center = [-4.032747, -79.202405];
-  const zoom = 18;
-  const markerRef = useRef();
+  // const center = [-4.032747, -79.202405];
+  // const zoom = 18;
+  // const markerRef = useRef();
 
-  const handleMarkerDrawn = (markerCoordinates) => {
-    const coordinates = markerCoordinates.geometry.coordinates;
-    setInterestingNode((prevState) => ({
-      ...prevState,
-      latitude: coordinates[1],
-      longitude: coordinates[0],
+  // const handleMarkerDrawn = (markerCoordinates) => {
+  //   const coordinates = markerCoordinates.geometry.coordinates;
+  //   setInterestingNode((prevState) => ({
+  //     ...prevState,
+  //     latitude: coordinates[1],
+  //     longitude: coordinates[0],
+  //   }));
+  // };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    const url = await updateImageToS3(file);
+    setDetail({ ...detail, img: url });
+    setInterestingNode({
+      ...interestingNode,
+      detail: {
+        ...interestingNode.detail,
+        img: url,
+      },
+    });
+  };
+
+
+  const handleChangePointer = (coordinates) => {
+    setInterestingNode((prevNode) => ({
+      ...prevNode,
+      latitude: coordinates.lat,
+      longitude: coordinates.lng,
     }));
   };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "title" || name === "description") {
+    if (name === "title" || name === "description" || name == "img") {
       setInterestingNode({
         ...interestingNode,
         detail: {
@@ -269,6 +313,79 @@ const InterestingNodesForm = () => {
             />
           </FormControl>
 
+          {/* imagen */}
+          {/* <FormControl>
+              <FormLabel>Imágen del nodo</FormLabel>
+              {detail.img && <Image width={"250px"} src={detail.img} />}
+              <Input
+                // required={!id}
+                accept={[".png", ".jpeg", ".svg", ".jpg"]}
+                type="file"
+                // value={detail.img}
+                onChange={async (e) => {
+                  setDetail({ ...detail, img: null });
+                  const img = await handleFileChange(e);
+
+                  setDetail({ ...detail, img: null });
+                }}
+              />
+            </FormControl> */}
+
+          <Box p={4} width={"100%"}>
+            <Heading as="h1" size="lg" mb={4}>
+              Nodo de interés
+            </Heading>
+            <MapSelector handleChangePointer={handleChangePointer} />
+
+
+            {/* <MapContainer
+              style={{ width: "100%", height: "60vh" }}
+              center={center}
+              zoom={zoom}
+              scrollWheelZoom={false}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <MapWithDrawNodes
+                onMarkerDrawn={handleMarkerDrawn}
+                markerRef={markerRef}
+                latitude={interestingNode.latitude}
+                longitude={interestingNode.longitude}
+              />
+            </MapContainer> */}
+          </Box>
+
+          {detail.img.length > 0 ? (
+            <FormControl>
+              <FormLabel htmlFor="image">Imagen</FormLabel>
+              <Input
+                type="file"
+                id="image"
+                name="image"
+                accept=".png, .jpg, .jpeg, .svg"
+                onChange={handleImageChange}
+                borderColor="gray.500"
+              />
+            </FormControl>
+          ) : (
+            <FormControl>
+              <FormLabel htmlFor="icon">Imagen</FormLabel>
+              <Input
+                type="file"
+                id="image"
+                name="image"
+                accept=".png, .jpg, .jpeg, .svg"
+                onChange={handleImageChange}
+                required
+                borderColor="gray.500"
+              />
+            </FormControl>
+          )}
+
+
+
           <FormControl>
             <HStack alignItems="center">
               <FormLabel htmlFor="avaible">¿Está activo?</FormLabel>
@@ -288,7 +405,7 @@ const InterestingNodesForm = () => {
             </HStack>
           </FormControl>
 
-          <Box p={4} width={"100%"}>
+          {/* <Box p={4} width={"100%"}>
             <Heading as="h1" size="lg" color="blue.600" mb={4}>
               Nodo de interés
             </Heading>
@@ -310,7 +427,7 @@ const InterestingNodesForm = () => {
                 longitude={interestingNode.longitude}
               />
             </MapContainer>
-          </Box>
+          </Box> */}
 
           {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
           {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}

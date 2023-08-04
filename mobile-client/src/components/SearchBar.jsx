@@ -5,9 +5,10 @@ import {
   HStack,
   Input,
   Icon,
+  Box,
   VStack,
   useColorModeValue,
-  LinkStyle
+  Link as LinkStyle,
 } from "native-base";
 import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
@@ -15,6 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { getInterestingNodesByStringSearch } from "../services/Search";
 import { getAllNodes } from "../services/Nodes";
+import { FilterName} from "../constants";
 
 const SearchBar = () => {
   const navigate = useNavigation().navigate;
@@ -23,7 +25,6 @@ const SearchBar = () => {
   const [showResults, setShowResults] = useState(false);
 
   const colorIcon = useColorModeValue("#DADADA");
-  const colorLink = useColorModeValue("#FAFAFA");
 
   const handleSearch = async () => {
     try {
@@ -37,15 +38,15 @@ const SearchBar = () => {
     }
   };
 
-  const handleNodes = async () => {
-    try {
-      const { nodes } = await getAllNodes();
-      console.log(nodes)
-    } catch (error) {
-      // Mostrar error
-      console.log({ error });
-    }
-  };
+  // const handleNodes = async () => {
+  //   try {
+  //     const { nodes } = await getAllNodes();
+  //     console.log(nodes)
+  //   } catch (error) {
+  //     // Mostrar error
+  //     console.log({ error });
+  //   }
+  // };
 
   useEffect(() => {
     if (showResults) {
@@ -65,6 +66,7 @@ const SearchBar = () => {
           <FormControl
             // maxW="275"
             mr="2"
+            mt="1"
             isRequired
           >
             <Input
@@ -73,6 +75,7 @@ const SearchBar = () => {
               onChangeText={(text) => setSearchText(text)}
               placeholder="Laboratorio de electromecánica..."
               backgroundColor="white"
+              borderRadius="100px"
               InputRightElement={
                 <Button
                   bg="transparent"
@@ -91,12 +94,12 @@ const SearchBar = () => {
                 </Button>
               }
               InputLeftElement={
-                <Button
+                <Box
                   bg="transparent"
                   // onPress={handleSearch}
-                  onPress={handleNodes}
-                  _pressed={{ bg: "transparent" }}
-                  _text={{ color: "gray" }}
+                  // onPress={handleNodes}
+                  // _pressed={{ bg: "transparent" }}
+                  // _text={{ color: "gray" }}
                   py={1}
                   px={2}
                   left={1}
@@ -106,16 +109,29 @@ const SearchBar = () => {
                     size={6}
                     color={colorIcon}
                   />
-                </Button>
+                </Box>
               }
               onSubmitEditing={handleSearch}
             />
-            
           </FormControl>
         </HStack>
+          <LinkStyle
+            onPress={() => navigate(FilterName)}
+            _text={{
+              fontSize: "sm",
+              fontWeight: "400",
+              color: "coolGray.500",
+            }}
+            alignSelf="flex-start"
+            mt="1"
+            ml="5"
+          >          
+            Búsqueda avanzada
+          </LinkStyle>
       </VStack>
     </Center>
   );
+  
 };
 
 export default SearchBar;
