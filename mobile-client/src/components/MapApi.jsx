@@ -1,9 +1,9 @@
 import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
-import MapView, { Marker, Polyline } from "react-native-maps";
+import MapView, { Marker, Polygon, Polyline } from "react-native-maps";
 import { findNearestRoute, getAllNodes } from "../services/Nodes";
 import Toast from "react-native-toast-message";
 import { useEffect, useRef, useState } from "react";
-import * as Location from 'expo-location';
+import * as Location from "expo-location";
 
 const initialState = {
   coordinates: ["0", "0"],
@@ -12,19 +12,25 @@ const initialState = {
   latitudeDelta: "0.00005",
   longitudeDelta: "0.00005",
   name: "Mi Ubicación",
-  type: "Mi Ubicación"
+  type: "Mi Ubicación",
 };
+const allowedColors = ["rgba(255, 0, 0, 0.5)", "rgba(252, 236, 80 , 0.5)", "rgba(70, 144, 250, 0.5)", "rgba(21, 254, 67, 0.5)", "rgba(241, 53, 244, 0.5)", "rgba(17, 16, 17, 0.5)"]
 
-
-export default function MapApi({ nodeSelected }) {
+export default function MapApi({ nodeSelected, faculty }) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
   const [path, setPath] = useState([]);
   const [nodeMarkerStart, setNodeMarkerStart] = useState("");
   const [nodeMarkerEnd, setNodeMarkerEnd] = useState("");
+  const [polygon, setPolygon] = useState([]);
   const [gpsNode, setGpsNode] = useState(initialState);
   const mapRef = useRef(null);
 
+  const getRandomColor = () => {
+    const randomIndex = Math.floor(Math.random() * allowedColors.length);
+    return allowedColors[randomIndex];
+  };
+  
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
   };
@@ -58,16 +64,16 @@ export default function MapApi({ nodeSelected }) {
   const printNode = (node) => {
     return (
       <Marker
-            key={node?._id}
-            coordinate={{
-              latitude: node?.latitude,
-              longitude: node?.longitude,
-            }}
-            title={node?.name}
-            description={node?.type}
-            pinColor={node?.color}
-            onPress={() => handleNode(node)}
-          />
+        key={node?._id}
+        coordinate={{
+          latitude: node?.latitude,
+          longitude: node?.longitude,
+        }}
+        title={node?.name}
+        description={node?.type}
+        pinColor={node?.color}
+        onPress={() => handleNode(node)}
+      />
     );
   };
 
@@ -85,13 +91,13 @@ export default function MapApi({ nodeSelected }) {
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
       console.log("Initial position", latitude, longitude);
-      
+
       if (mapRef.current) {
         mapRef.current.animateToRegion({
           latitude,
           longitude,
           latitudeDelta: "0.00005",
-          longitudeDelta: "0.00005"
+          longitudeDelta: "0.00005",
         });
       }
     };
@@ -112,10 +118,33 @@ export default function MapApi({ nodeSelected }) {
     }
   }, [nodeMarkerStart, nodeMarkerEnd]);
 
+  useEffect(() => {
+
+    if (faculty?.polygons?.length > 0) {
+      const polygonCoordinates = faculty?.polygons.map((polygon) => {
+        return polygon.map((point) => {
+          return { latitude: point[0], longitude: point[1] };
+        });
+      });
+      setPolygon(polygonCoordinates);
+      Toast.show({
+        type: "success",
+        text1: "Poligono graficado",
+        position: "bottom",
+      });
+    }else{
+      Toast.show({
+        type: "error",
+        text1: "La Facultad no tiene un poligono definido",
+        position: "bottom",
+      });
+    }
+  }, [faculty]);
+
   const handleShortPath = async (node) => {
     try {
       const information = await findNearestRoute(node);
-      drawPath(information.result.path);
+      setPath(createArrayToMap(information.result.path));
       Toast.show({
         type: "success",
         text1: "Ruta calculada",
@@ -130,7 +159,7 @@ export default function MapApi({ nodeSelected }) {
     }
   };
 
-  const drawPath = async (points) => {
+  const createArrayToMap = (points) => {
     const coordinates = [];
 
     for (let i = 0; i < points.length; i++) {
@@ -143,10 +172,14 @@ export default function MapApi({ nodeSelected }) {
         longitude: coordinate[1],
       };
     });
-    setPath(convertedCoordinates);
+    return convertedCoordinates;
   };
 
+  const showInformation = () => {};
+
   const handleNode = (node) => {
+    showInformation();
+
     if (nodeMarkerStart == "") {
       setNodeMarkerStart(node._id);
     } else if (nodeMarkerEnd == "") {
@@ -182,6 +215,16 @@ export default function MapApi({ nodeSelected }) {
       >
         <Polyline coordinates={path} strokeColor="#238C23" strokeWidth={6} />
         {showNodesOnMap()}
+        {polygon && polygon.map( (poly) => (
+          <Polygon
+            coordinates={poly}
+            fillColor={getRandomColor()}
+            strokeColor="black"
+            strokeWidth={3}
+          />
+        )
+        )}
+
       </MapView>
       <StatusBar style="auto" />
     </View>

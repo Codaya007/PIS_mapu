@@ -39,7 +39,6 @@ export const coordinatesGPS = async () => {
 export const findNearestRoute = async (node) => {
   try {
     const { data } = await axios.post(`${API_BASEURL}/route`, node);
-    console.log(data);
     return data;
   } catch (error) {
     console.log(`eeerror ${error}`);
