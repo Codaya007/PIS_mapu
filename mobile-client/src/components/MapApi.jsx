@@ -13,8 +13,8 @@ const initialState = {
   coordinates: ["0", "0"],
   latitude: "0",
   longitude: "0",
-  latitudeDelta: "0.00005",
-  longitudeDelta: "0.00005",
+  latitudeDelta: "0.0005",
+  longitudeDelta: "0.0005",
   name: "Mi Ubicación",
   type: "Mi Ubicación",
 };
@@ -107,12 +107,20 @@ export default function MapApi({ nodeSelected, faculty }) {
       console.log("Initial position", latitude, longitude);
 
       if (mapRef.current) {
-        mapRef.current.animateToRegion({
-          latitude,
-          longitude,
-          latitudeDelta: "0.00005",
-          longitudeDelta: "0.00005",
-        });
+        const animateCamera = async () => {
+          mapRef.current.animateCamera({
+            center: {
+              latitude: latitude,
+              longitude: longitude,
+            },
+            pitch: 0,
+            heading: 0,
+            altitude: 250, //altitud en metros para ios, ignorado por android
+            zoom: 25 //zoom para android, ignorado por ios
+          }, 5000);
+        }
+        await animateCamera();
+        await animateCamera();
       }
     };
 
