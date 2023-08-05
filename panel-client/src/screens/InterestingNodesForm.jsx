@@ -98,6 +98,7 @@ const InterestingNodesForm = () => {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     const url = await updateImageToS3(file);
+    // console.log(url)
     setDetail({ ...detail, img: url });
     setInterestingNode({
       ...interestingNode,
@@ -106,6 +107,8 @@ const InterestingNodesForm = () => {
         img: url,
       },
     });
+    // console.log(detail);
+    // console.log(interestingNode);
   };
 
 
@@ -181,6 +184,12 @@ const InterestingNodesForm = () => {
 
     // }, []);
   }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA
+
+  //! POR ALGUNA RAZON, LA IMG FUNCIONA BIEN CON ESTE useEffect()
+  useEffect(() => {
+    console.log(detail);
+    console.log(interestingNode); 
+  }, [detail, interestingNode]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -312,24 +321,6 @@ const InterestingNodesForm = () => {
               borderColor="gray.500"
             />
           </FormControl>
-
-          {/* imagen */}
-          {/* <FormControl>
-              <FormLabel>Imágen del nodo</FormLabel>
-              {detail.img && <Image width={"250px"} src={detail.img} />}
-              <Input
-                // required={!id}
-                accept={[".png", ".jpeg", ".svg", ".jpg"]}
-                type="file"
-                // value={detail.img}
-                onChange={async (e) => {
-                  setDetail({ ...detail, img: null });
-                  const img = await handleFileChange(e);
-
-                  setDetail({ ...detail, img: null });
-                }}
-              />
-            </FormControl> */}
 
           <Box p={4} width={"100%"}>
             <Heading as="h1" size="lg" mb={4}>

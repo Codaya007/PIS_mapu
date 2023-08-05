@@ -1,6 +1,4 @@
 import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
-import { useEffect, useState } from "react";
-import { getAllNodes } from "../services/Nodes";
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
@@ -70,6 +68,10 @@ export default function MapApi({ nodeSelected, faculty }) {
     console.log(gpsNode);
   };
 
+  const handlePressClickNode = (node) =>{
+    console.log("ESTEEE ES MI NODOOO CARAJOOOO", node);
+  }
+
   const printNode = (node) => {
     return (
       <Marker
@@ -81,7 +83,8 @@ export default function MapApi({ nodeSelected, faculty }) {
         title={node?.name}
         description={node?.type}
         pinColor={node?.color}
-        onPress={() => handleNode(node)}
+        // onPress={() => handleNode(node)}
+        onPress={() => handlePressClickNode(node)}
       />
     );
   };
