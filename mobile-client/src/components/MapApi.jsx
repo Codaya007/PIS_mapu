@@ -9,7 +9,6 @@ import Toast from "react-native-toast-message";
 import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 import {
-  ROUTE_NODO_TYPE,
   INTEREST_NODO_TYPE,
   ACCESS_NODO_TYPE,
   BLOCK_NODO_TYPE
@@ -43,10 +42,6 @@ export default function MapApi({ nodeSelected, faculty }) {
   const [gpsNode, setGpsNode] = useState(initialState);
   const mapRef = useRef(null);
 
-  // Pulsaciones
-  const lastPressRef = useRef(0);
-  const [showDetail, setShowDetail] = useState(false);
-
 
   const navigation = useNavigation();
 
@@ -63,7 +58,6 @@ export default function MapApi({ nodeSelected, faculty }) {
     try {
       const { nodes } = await getAllNodes();
       setNodesPoint(nodes);
-      // console.log(nodesPoint);
     } catch (error) {
       Toast.show({
         type: "error",
@@ -96,17 +90,8 @@ export default function MapApi({ nodeSelected, faculty }) {
       data = await getInterestingNodeById(node._id)      
     }
 
-    // console.log("este nodooooo: ", node, "y la dataaa::: ", data);
     navigation.navigate(DetailNodeName, { node: data });
   }
-
-  const handleDoubleClick = (node) => {
-
-
-    navigation.navigate(DetailNodeName, { node: selectedNode }); // Se navega a la pantalla de detalle
-    console.log("Doble clic en el nodo:", node);
-  };
-
 
   const printNode = (node) => {
     return (

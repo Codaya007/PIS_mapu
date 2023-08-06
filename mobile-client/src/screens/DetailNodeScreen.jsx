@@ -3,8 +3,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 
 const DetailNodeScreen = ({ route }) => {
     const { node } = route.params;
-
-    // console.log("xdddddddddddddaaaaaaaa,", node);
+    
     return (
         <View style={styles.container}>
 
