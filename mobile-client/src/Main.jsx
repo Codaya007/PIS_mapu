@@ -5,6 +5,7 @@ import Register from "./screens/Register";
 import About from "./screens/About";
 import Events from "./screens/Events";
 import Favorites from "./screens/Favorites";
+import DetailNodeScreen from "./screens/DetailNodeScreen";
 import Filter from "./screens/Filter";
 import MapApi from "./components/MapApi";
 import ResultSearch from "./components/ResultSearch";
@@ -27,6 +28,7 @@ import {
   ReportLostPointName,
   MapName,
   FacultiesName,
+  DetailNodeName
 } from "./constants";
 import ReportLostPoint from "./screens/ReportLostPoint";
 import Comment from "./screens/Comment";
@@ -68,6 +70,14 @@ const Main = () => {
           <Drawer.Screen
             name={ResultSearchName}
             component={ResultSearch}
+            options={{
+              drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+              drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+            }}
+          />
+          <Drawer.Screen
+            name={DetailNodeName}
+            component={DetailNodeScreen}
             options={{
               drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
               drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
