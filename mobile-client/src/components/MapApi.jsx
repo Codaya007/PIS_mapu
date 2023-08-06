@@ -4,10 +4,19 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import React from "react";
 import MapView, { Marker, Polygon, Polyline } from "react-native-maps";
-import { findNearestRoute, getAllNodes } from "../services/Nodes";
+import { findNearestRoute, getAllNodes, getAccessNodeById, getBlockNodeById, getInterestingNodeById } from "../services/Nodes";
 import Toast from "react-native-toast-message";
 import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
+import {
+  INTEREST_NODO_TYPE,
+  ACCESS_NODO_TYPE,
+  BLOCK_NODO_TYPE
+} from "../constants/index"
+
+import {
+  DetailNodeName
+} from "../constants/index"
 
 const initialState = {
   coordinates: ["0", "0"],
@@ -22,7 +31,7 @@ const allowedColors = ["rgba(255, 0, 0, 0.5)", "rgba(252, 236, 80 , 0.5)", "rgba
 
 export default function MapApi({ nodeSelected, faculty }) {
   // const route = useRoute();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   // const navigation = useNavigation();
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
@@ -33,11 +42,14 @@ export default function MapApi({ nodeSelected, faculty }) {
   const [gpsNode, setGpsNode] = useState(initialState);
   const mapRef = useRef(null);
 
+
+  const navigation = useNavigation();
+
   const getRandomColor = () => {
     const randomIndex = Math.floor(Math.random() * allowedColors.length);
     return allowedColors[randomIndex];
   };
-  
+
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
   };
@@ -68,8 +80,17 @@ export default function MapApi({ nodeSelected, faculty }) {
     console.log(gpsNode);
   };
 
-  const handlePressClickNode = (node) =>{
-    console.log("ESTEEE ES MI NODOOO CARAJOOOO", node);
+  const handlePressClickNode = async (node) => {
+    let data = null;
+    if (node.type == BLOCK_NODO_TYPE) {
+      data = await getBlockNodeById(node._id)
+    } else if (node.type == ACCESS_NODO_TYPE) {
+      data = await getAccessNodeById(node._id)
+    } else if (node.type == INTEREST_NODO_TYPE) {
+      data = await getInterestingNodeById(node._id)      
+    }
+
+    navigation.navigate(DetailNodeName, { node: data });
   }
 
   const printNode = (node) => {
@@ -88,6 +109,7 @@ export default function MapApi({ nodeSelected, faculty }) {
       />
     );
   };
+
 
   useEffect(() => {
     // console.log("hola")
@@ -154,7 +176,7 @@ export default function MapApi({ nodeSelected, faculty }) {
         text1: "Poligono graficado",
         position: "bottom",
       });
-    }else{
+    } else {
       Toast.show({
         type: "error",
         text1: "La Facultad no tiene un poligono definido",
@@ -197,7 +219,7 @@ export default function MapApi({ nodeSelected, faculty }) {
     return convertedCoordinates;
   };
 
-  const showInformation = () => {};
+  const showInformation = () => { };
 
   const handleNode = (node) => {
     showInformation();
@@ -237,7 +259,7 @@ export default function MapApi({ nodeSelected, faculty }) {
       >
         <Polyline coordinates={path} strokeColor="#238C23" strokeWidth={6} />
         {showNodesOnMap()}
-        {polygon && polygon.map( (poly) => (
+        {polygon && polygon.map((poly) => (
           <Polygon
             coordinates={poly}
             fillColor={getRandomColor()}
