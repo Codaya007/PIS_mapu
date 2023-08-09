@@ -30,7 +30,7 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
   const [gpsNode, setGpsNode] = useState(initialState);
   const mapRef = useRef(null);
   const navigation = useNavigation();
-  const { path: originalPath } = useSelector(state => state.searchReducer)
+  const { path: originalPath, totalDistance = 0 } = useSelector(state => state.searchReducer)
 
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
@@ -135,7 +135,7 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
 
       Toast.show({
         type: "success",
-        text1: "Ruta calculada",
+        text1: `Hay ${parseInt(totalDistance)} ms hasta su destino`,
         position: "bottom",
       });
     } catch (error) {
