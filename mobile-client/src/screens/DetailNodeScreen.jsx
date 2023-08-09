@@ -1,16 +1,22 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Button } from 'react-native';
+import { ReportLostPointName } from '../constants';
 
 const DetailNodeScreen = ({ route }) => {
     const { node } = route.params;
+      const navigation = useNavigation();
+
     
     return (
         <View style={styles.container}>
+            <Button title='Reportar punto por falta de información' marginTop={30}  onPress={() => navigation.navigate(ReportLostPointName,  node)}>Hola Mundo</Button>
 
             {/* Imágen*/}
-            {node?.nodes.detail.img && (
+                {node?.nodes.detail.img && (
                 <Image source={{ uri: node?.nodes.detail.img }} style={styles.image} resizeMode="cover" />
             )}
+
 
             <Text style={styles.name}>{node?.nodes.detail.title}</Text>
 
@@ -55,6 +61,7 @@ const DetailNodeScreen = ({ route }) => {
                     </Text>
                 </View>
             )}
+  
         </View>
     );
 };

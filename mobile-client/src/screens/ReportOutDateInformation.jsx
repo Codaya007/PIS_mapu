@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import {
   Box,
@@ -12,7 +12,7 @@ import {
   TextArea,
   VStack,
 } from "native-base";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import { API_BASEURL, HomeName } from "../constants";
 import { useSelector } from "react-redux";
@@ -20,17 +20,21 @@ import { useSelector } from "react-redux";
 const reportState = {
   comment: "",
   revised: false,
-  lostPoint: {
-    latitude: "0",
-    length: "0",
-  },
+  latitude: '',
+  longitude: '',
 };
 
-const ReportLostPoint = () => {
+const ReportOutdatedInformation = () => {
   const navigate = useNavigation();
+  const route = useRoute();
+  const node = route.params;
   const { user } = useSelector((state) => state.authReducer);
   const [report, setReport] = useState(reportState);
 
+  useEffect( ()=> {
+    console.log(node);
+  },[]);
+  
   const handleEditReport = async (text, input) => {
     if (input == "latitude" || input == "length") {
       setReport({
@@ -109,7 +113,7 @@ const ReportLostPoint = () => {
               }}
               fontWeight="semibold"
             >
-              Detalle su punto perdido
+              Detalle su punto perdidoa
             </Heading>
             <Heading
               mt="1"
@@ -123,6 +127,15 @@ const ReportLostPoint = () => {
               Registre su punto perdido para continuar
             </Heading>
             <VStack space={3} mt="5">
+              <FormControl>
+                <FormControl.Label>Titulo</FormControl.Label>
+                <Input
+                  keyboardType="numeric"
+                  id="tittle"
+                  onChangeText={(text) => handleEditReport(text, "tittle")}
+                  value={report.lostPoint.latitude}
+                />
+              </FormControl>
               <FormControl>
                 <FormControl.Label>Latitud</FormControl.Label>
                 <Input
@@ -148,7 +161,7 @@ const ReportLostPoint = () => {
                 />
               </FormControl>
 
-              <Button mt="2" bgColor={"indigo.500"} onPress={handleSave}>
+              <Button mt="2" bgColor={"indigo.500"} onPress={(8)}>
                 Enviar
               </Button>
             </VStack>
@@ -159,4 +172,4 @@ const ReportLostPoint = () => {
   );
 };
 
-export default ReportLostPoint;
+export default ReportOutdatedInformation;

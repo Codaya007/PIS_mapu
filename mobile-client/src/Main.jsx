@@ -30,7 +30,7 @@ import {
   FacultiesName,
   DetailNodeName
 } from "./constants";
-import ReportLostPoint from "./screens/ReportLostPoint";
+import ReportOutdatedInformation from "./screens/ReportOutDateInformation";
 import Comment from "./screens/Comment";
 import EditProfile from "./screens/EditProfile";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
@@ -93,8 +93,9 @@ const Main = () => {
           />
           <Drawer.Screen
             name={ReportLostPointName}
-            component={ReportLostPoint}
+            component={ReportOutdatedInformation}
           />
+
           <Drawer.Screen name={CommentName} component={Comment} />
         </Drawer.Navigator>
       </NavigationContainer>
