@@ -23,6 +23,12 @@ export const getBlockNodeById = async (id) => {
   return data;
 };
 
+export const getRouteNodeById = async (id) => {
+  const { data } = await axios.get(`${API_BASEURL}/route-node/${id}`);
+  // console.log("dfad: ", data);
+  return data;
+};
+
 export const getAccessNodeById = async (id) => {
   const { data } = await axios.get(`${API_BASEURL}/access-node/${id}`);
   return data;

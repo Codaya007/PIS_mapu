@@ -184,7 +184,7 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
   };
 
   useEffect(() => {
-    handleShortPath();
+    originalPath && handleShortPath();
   }, [originalPath]);
 
   return (

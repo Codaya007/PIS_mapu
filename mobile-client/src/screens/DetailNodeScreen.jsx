@@ -1,17 +1,24 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { View, Text, Image, Heading, FlatList, Box } from 'native-base';
-import { ACCESS_NODO_TYPE, BLOCK_NODO_TYPE, INTEREST_NODO_TYPE } from '../constants';
-import { getAccessNodeById, getBlockNodeById, getInterestingNodeById } from '../services/Nodes';
+import { View, Text, Image, Heading, FlatList, Box, Button } from 'native-base';
+import { ACCESS_NODO_TYPE, BLOCK_NODO_TYPE, HomeName, INTEREST_NODO_TYPE, ROUTE_NODO_TYPE } from '../constants';
+import { getAccessNodeById, getBlockNodeById, getInterestingNodeById, getRouteNodeById } from '../services/Nodes';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import SubnodeDetail from '../components/SubnodeDetail';
 import Loader from '../components/Loader';
+import { useDispatch } from 'react-redux';
+import { setCurrentNode, setDestination, setOrigin } from '../store/slices/searchSlice';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const NodeDetail = ({ node = {} }) => {
     const [showSubnodes, setShowSubnodes] = useState(false);
-    const { detail } = node;
+    const { detail } = node || {};
     const { subnodes } = detail || {};
+    const navigation = useNavigation();
+    const navigate = to => navigation.navigate(to)
+    const dispatch = useDispatch();
 
     return !node ?
         <Text>Nodo no encontrado</Text> :
@@ -30,7 +37,7 @@ const NodeDetail = ({ node = {} }) => {
             )}
 
             <View padding={"6"} flex={1} >
-                <Heading>{detail?.title || "Sin nombre"}</Heading>
+                <Heading>{detail?.title || node.name || "Sin nombre"}</Heading>
 
                 {/* Tipo de nodo */}
                 <Text style={styles.type}>Punto de {node?.type?.name} {node?.campus?.name && `campus ${node.campus?.name}`}</Text>
@@ -41,6 +48,35 @@ const NodeDetail = ({ node = {} }) => {
                         {node?.available ? "Disponible" : "No disponible"}
                     </Text>
                 </View>
+
+
+                <View margin={3} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+
+                    <Box width={"25%"}>
+                        <Button onPress={() => {
+                            dispatch(setOrigin(node))
+                            dispatch(setCurrentNode(null))
+                            navigate(HomeName)
+                        }} borderRadius={"50"} width={"20"}>
+                            <Ionicons name="ios-return-up-back" size={20} color="black" />
+                        </Button>
+                        <Text textAlign={"center"}>Ir desde</Text>
+                    </Box>
+
+                    <Box width={"25%"}>
+                        <Button onPress={() => {
+                            dispatch(setDestination(node))
+                            dispatch(setCurrentNode(null))
+                            navigate(HomeName)
+                        }} borderRadius={"50"} width={"20"}>
+                            <Ionicons name="return-up-forward" size={20} color="black" />
+                        </Button>
+                        <Text textAlign={"center"}>Ir hasta</Text>
+                    </Box>
+
+
+                </View>
+
 
                 {/* Descripcion */}
                 <Text textAlign={"justify"} flexWrap={"wrap"}>{detail?.description || "Sin descripción"}</Text>
@@ -92,6 +128,9 @@ const DetailNodeScreen = ({ route }) => {
                 data = await getAccessNodeById(nodeId)
             } else if (type == INTEREST_NODO_TYPE) {
                 data = await getInterestingNodeById(nodeId)
+            } else if (type === ROUTE_NODO_TYPE) {
+                data = await getRouteNodeById(nodeId);
+                data.name = "Nodo Ruta"
             }
 
             setNode(data);

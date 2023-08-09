@@ -1,4 +1,4 @@
-import { Fab, Box, Button, Heading, Text } from 'native-base';
+import { Fab, Box, Button, Heading, Text, Toast } from 'native-base';
 import { View, StyleSheet, Dimensions, PixelRatio } from "react-native";
 import MapApi from "../components/MapApi";
 import SearchBar from "../components/SearchBar";
@@ -8,7 +8,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
-import { setCurrentNode, setDestination } from '../store/slices/searchSlice';
+import { clearError, setCurrentNode, setDestination } from '../store/slices/searchSlice';
+import { useEffect } from 'react';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -29,8 +30,6 @@ export default function Home() {
   const bottomActive = scalePixelToDp(-575);
   const right = scalePixelToDp(-5);
   const bottomInactive = scalePixelToDp(-618);
-
-  // console.log("Hay algo?", currentNode?.detail);
 
   return (
     <View style={styles.container}>

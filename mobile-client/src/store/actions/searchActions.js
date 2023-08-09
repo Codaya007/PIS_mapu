@@ -1,9 +1,13 @@
-import { Toast } from "native-base";
 import {
   getInterestingNodesByStringSearch,
   getShortestPath,
 } from "../../services/Search";
-import { searchText, setPath } from "../slices/searchSlice";
+import {
+  clearError,
+  searchText,
+  setError,
+  setPath,
+} from "../slices/searchSlice";
 
 export const getSearchResults = (search) => async (dispatch) => {
   try {
@@ -11,28 +15,29 @@ export const getSearchResults = (search) => async (dispatch) => {
 
     dispatch(searchText(results));
   } catch (error) {
-    Toast.show({
-      type: "error",
-      text1: error.response?.data?.message || error.message,
-      position: "bottom",
-    });
+    console.log(error.response?.data?.message || error.message);
   }
 };
 
 export const searchShortestPathByNode =
   (origin, destination) => async (dispatch) => {
     try {
+      dispatch(clearError());
       const results = await getShortestPath("byNode", origin, destination);
-
-      console.log({ results });
 
       dispatch(setPath(results));
     } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: error.response?.data?.message || error.message,
-        position: "bottom",
-      });
+      console.log(error.response?.data?.message || error.message);
+      dispatch(
+        setError(
+          error.response?.data?.message || "No se ha podido buscar la ruta"
+        )
+      );
+      // Toast.show({
+      //   type: "error",
+      //   text1: error.response?.data?.message || "No se ha podido buscar la ruta",
+      //   position: "bottom",
+      // });
     }
   };
 
@@ -48,10 +53,6 @@ export const searchShortestPathByNomenclature =
 
       dispatch(setPath(results));
     } catch (error) {
-      Toast.show({
-        type: "error",
-        text1: error.response?.data?.message || error.message,
-        position: "bottom",
-      });
+      console.log(error.response?.data?.message || error.message);
     }
   };

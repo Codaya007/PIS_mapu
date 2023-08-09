@@ -21,7 +21,7 @@ import { getSearchResults, searchShortestPathByNode } from "../store/actions/sea
 
 const FromTo = () => {
     const navigate = useNavigation().navigate;
-    const { destination, origin, searchPathBy = "byNode" } = useSelector(state => state.searchReducer);
+    const { destination, origin, searchPathBy = "byNode", errorOnPathSearch } = useSelector(state => state.searchReducer);
     const [destinyText, setDestinyText] = useState(destination?.detail?.title || "");
     const [originText, setOriginText] = useState("");
     const dispatch = useDispatch()
@@ -63,11 +63,11 @@ const FromTo = () => {
     };
 
     useEffect(() => {
-        setDestinyText(destination?.detail?.title || "")
+        setDestinyText(destination?.detail?.title || destination?.name || "")
     }, [destination]);
 
     useEffect(() => {
-        setOriginText(origin?.detail?.title || "")
+        setOriginText(origin?.detail?.title || origin?.name || "")
     }, [origin]);
 
     return (
@@ -159,7 +159,7 @@ const FromTo = () => {
                         />
                         <Button margin={1} onPress={() => {
                             if (searchPathBy === "byNode") {
-                                dispatch(searchShortestPathByNode(origin._id, destination._id))
+                                dispatch(searchShortestPathByNode(origin?._id, destination?._id))
                             } else {
                                 // TODO: Implementar búsqueda por nomenclatura
                             }

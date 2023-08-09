@@ -18,6 +18,7 @@ const initialState = {
     environment: "",
   },
   currentNode: null,
+  errorOnPathSearch: null,
 };
 
 export const searchSlice = createSlice({
@@ -76,6 +77,12 @@ export const searchSlice = createSlice({
     setCurrentNode: (state, action) => {
       state.currentNode = action.payload;
     },
+    setError: (state, action) => {
+      state.errorOnPathSearch = action.payload;
+    },
+    clearError: (state) => {
+      state.errorOnPathSearch = null;
+    },
   },
 });
 
@@ -91,6 +98,8 @@ export const {
   setNomenclature,
   setCurrentNode,
   setSearchResults,
+  clearError,
+  setError,
 } = searchSlice.actions;
 
 export default searchSlice.reducer;
