@@ -4,10 +4,10 @@ import LoginForm from "./screens/Login";
 import Register from "./screens/Register";
 import About from "./screens/About";
 import Events from "./screens/Events";
-import Favorites from "./screens/Favorites";
+// import Favorites from "./screens/Favorites";
 import DetailNodeScreen from "./screens/DetailNodeScreen";
 import Filter from "./screens/Filter";
-import MapApi from "./components/MapApi";
+// import MapApi from "./components/MapApi";
 import ResultSearch from "./components/ResultSearch";
 import ForgotPasswordForm from "./screens/ForgotPasswordForm";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -18,7 +18,7 @@ import {
   CommentName,
   EditProfileName,
   EventsName,
-  FavoritesName,
+  // FavoritesName,
   ForgotPasswordName,
   HomeName,
   LoginName,
@@ -26,7 +26,7 @@ import {
   FilterName,
   ResultSearchName,
   ReportLostPointName,
-  MapName,
+  // MapName,
   FacultiesName,
   DetailNodeName
 } from "./constants";
@@ -49,7 +49,7 @@ const Main = () => {
           <Drawer.Screen name={RegisterName} component={Register} />
           <Drawer.Screen name={AboutName} component={About} />
           <Drawer.Screen name={EventsName} component={Events} />
-          <Drawer.Screen name={FavoritesName} component={Favorites} />
+          {/* <Drawer.Screen name={FavoritesName} component={Favorites} /> */}
           <Drawer.Screen
             name={FilterName}
             component={Filter}
@@ -83,14 +83,14 @@ const Main = () => {
               drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
             }}
           />
-          <Drawer.Screen
+          {/* <Drawer.Screen
             name={MapName}
             component={MapApi}
           // options={{
           //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
           //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
           // }}
-          />
+          /> */}
           <Drawer.Screen
             name={ReportLostPointName}
             component={ReportLostPoint}

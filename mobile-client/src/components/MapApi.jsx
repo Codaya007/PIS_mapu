@@ -1,8 +1,8 @@
 import { StatusBar, View, StyleSheet, } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import MapView, { Callout, Marker, Polygon, Polyline } from "react-native-maps";
-import { findNearestRoute, getAllNodes } from "../services/Nodes";
+import MapView, { Callout, Marker, Polyline } from "react-native-maps";
+import { getAllNodes } from "../services/Nodes";
 import Toast from "react-native-toast-message";
 import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
@@ -10,6 +10,7 @@ import * as Location from "expo-location";
 import {
   DetailNodeName
 } from "../constants/index"
+import { useSelector } from "react-redux";
 
 const initialState = {
   coordinates: ["0", "0"],
@@ -21,15 +22,15 @@ const initialState = {
   type: "Mi Ubicación",
 };
 
-export default function MapApi({ nodeSelected }) {
+export default function MapApi({ nodeSelected, onSelect = false }) {
   const [nodesPoint, setNodesPoint] = useState([]);
-  const [onSelect, setOnSelect] = useState(false);
   const [path, setPath] = useState([]);
   const [nodeMarkerStart, setNodeMarkerStart] = useState("");
   const [nodeMarkerEnd, setNodeMarkerEnd] = useState("");
   const [gpsNode, setGpsNode] = useState(initialState);
   const mapRef = useRef(null);
   const navigation = useNavigation();
+  const { path: originalPath } = useSelector(state => state.searchReducer)
 
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
@@ -84,8 +85,6 @@ export default function MapApi({ nodeSelected }) {
 
 
   useEffect(() => {
-    console.log("Cambio ref desde MapApi");
-
     handleNodes();
 
     const handleInitialLocation = async () => {
@@ -116,23 +115,24 @@ export default function MapApi({ nodeSelected }) {
     handleInitialLocation();
   }, [mapRef.current]);
 
-  useEffect(() => {
-    if ((nodeMarkerStart != "") & (nodeMarkerEnd != "")) {
-      const node = {
-        type: "byNode",
-        origin: nodeMarkerStart,
-        destination: nodeMarkerEnd,
-      };
-      handleShortPath(node);
-      setNodeMarkerStart("");
-      setNodeMarkerEnd("");
-    }
-  }, [nodeMarkerStart, nodeMarkerEnd]);
+  // useEffect(() => {
+  //   if ((nodeMarkerStart != "") & (nodeMarkerEnd != "")) {
+  //     const node = {
+  //       type: "byNode",
+  //       origin: nodeMarkerStart,
+  //       destination: nodeMarkerEnd,
+  //     };
+  //     handleShortPath(node);
+  //     setNodeMarkerStart("");
+  //     setNodeMarkerEnd("");
+  //   }
+  // }, [nodeMarkerStart, nodeMarkerEnd]);
 
-  const handleShortPath = async (node) => {
+  const handleShortPath = () => {
     try {
-      const information = await findNearestRoute(node);
-      setPath(createArrayToMap(information.result.path));
+
+      setPath(createArrayToMap(originalPath));
+
       Toast.show({
         type: "success",
         text1: "Ruta calculada",
@@ -182,6 +182,10 @@ export default function MapApi({ nodeSelected }) {
       }
     });
   };
+
+  useEffect(() => {
+    handleShortPath();
+  }, [originalPath]);
 
   return (
     <View style={styles.container}>

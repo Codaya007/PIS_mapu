@@ -1,65 +1,50 @@
 import {
   Box,
   Button,
-  Link as LinkStyle,
   Text,
   VStack,
   useColorModeValue,
   ScrollView,
 } from "native-base";
 import React from "react";
-import { useDispatch } from "react-redux";
-import { FilterName, HomeName, MapName } from "../constants";
+import { useDispatch, useSelector } from "react-redux";
+import { HomeName } from "../constants";
+import { setCurrentNode, setDestination, setOrigin, setSearchResults } from "../store/slices/searchSlice";
 
-const initialState = {
-  hola: "holaskdfljsdfalk"
-};
 
-const ResultSearch = ({ route, navigation }) => {
-  const dispatch = useDispatch();
-  // const [chooseResult, setChooseResult] = useState(false);
-  // const [node, setNode] = useState();
-  // const navigation = useNavigation();
-
+const ResultSearch = ({ navigation, route }) => {
+  const pressedColor = useColorModeValue("#EAEAEA");
+  const { searchText = "", searchTextResults = [] } = useSelector(state => state.searchReducer);
   const navigate = (to) => navigation.navigate(to);
+  const dispatch = useDispatch()
+  const { type } = route?.params || {}
 
-  const { nodes } = route.params;
-
-  // const handleSearch = (node) => {
-  //   try {
-  //     console.log("nodooo: ", node)
-  //     setNode(node)
-  //     setChooseResult(true);
-  //   } catch (error) {
-  //     // Mostrar error
-  //     console.log({ error });
-  //   }
-  // };
-
+  console.log("RESULTADOS DE BUSQUEDA: ", { type });
 
   const handleNodePress = (nodeSelected) => {
-    navigate(HomeName, nodeSelected);
+    if (type) {
+      if (type === "origin") {
+        dispatch(setOrigin(nodeSelected))
+      } else {
+        dispatch(setDestination(nodeSelected))
+      }
+    } else {
+      dispatch(setCurrentNode(nodeSelected));
+    }
+
+    navigate(HomeName);
+    dispatch(setSearchResults(null))
   };
-
-  // useEffect(() => {
-  //   if (chooseResult) {
-  //     navigate(MapName, { node }); // Redirigir y pasar los nodos como parámetro
-  //   }
-  // }, [chooseResult]);
-
-  const pressedColor = useColorModeValue("#EAEAEA");
-  const colorLink = useColorModeValue("#FAFAFA");
 
   return (
     <VStack w="100%" h="100%">
       <ScrollView w="100%">
         <Box safeArea p="1" py="0" w="100%">
           <VStack space={1} mt="5">
-            {nodes.map((node) => (
+            {searchTextResults && searchTextResults.length > 0 ? searchTextResults?.map((node) => (
               <Button
                 key={node._id}
                 onPress={() => handleNodePress(node)}
-                // onPress={() => handleSearch(node)}
                 justifyContent="flex-start"
                 w="100%"
                 maxW="500"
@@ -81,7 +66,7 @@ const ResultSearch = ({ route, navigation }) => {
                   {node.campus.name}
                 </Text>
               </Button>
-            ))}
+            )) : <Text>No se encontraron resultados para '{searchText}'</Text>}
           </VStack>
         </Box>
       </ScrollView>

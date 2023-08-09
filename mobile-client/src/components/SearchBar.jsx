@@ -9,53 +9,53 @@ import {
   VStack,
   useColorModeValue,
   Link as LinkStyle,
+  Toast,
 } from "native-base";
 import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { getInterestingNodesByStringSearch } from "../services/Search";
-import { getAllNodes } from "../services/Nodes";
-import { FilterName} from "../constants";
+import { FilterName } from "../constants";
+import { useDispatch, useSelector } from "react-redux";
+import { getSearchResults } from "../store/actions/searchActions";
+import { setSearchText } from "../store/slices/searchSlice";
 
 const SearchBar = () => {
-  const navigate = useNavigation().navigate;
-  const [nodes, setNodes] = useState([]);
-  const [searchText, setSearchText] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const navigate = useNavigation().navigate;
+  const { searchText } = useSelector(state => state.searchReducer);
+  const dispatch = useDispatch()
 
   const colorIcon = useColorModeValue("#DADADA");
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     try {
-      const { nodes } = await getInterestingNodesByStringSearch(searchText);
-      setNodes(nodes);
+      if (!searchText) return Toast.show({
+        type: "error",
+        text1: "Ingrese el nombre del lugar que desea buscar",
+        position: "bottom",
+      });
+
+      dispatch(getSearchResults(searchText))
       setShowResults(true);
-      handleClearSearch();
     } catch (error) {
-      // Mostrar error
-      console.log({ error });
+      console.log("Error en handleSearch", { error });
+      Toast.show({
+        type: "error",
+        text1: error.response?.data?.message || error.message,
+        position: "bottom",
+      });
     }
   };
 
-  // const handleNodes = async () => {
-  //   try {
-  //     const { nodes } = await getAllNodes();
-  //     console.log(nodes)
-  //   } catch (error) {
-  //     // Mostrar error
-  //     console.log({ error });
-  //   }
-  // };
-
   useEffect(() => {
     if (showResults) {
-      navigate(ResultSearchName, { nodes }); // Redirigir y pasar los nodos como parámetro
+      navigate(ResultSearchName); // Redirigir a detalle de resultados
     }
   }, [showResults]);
 
   const handleClearSearch = () => {
-    setSearchText("");
+    dispatch(setSearchText(""))
     setShowResults(false);
   };
 
@@ -72,7 +72,7 @@ const SearchBar = () => {
             <Input
               type="text"
               value={searchText}
-              onChangeText={(text) => setSearchText(text)}
+              onChangeText={(text) => dispatch(setSearchText(text))}
               placeholder="Laboratorio de electromecánica..."
               backgroundColor="white"
               borderRadius="100px"
@@ -96,10 +96,6 @@ const SearchBar = () => {
               InputLeftElement={
                 <Box
                   bg="transparent"
-                  // onPress={handleSearch}
-                  // onPress={handleNodes}
-                  // _pressed={{ bg: "transparent" }}
-                  // _text={{ color: "gray" }}
                   py={1}
                   px={2}
                   left={1}
@@ -115,23 +111,23 @@ const SearchBar = () => {
             />
           </FormControl>
         </HStack>
-          <LinkStyle
-            onPress={() => navigate(FilterName)}
-            _text={{
-              fontSize: "sm",
-              fontWeight: "400",
-              color: "coolGray.500",
-            }}
-            alignSelf="flex-start"
-            mt="1"
-            ml="5"
-          >          
-            Búsqueda avanzada
-          </LinkStyle>
+        <LinkStyle
+          onPress={() => navigate(FilterName)}
+          _text={{
+            fontSize: "sm",
+            fontWeight: "400",
+            color: "coolGray.500",
+          }}
+          alignSelf="flex-start"
+          mt="1"
+          ml="5"
+        >
+          Búsqueda avanzada
+        </LinkStyle>
       </VStack>
     </Center>
   );
-  
+
 };
 
 export default SearchBar;
