@@ -9,19 +9,17 @@ import {
   VStack,
   useColorModeValue,
   Link as LinkStyle,
-  Toast,
 } from "native-base";
-import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FilterName } from "../constants";
 import { useDispatch, useSelector } from "react-redux";
 import { getSearchResults } from "../store/actions/searchActions";
-import { setSearchText } from "../store/slices/searchSlice";
+import { setCurrentNode, setSearchText } from "../store/slices/searchSlice";
+import Toast from "react-native-toast-message"
 
 const SearchBar = () => {
-  const [showResults, setShowResults] = useState(false);
   const navigate = useNavigation().navigate;
   const { searchText } = useSelector(state => state.searchReducer);
   const dispatch = useDispatch()
@@ -29,34 +27,19 @@ const SearchBar = () => {
   const colorIcon = useColorModeValue("#DADADA");
 
   const handleSearch = () => {
-    try {
-      if (!searchText) return Toast.show({
-        type: "error",
-        text1: "Ingrese el nombre del lugar que desea buscar",
-        position: "bottom",
-      });
+    dispatch(setCurrentNode(null))
+    if (!searchText) return Toast.show({
+      type: "error",
+      text1: "Ingrese el nombre del lugar que desea buscar",
+      position: "bottom",
+    });
 
-      dispatch(getSearchResults(searchText))
-      setShowResults(true);
-    } catch (error) {
-      console.log("Error en handleSearch", { error });
-      Toast.show({
-        type: "error",
-        text1: error.response?.data?.message || error.message,
-        position: "bottom",
-      });
-    }
+    dispatch(getSearchResults(searchText))
+    navigate(ResultSearchName)
   };
-
-  useEffect(() => {
-    if (showResults) {
-      navigate(ResultSearchName); // Redirigir a detalle de resultados
-    }
-  }, [showResults]);
 
   const handleClearSearch = () => {
     dispatch(setSearchText(""))
-    setShowResults(false);
   };
 
   return (

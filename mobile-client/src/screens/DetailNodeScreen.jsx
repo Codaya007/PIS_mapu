@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import SubnodeDetail from '../components/SubnodeDetail';
 import Loader from '../components/Loader';
 import { useDispatch } from 'react-redux';
-import { setCurrentNode, setDestination, setOrigin } from '../store/slices/searchSlice';
+import { setCurrentNode, setDestination, setOnSearchProcess, setOrigin } from '../store/slices/searchSlice';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,6 +19,20 @@ const NodeDetail = ({ node = {} }) => {
     const navigation = useNavigation();
     const navigate = to => navigation.navigate(to)
     const dispatch = useDispatch();
+
+    const handleGoFrom = () => {
+        dispatch(setOnSearchProcess(true))
+        dispatch(setOrigin(node))
+        dispatch(setCurrentNode(null))
+        navigate(HomeName)
+    }
+
+    const handleGoTo = () => {
+        dispatch(setOnSearchProcess(true))
+        dispatch(setDestination(node))
+        dispatch(setCurrentNode(null))
+        navigate(HomeName)
+    }
 
     return !node ?
         <Text>Nodo no encontrado</Text> :
@@ -53,22 +67,14 @@ const NodeDetail = ({ node = {} }) => {
                 <View margin={3} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
 
                     <Box width={"25%"}>
-                        <Button onPress={() => {
-                            dispatch(setOrigin(node))
-                            dispatch(setCurrentNode(null))
-                            navigate(HomeName)
-                        }} borderRadius={"50"} width={"20"}>
+                        <Button onPress={handleGoFrom} borderRadius={"50"} width={"20"}>
                             <Ionicons name="ios-return-up-back" size={20} color="black" />
                         </Button>
                         <Text textAlign={"center"}>Ir desde</Text>
                     </Box>
 
                     <Box width={"25%"}>
-                        <Button onPress={() => {
-                            dispatch(setDestination(node))
-                            dispatch(setCurrentNode(null))
-                            navigate(HomeName)
-                        }} borderRadius={"50"} width={"20"}>
+                        <Button onPress={handleGoTo} borderRadius={"50"} width={"20"}>
                             <Ionicons name="return-up-forward" size={20} color="black" />
                         </Button>
                         <Text textAlign={"center"}>Ir hasta</Text>

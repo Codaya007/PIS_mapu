@@ -19,6 +19,8 @@ const initialState = {
   },
   currentNode: null,
   errorOnPathSearch: null,
+  onSearchProcess: false,
+  loadingSearch: false,
 };
 
 export const searchSlice = createSlice({
@@ -83,6 +85,12 @@ export const searchSlice = createSlice({
     clearError: (state) => {
       state.errorOnPathSearch = null;
     },
+    setOnSearchProcess: (state, action) => {
+      state.onSearchProcess = action.payload || false;
+    },
+    setLoadingSearch: (state, action) => {
+      state.loadingSearch = action.payload || false;
+    },
   },
 });
 
@@ -100,6 +108,8 @@ export const {
   setSearchResults,
   clearError,
   setError,
+  setOnSearchProcess,
+  setLoadingSearch,
 } = searchSlice.actions;
 
 export default searchSlice.reducer;
