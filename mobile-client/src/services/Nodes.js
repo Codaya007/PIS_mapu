@@ -9,10 +9,8 @@ export const getAllNodes = async () => {
 };
 export const getInterestingNodeById = async (id) => {
   try {
-    console.log("asklfjakljadshfiadshfiwkfjhasdighadlgahwrgilhasdgkjh");
     const { data } = await axios.get(`${API_BASEURL}/interesting-node/${id}`);
-    console.log("Data:", data);
-    return { nodes: data };
+    return data;
   } catch (error) {
     console.error("Error al obtener datos del nodo interesante:", error);
     throw error;
@@ -22,15 +20,13 @@ export const getInterestingNodeById = async (id) => {
 export const getBlockNodeById = async (id) => {
   const { data } = await axios.get(`${API_BASEURL}/block-node/${id}`);
   // console.log("dfad: ", data);
-  return { nodes: data };
+  return data;
 };
 
 export const getAccessNodeById = async (id) => {
   const { data } = await axios.get(`${API_BASEURL}/access-node/${id}`);
-  console.log("dfad: ", data);
-  return { nodes: data };
+  return data;
 };
-
 
 export const coordinatesGPS = async () => {
   const { status } = await Location.requestForegroundPermissionsAsync();

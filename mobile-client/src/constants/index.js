@@ -18,7 +18,7 @@ export const MapName = "Mapa";
 export const CommentName = "Comentar";
 export const EditProfileName = "Actualizar perfil";
 export const ChangePasswordName = "Actualizar contraseña";
-export const DetailNodeName = "Detalle de nodo";
+export const DetailNodeName = "Detalle";
 export const NomenclatureInfoName = "Nomenclatura Universitaria";
 
 //! Tipos de nodo

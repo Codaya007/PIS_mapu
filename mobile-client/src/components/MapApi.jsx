@@ -1,18 +1,11 @@
-import { StatusBar, View, StyleSheet, LinkStyle } from "react-native";
-import { useRoute } from '@react-navigation/native';
+import { StatusBar, View, StyleSheet, } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
 import React from "react";
-import MapView, { Marker, Polygon, Polyline } from "react-native-maps";
-import { findNearestRoute, getAllNodes, getAccessNodeById, getBlockNodeById, getInterestingNodeById } from "../services/Nodes";
+import MapView, { Callout, Marker, Polygon, Polyline } from "react-native-maps";
+import { findNearestRoute, getAllNodes } from "../services/Nodes";
 import Toast from "react-native-toast-message";
 import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
-import {
-  INTEREST_NODO_TYPE,
-  ACCESS_NODO_TYPE,
-  BLOCK_NODO_TYPE
-} from "../constants/index"
 
 import {
   DetailNodeName
@@ -27,28 +20,16 @@ const initialState = {
   name: "Mi Ubicación",
   type: "Mi Ubicación",
 };
-const allowedColors = ["rgba(255, 0, 0, 0.5)", "rgba(252, 236, 80 , 0.5)", "rgba(70, 144, 250, 0.5)", "rgba(21, 254, 67, 0.5)", "rgba(241, 53, 244, 0.5)", "rgba(17, 16, 17, 0.5)"]
 
-export default function MapApi({ nodeSelected, faculty }) {
-  // const route = useRoute();
-  const dispatch = useDispatch();
-  // const navigation = useNavigation();
+export default function MapApi({ nodeSelected }) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [onSelect, setOnSelect] = useState(false);
   const [path, setPath] = useState([]);
   const [nodeMarkerStart, setNodeMarkerStart] = useState("");
   const [nodeMarkerEnd, setNodeMarkerEnd] = useState("");
-  const [polygon, setPolygon] = useState([]);
   const [gpsNode, setGpsNode] = useState(initialState);
   const mapRef = useRef(null);
-
-
   const navigation = useNavigation();
-
-  const getRandomColor = () => {
-    const randomIndex = Math.floor(Math.random() * allowedColors.length);
-    return allowedColors[randomIndex];
-  };
 
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
@@ -77,20 +58,10 @@ export default function MapApi({ nodeSelected, faculty }) {
       longitude: longitude.toString(),
     };
     setGpsNode(updatedGpsNode);
-    console.log(gpsNode);
   };
 
-  const handlePressClickNode = async (node) => {
-    let data = null;
-    if (node.type == BLOCK_NODO_TYPE) {
-      data = await getBlockNodeById(node._id)
-    } else if (node.type == ACCESS_NODO_TYPE) {
-      data = await getAccessNodeById(node._id)
-    } else if (node.type == INTEREST_NODO_TYPE) {
-      data = await getInterestingNodeById(node._id)      
-    }
-
-    navigation.navigate(DetailNodeName, { node: data });
+  const handlePressClickNode = (node) => {
+    navigation.navigate(DetailNodeName, { nodeId: node?._id, type: node?.type });
   }
 
   const printNode = (node) => {
@@ -104,16 +75,17 @@ export default function MapApi({ nodeSelected, faculty }) {
         title={node?.name}
         description={node?.type}
         pinColor={node?.color}
-        // onPress={() => handleNode(node)}
-        onPress={() => handlePressClickNode(node)}
-      />
+      >
+        <Callout onPress={() => handlePressClickNode(node)}>
+        </Callout>
+      </Marker>
     );
   };
 
 
   useEffect(() => {
-    // console.log("hola")
-    // console.log(nodeSelected)
+    console.log("Cambio ref desde MapApi");
+
     handleNodes();
 
     const handleInitialLocation = async () => {
@@ -126,28 +98,23 @@ export default function MapApi({ nodeSelected, faculty }) {
 
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
-      console.log("Initial position", latitude, longitude);
 
       if (mapRef.current) {
-        const animateCamera = async () => {
-          mapRef.current.animateCamera({
-            center: {
-              latitude: latitude,
-              longitude: longitude,
-            },
-            pitch: 0,
-            heading: 0,
-            altitude: 250, //altitud en metros para ios, ignorado por android
-            zoom: 25 //zoom para android, ignorado por ios
-          }, 5000);
-        }
-        await animateCamera();
-        await animateCamera();
+        await mapRef.current.animateCamera({
+          center: {
+            latitude: latitude,
+            longitude: longitude,
+          },
+          pitch: 0,
+          heading: 0,
+          altitude: 250, //altitud en metros para ios, ignorado por android
+          zoom: 15 //zoom para android, ignorado por ios
+        }, 5000);
       }
     };
 
     handleInitialLocation();
-  }, []);
+  }, [mapRef.current]);
 
   useEffect(() => {
     if ((nodeMarkerStart != "") & (nodeMarkerEnd != "")) {
@@ -161,29 +128,6 @@ export default function MapApi({ nodeSelected, faculty }) {
       setNodeMarkerEnd("");
     }
   }, [nodeMarkerStart, nodeMarkerEnd]);
-
-  useEffect(() => {
-
-    if (faculty?.polygons?.length > 0) {
-      const polygonCoordinates = faculty?.polygons.map((polygon) => {
-        return polygon.map((point) => {
-          return { latitude: point[0], longitude: point[1] };
-        });
-      });
-      setPolygon(polygonCoordinates);
-      Toast.show({
-        type: "success",
-        text1: "Poligono graficado",
-        position: "bottom",
-      });
-    } else {
-      Toast.show({
-        type: "error",
-        text1: "La Facultad no tiene un poligono definido",
-        position: "bottom",
-      });
-    }
-  }, [faculty]);
 
   const handleShortPath = async (node) => {
     try {
@@ -230,6 +174,7 @@ export default function MapApi({ nodeSelected, faculty }) {
       setNodeMarkerEnd(node._id);
     }
   };
+
   const showNodesOnMap = () => {
     return nodesPoint.map((node) => {
       if (node.type !== "Ruta" && !onSelect) {
@@ -259,16 +204,6 @@ export default function MapApi({ nodeSelected, faculty }) {
       >
         <Polyline coordinates={path} strokeColor="#238C23" strokeWidth={6} />
         {showNodesOnMap()}
-        {polygon && polygon.map((poly) => (
-          <Polygon
-            coordinates={poly}
-            fillColor={getRandomColor()}
-            strokeColor="black"
-            strokeWidth={3}
-          />
-        )
-        )}
-
       </MapView>
       <StatusBar style="auto" />
     </View>

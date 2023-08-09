@@ -1,60 +1,112 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { View, Text, Image, Heading, FlatList, Box } from 'native-base';
+import { ACCESS_NODO_TYPE, BLOCK_NODO_TYPE, INTEREST_NODO_TYPE } from '../constants';
+import { getAccessNodeById, getBlockNodeById, getInterestingNodeById } from '../services/Nodes';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import SubnodeDetail from '../components/SubnodeDetail';
+import Loader from '../components/Loader';
+
+const NodeDetail = ({ node = {} }) => {
+    const [showSubnodes, setShowSubnodes] = useState(false);
+    const { detail } = node;
+    const { subnodes } = detail || {};
+
+    return !node ?
+        <Text>Nodo no encontrado</Text> :
+        <>
+            {/* Imágen*/}
+            {detail?.img && (
+                <Box overflow={"hidden"} borderTopRadius={"27"} style={styles.image}>
+                    <Image
+                        height={"100%"}
+                        width={"100%"}
+                        resizeMode="cover"
+                        source={{ uri: detail?.img }}
+                        alt={detail?.title}
+                    />
+                </Box>
+            )}
+
+            <View padding={"6"} flex={1} >
+                <Heading>{detail?.title || "Sin nombre"}</Heading>
+
+                {/* Tipo de nodo */}
+                <Text style={styles.type}>Punto de {node?.type?.name} {node?.campus?.name && `campus ${node.campus?.name}`}</Text>
+
+                <View style={styles.container_flex}>
+                    <View style={[styles.circle, { backgroundColor: node?.available ? "#2AA646" : "#DC3546" }]} />
+                    <Text style={[styles.available, { color: node?.available ? "#2AA646" : "#DC3546" }]}>
+                        {node?.available ? "Disponible" : "No disponible"}
+                    </Text>
+                </View>
+
+                {/* Descripcion */}
+                <Text textAlign={"justify"} flexWrap={"wrap"}>{detail?.description || "Sin descripción"}</Text>
+
+                {subnodes?.length > 0 &&
+                    <>
+                        <Heading size="sm" textAlign={"right"} onPress={() => setShowSubnodes(!showSubnodes)}>
+                            {showSubnodes ? "Ver menos" : "Ver más"}
+                        </Heading>
+                        {showSubnodes &&
+                            <>
+                                {/* Divider */}
+                                <View style={styles.divider} />
+                                <Heading paddingY={3} size="sm">Lugares dentro del {detail.title}</Heading>
+
+                                <FlatList
+                                    showsVerticalScrollIndicator={false}
+                                    data={subnodes}
+                                    renderItem={({ item: subnode }) =>
+                                        <SubnodeDetail
+                                            subnode={subnode}
+                                            campus={node?.campus}
+                                            block={detail?.title}
+                                        />
+                                    }
+                                />
+                            </>
+                        }
+                    </>
+                }
+            </View>
+        </>
+}
 
 const DetailNodeScreen = ({ route }) => {
-    const { node } = route.params;
-    
+    const { nodeId, type } = route.params;
+    const [node, setNode] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setNode(null);
+        setLoading(true);
+
+        const getNode = async () => {
+            let data = null;
+            if (type == BLOCK_NODO_TYPE) {
+                data = await getBlockNodeById(nodeId)
+            } else if (type == ACCESS_NODO_TYPE) {
+                data = await getAccessNodeById(nodeId)
+            } else if (type == INTEREST_NODO_TYPE) {
+                data = await getInterestingNodeById(nodeId)
+            }
+
+            setNode(data);
+            setLoading(false);
+        }
+
+        getNode();
+    }, [nodeId]);
+
     return (
         <View style={styles.container}>
-
-            {/* Imágen*/}
-            {node?.nodes.detail.img && (
-                <Image source={{ uri: node?.nodes.detail.img }} style={styles.image} resizeMode="cover" />
-            )}
-
-            <Text style={styles.name}>{node?.nodes.detail.title}</Text>
-
-            {/* Tipo de nodo */}
-            <Text style={styles.type}>Punto de {node?.nodes.type.name}</Text>
-
-            <View style={styles.container_flex}>
-                <View style={[styles.circle, { backgroundColor: node?.nodes.available ? "#2AA646" : "#DC3546" }]} />
-                <Text style={[styles.available, { color: node?.nodes.available ? "#2AA646" : "#DC3546"}]}>
-                    {node?.nodes.available ? "Disponible" : "No disponible"}
-                </Text>
-            </View>
-
-            {/* Divider */}
-            <View style={styles.divider} />
-
-            {/* Descripcion */}
-            <Text style={styles.description}>{node?.nodes.detail.description || "Sin descripción"}</Text>
-
-            {/* Campus */}
-            {node?.nodes.campus && (
-                <View style={styles.campus}>
-                    <Text style={styles.textMoreDetail}>
-                        <Text style={styles.boldText}>Campus:</Text> {node?.nodes.campus.symbol} - {node?.nodes.campus.name}
-                    </Text>
-                </View>
-            )}
-
-            {/* Categoria */}
-            {node?.nodes.category && (
-                <View style={styles.categoryContainer}>
-                    {node?.nodes.category.icon && (
-                        <Image
-                            source={{ uri: node?.nodes.category.icon }}
-                            style={styles.icon}
-                            resizeMode="cover"
-                        />
-                    )}
-
-                    <Text style={styles.textMoreDetail}>
-                        <Text style={styles.boldText}>Categoria:</Text> {node?.nodes.category.name}
-                    </Text>
-                </View>
-            )}
+            {loading ?
+                <Loader /> :
+                <NodeDetail node={node} />
+            }
         </View>
     );
 };
@@ -63,8 +115,8 @@ const DetailNodeScreen = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
-        paddingHorizontal: 20,
-        marginBottom: 10,
+        padding: 0,
+        margin: 0,
         height: '100%'
     },
     container_flex: {
@@ -88,7 +140,6 @@ const styles = StyleSheet.create({
         fontWeight: 'normal',
         marginTop: 5,
         marginBottom: 15,
-        color: '#AAAAAA',
     },
     circle: {
         width: 10,
@@ -104,9 +155,10 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: '25%',
-        marginTop: 25,
-        alignSelf: 'center'
+        height: '27%',
+        margin: 0,
+        padding: 0,
+        alignSelf: 'center',
     },
     icon: {
         width: 24,
@@ -114,8 +166,8 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     type: {
-        fontSize: 13,
-        fontWeight: '200',
+        fontSize: 14,
+        fontWeight: '300',
     },
     campus: {
         marginTop: 10,

@@ -1,13 +1,13 @@
-import { Text, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import MapApi from "../components/MapApi";
-import { Box, Select, Item, Picker, FormControl } from "native-base";
+import { Box, Select, FormControl } from "native-base";
 import { getFaculties } from "../services/faculty";
 import Toast from "react-native-toast-message";
+import FacultiesMap from "../components/FacultiesMap";
 
 export default function Faculties() {
   const [faculties, setFaculties] = useState([]);
-  const [faculty, setFaculty] = useState('');
+  const [faculty, setFaculty] = useState(null);
 
   useEffect(() => {
     handleFaculties();
@@ -20,7 +20,7 @@ export default function Faculties() {
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: "Error al cargar nodos",
+        text1: "No se han podido obtener las facultades",
         position: "bottom",
       });
       console.log({ error });
@@ -29,33 +29,29 @@ export default function Faculties() {
 
   return (
     <View style={styles.container}>
-      <MapApi  faculty={faculty}/>
+      <FacultiesMap faculties={faculties} faculty={faculty} />
       <View style={styles.appBar}>
         <Box bg='white' w='100%' p={4} color='black'>
-        <FormControl>
-          <FormControl.Label>
-            Selecione la facultad <Text style={{ color: "red" }}>*</Text>
-          </FormControl.Label>
-          <Select
-            selectedValue= {faculty?.name}
-            minWidth="200"
-            accessibilityLabel="Elige la facultad"
-            placeholder="Elige la facultad"
-            mt={1}
-            onValueChange={(itemValue) => {setFaculty(itemValue)}}
-          >
-            {faculties.map((faculty) => (
-              <Select.Item
-                key={faculty._id}
-                label={faculty?.name || "No hay nombre"}
-                value={faculty || "No hay nombre"}
-              />
-            ))}
-          </Select>
-        </FormControl>
+          <Box>
+            <Select
+              minWidth="200"
+              placeholder={faculty?.name || "Seleccione una facultad"}
+              mt={1}
+              onValueChange={(itemValue) => { setFaculty(itemValue) }}
+            >
+              <Select.Item key={"1"} label={"Todas las facultades"} value={null} />
+              {faculties.map((faculty) => (
+                <Select.Item
+                  key={faculty._id}
+                  label={faculty?.name || "No hay nombre"}
+                  value={faculty}
+                />
+              ))}
+            </Select>
+          </Box>
         </Box>
       </View>
-    </View>
+    </View >
   );
 }
 

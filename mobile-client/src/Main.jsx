@@ -53,10 +53,10 @@ const Main = () => {
           <Drawer.Screen
             name={FilterName}
             component={Filter}
-            // options={{
-            //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
-            //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
-            // }}
+          // options={{
+          //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+          //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+          // }}
           />
           <Drawer.Screen name={EditProfileName} component={EditProfile} />
           <Drawer.Screen
@@ -86,10 +86,10 @@ const Main = () => {
           <Drawer.Screen
             name={MapName}
             component={MapApi}
-            // options={{
-            //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
-            //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
-            // }}
+          // options={{
+          //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+          //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+          // }}
           />
           <Drawer.Screen
             name={ReportLostPointName}
