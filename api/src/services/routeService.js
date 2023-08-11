@@ -33,7 +33,7 @@ async function findShortestRoute(type, origin, destination, nomenclature) {
   const campusDestino = destinityNode.campus;
 
   // Paso 3: Comparamos si los campus de origen y destino son los mismos
-  if (campusOrigen._id?.toString() !== campusDestino._id?.toString()) {
+  if (campusOrigen?._id?.toString() !== campusDestino?._id?.toString()) {
     // Paso 3.1: Si los campus origen y destino son diferentes, se cambia el punto de origen a un punto de acceso del campus de destino
     const accessPoints = await accessNodeService.getAccessNodes({
       campus: campusDestino._id,

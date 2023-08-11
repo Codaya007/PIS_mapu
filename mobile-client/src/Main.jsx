@@ -4,10 +4,10 @@ import LoginForm from "./screens/Login";
 import Register from "./screens/Register";
 import About from "./screens/About";
 import Events from "./screens/Events";
-import Favorites from "./screens/Favorites";
+// import Favorites from "./screens/Favorites";
 import DetailNodeScreen from "./screens/DetailNodeScreen";
 import Filter from "./screens/Filter";
-import MapApi from "./components/MapApi";
+// import MapApi from "./components/MapApi";
 import ResultSearch from "./components/ResultSearch";
 import ForgotPasswordForm from "./screens/ForgotPasswordForm";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -18,7 +18,7 @@ import {
   CommentName,
   EditProfileName,
   EventsName,
-  FavoritesName,
+  // FavoritesName,
   ForgotPasswordName,
   HomeName,
   LoginName,
@@ -26,15 +26,17 @@ import {
   FilterName,
   ResultSearchName,
   ReportLostPointName,
-  MapName,
+  // MapName,
   FacultiesName,
-  DetailNodeName
+  DetailNodeName,
+  ResportOutDatedInformationName
 } from "./constants";
 import ReportOutdatedInformation from "./screens/ReportOutDateInformation";
 import Comment from "./screens/Comment";
 import EditProfile from "./screens/EditProfile";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
 import Faculties from "./screens/Faculties";
+import ReportLostPoint from "./screens/ReportLostPoint copy";
 
 const Drawer = createDrawerNavigator();
 
@@ -49,14 +51,14 @@ const Main = () => {
           <Drawer.Screen name={RegisterName} component={Register} />
           <Drawer.Screen name={AboutName} component={About} />
           <Drawer.Screen name={EventsName} component={Events} />
-          <Drawer.Screen name={FavoritesName} component={Favorites} />
+          {/* <Drawer.Screen name={FavoritesName} component={Favorites} /> */}
           <Drawer.Screen
             name={FilterName}
             component={Filter}
-            // options={{
-            //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
-            //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
-            // }}
+          // options={{
+          //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+          //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+          // }}
           />
           <Drawer.Screen name={EditProfileName} component={EditProfile} />
           <Drawer.Screen
@@ -83,19 +85,23 @@ const Main = () => {
               drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
             }}
           />
-          <Drawer.Screen
+          {/* <Drawer.Screen
             name={MapName}
             component={MapApi}
-            // options={{
-            //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
-            //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
-            // }}
-          />
+          // options={{
+          //   drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+          //   drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+          // }}
+          /> */}
           <Drawer.Screen
             name={ReportLostPointName}
+            component={ReportLostPoint}
+          />
+          
+          <Drawer.Screen
+            name={ResportOutDatedInformationName}
             component={ReportOutdatedInformation}
           />
-
           <Drawer.Screen name={CommentName} component={Comment} />
         </Drawer.Navigator>
       </NavigationContainer>

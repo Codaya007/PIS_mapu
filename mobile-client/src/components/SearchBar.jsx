@@ -10,53 +10,36 @@ import {
   useColorModeValue,
   Link as LinkStyle,
 } from "native-base";
-import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { getInterestingNodesByStringSearch } from "../services/Search";
-import { getAllNodes } from "../services/Nodes";
-import { FilterName} from "../constants";
+import { FilterName } from "../constants";
+import { useDispatch, useSelector } from "react-redux";
+import { getSearchResults } from "../store/actions/searchActions";
+import { setCurrentNode, setSearchText } from "../store/slices/searchSlice";
+import Toast from "react-native-toast-message"
 
 const SearchBar = () => {
   const navigate = useNavigation().navigate;
-  const [nodes, setNodes] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [showResults, setShowResults] = useState(false);
+  const { searchText } = useSelector(state => state.searchReducer);
+  const dispatch = useDispatch()
 
   const colorIcon = useColorModeValue("#DADADA");
 
-  const handleSearch = async () => {
-    try {
-      const { nodes } = await getInterestingNodesByStringSearch(searchText);
-      setNodes(nodes);
-      setShowResults(true);
-      handleClearSearch();
-    } catch (error) {
-      // Mostrar error
-      console.log({ error });
-    }
+  const handleSearch = () => {
+    dispatch(setCurrentNode(null))
+    if (!searchText) return Toast.show({
+      type: "error",
+      text1: "Ingrese el nombre del lugar que desea buscar",
+      position: "bottom",
+    });
+
+    dispatch(getSearchResults(searchText))
+    navigate(ResultSearchName)
   };
 
-  // const handleNodes = async () => {
-  //   try {
-  //     const { nodes } = await getAllNodes();
-  //     console.log(nodes)
-  //   } catch (error) {
-  //     // Mostrar error
-  //     console.log({ error });
-  //   }
-  // };
-
-  useEffect(() => {
-    if (showResults) {
-      navigate(ResultSearchName, { nodes }); // Redirigir y pasar los nodos como parámetro
-    }
-  }, [showResults]);
-
   const handleClearSearch = () => {
-    setSearchText("");
-    setShowResults(false);
+    dispatch(setSearchText(""))
   };
 
   return (
@@ -72,7 +55,7 @@ const SearchBar = () => {
             <Input
               type="text"
               value={searchText}
-              onChangeText={(text) => setSearchText(text)}
+              onChangeText={(text) => dispatch(setSearchText(text))}
               placeholder="Laboratorio de electromecánica..."
               backgroundColor="white"
               borderRadius="100px"
@@ -96,10 +79,6 @@ const SearchBar = () => {
               InputLeftElement={
                 <Box
                   bg="transparent"
-                  // onPress={handleSearch}
-                  // onPress={handleNodes}
-                  // _pressed={{ bg: "transparent" }}
-                  // _text={{ color: "gray" }}
                   py={1}
                   px={2}
                   left={1}
@@ -115,23 +94,23 @@ const SearchBar = () => {
             />
           </FormControl>
         </HStack>
-          <LinkStyle
-            onPress={() => navigate(FilterName)}
-            _text={{
-              fontSize: "sm",
-              fontWeight: "400",
-              color: "coolGray.500",
-            }}
-            alignSelf="flex-start"
-            mt="1"
-            ml="5"
-          >          
-            Búsqueda avanzada
-          </LinkStyle>
+        <LinkStyle
+          onPress={() => navigate(FilterName)}
+          _text={{
+            fontSize: "sm",
+            fontWeight: "400",
+            color: "coolGray.500",
+          }}
+          alignSelf="flex-start"
+          mt="1"
+          ml="5"
+        >
+          Búsqueda avanzada
+        </LinkStyle>
       </VStack>
     </Center>
   );
-  
+
 };
 
 export default SearchBar;

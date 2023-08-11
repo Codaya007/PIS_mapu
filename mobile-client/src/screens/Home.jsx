@@ -1,16 +1,20 @@
-import { Fab, Box, Flex } from 'native-base';
-import { Text, View, StyleSheet, Dimensions, PixelRatio } from "react-native";
+import { Fab, Box, Button, Heading, Text } from 'native-base';
+import { View, StyleSheet, Dimensions, PixelRatio } from "react-native";
 import MapApi from "../components/MapApi";
 import SearchBar from "../components/SearchBar";
 import FromTo from "../components/FromTo";
-import { IconName } from "react-icons/ai";
 import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from "@expo/vector-icons";
-import Filter from "../screens/Filter"
-import BeginRoute from "./BeginRoute";
-import React, { useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { Ionicons } from '@expo/vector-icons';
+import { clearError, setCurrentNode, setDestination, setOnSearchProcess } from '../store/slices/searchSlice';
+import { useEffect } from 'react';
+import Toast from "react-native-toast-message";
 
-export default function Home({ route }) {
+export default function Home() {
+  const dispatch = useDispatch();
+  const { currentNode, errorOnPathSearch, onSearchProcess } = useSelector(state => state.searchReducer);
 
   // Función para convertir píxeles a dp
   const scalePixelToDp = (pixelValue) => {
@@ -19,28 +23,69 @@ export default function Home({ route }) {
     return dpValue;
   };
 
+  const handleFabClick = () => {
+    dispatch(setOnSearchProcess(!onSearchProcess));
+  };
+
   const bottomActive = scalePixelToDp(-575);
   const right = scalePixelToDp(-5);
   const bottomInactive = scalePixelToDp(-618);
 
-  const [showComponent, setShowComponent] = useState(false);
-
-  const handleFabClick = () => {
-    setShowComponent(!showComponent);
-  };
+  useEffect(() => {
+    if (errorOnPathSearch) {
+      Toast.show({
+        type: "error",
+        text1: errorOnPathSearch,
+        position: "bottom"
+      });
+      dispatch(clearError())
+    }
+  }, [errorOnPathSearch]);
 
   return (
     <View style={styles.container}>
-      <MapApi />
+      <MapApi nodeSelected={currentNode} />
       <View style={styles.appBar}>
-        {showComponent ? (
+        {onSearchProcess ? (
           <FromTo />
         ) : (
           <SearchBar />
         )}
+        {currentNode &&
+          <Box
+            position={"absolute"}
+            top={"570"}
+            // bottom={0}
+            left={"0"}
+            right={"0"}
+            width={"100%"}
+            // height={"25%"}
+            bgColor={"white"}
+            zIndex={3}
+            borderRadius={30}
+            padding={3}
+          >
+            <Heading size={"md"} padding={2}>
+              {currentNode?.detail?.title}
+            </Heading>
+            <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+              <Text width={"70%"} textAlign={"justify"}>{currentNode?.detail?.description}</Text>
+              <Box width={"25%"}>
+                <Button onPress={() => {
+                  dispatch(setOnSearchProcess(true))
+                  dispatch(setDestination(currentNode))
+                  dispatch(setCurrentNode(null))
+                }} borderRadius={"50"} width={"20"}>
+                  <Ionicons name="return-up-forward" size={20} color="black" />
+                </Button>
+                <Text>Cómo llegar</Text>
+              </Box>
+            </View>
+          </Box>
+        }
         <Box
           position="absolute"
-          bottom={showComponent ? bottomActive : bottomInactive}
+          bottom={onSearchProcess ? bottomActive : bottomInactive}
           right={right}
         >
           <Fab
@@ -49,10 +94,10 @@ export default function Home({ route }) {
             size="sm"
             backgroundColor={"indigo.500"}
             icon={
-              showComponent ? (
-                <MaterialIcons name="navigation" size={24} color="white" />
+              onSearchProcess ? (
+                <MaterialIcons name="navigation" size={20} color="white" />
               ) : (
-                <Entypo name="dots-three-horizontal" size={24} color="white" />
+                <Entypo name="dots-three-horizontal" size={20} color="white" />
               )}
             onPress={handleFabClick}
           />
@@ -67,7 +112,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     height: "100%"
-
   },
   appBar: {
     position: 'absolute',
@@ -75,10 +119,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 1,
-    // Ajusta otros estilos del AppBar según tus necesidades
-    // backgroundColor: 'white',
-    // padding: 10,
-    // borderBottomWidth: 1,
-    // borderBottomColor: 'gray',
+    flex: 1,
   },
 });

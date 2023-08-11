@@ -1,144 +1,294 @@
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { View, Text, Image, StyleSheet, Button } from 'react-native';
-import { ReportLostPointName } from '../constants';
+import { Link, useNavigation } from "@react-navigation/native";
+import React from "react";
+import { ResportOutDatedInformationName } from "../constants";
+import { StyleSheet } from "react-native";
+import { View, Text, Image, Heading, FlatList, Box, Button } from "native-base";
+import {
+  ACCESS_NODO_TYPE,
+  BLOCK_NODO_TYPE,
+  HomeName,
+  INTEREST_NODO_TYPE,
+  ROUTE_NODO_TYPE,
+} from "../constants";
+import {
+  getAccessNodeById,
+  getAllNodes,
+  getBlockNodeById,
+  getInterestingNodeById,
+  getRouteNodeById,
+} from "../services/Nodes";
+import { useState } from "react";
+import { useEffect } from "react";
+import SubnodeDetail from "../components/SubnodeDetail";
+import Loader from "../components/Loader";
+import { useDispatch } from "react-redux";
+import {
+  setCurrentNode,
+  setDestination,
+  setOnSearchProcess,
+  setOrigin,
+} from "../store/slices/searchSlice";
+import { Ionicons } from "@expo/vector-icons";
 
-const DetailNodeScreen = ({ route }) => {
-    const { node } = route.params;
-      const navigation = useNavigation();
+const NodeDetail = ({ node = {}, navigation }) => {
 
+  const [showSubnodes, setShowSubnodes] = useState(false);
+  const { detail } = node || {};
+  const { subnodes } = detail || {};
+  const navigation = useNavigation();
+  const navigate = (to) => navigation.navigate(to);
+  const dispatch = useDispatch();
+
+  const handleGoFrom = () => {
+    dispatch(setOnSearchProcess(true));
+    dispatch(setOrigin(node));
+    dispatch(setCurrentNode(null));
+    navigate(HomeName);
+  };
+
+  const handleGoTo = () => {
+    dispatch(setOnSearchProcess(true));
+    dispatch(setDestination(node));
+    dispatch(setCurrentNode(null));
+    navigate(HomeName);
+  };
+
+  const handleNode = async() => {
+    console.log(node)
+    navigation(ResportOutDatedInformationName, {nodeA: 'asdasd' })
+  }
+
+  return !node ? (
+    <Text>Nodo no encontrado</Text>
+  ) : (
+    <>
+        
+      {/* Imágen*/}
+      {detail?.img && (
+        <Box overflow={"hidden"} borderTopRadius={"27"} style={styles.image}>
+          <Image
+            height={"100%"}
+            width={"100%"}
+            resizeMode="cover"
+            source={{ uri: detail?.img }}
+            alt={detail?.title}
+          />
+        </Box>
+      )}
     
-    return (
-        <View style={styles.container}>
-            <Button title='Reportar punto por falta de información' marginTop={30}  onPress={() => navigation.navigate(ReportLostPointName,  node)}>Hola Mundo</Button>
+      <View padding={"6"} flex={1}>
+        <Heading>{detail?.title || node.name || "Sin nombre"}</Heading>
 
-            {/* Imágen*/}
-                {node?.nodes.detail.img && (
-                <Image source={{ uri: node?.nodes.detail.img }} style={styles.image} resizeMode="cover" />
-            )}
+        {/* Tipo de nodo */}
+        <Text style={styles.type}>
+          Punto de {node?.type?.name}{" "}
+          {node?.campus?.name && `campus ${node.campus?.name}`}
+        </Text>
 
-
-            <Text style={styles.name}>{node?.nodes.detail.title}</Text>
-
-            {/* Tipo de nodo */}
-            <Text style={styles.type}>Punto de {node?.nodes.type.name}</Text>
-
-            <View style={styles.container_flex}>
-                <View style={[styles.circle, { backgroundColor: node?.nodes.available ? "#2AA646" : "#DC3546" }]} />
-                <Text style={[styles.available, { color: node?.nodes.available ? "#2AA646" : "#DC3546"}]}>
-                    {node?.nodes.available ? "Disponible" : "No disponible"}
-                </Text>
-            </View>
-
-            {/* Divider */}
-            <View style={styles.divider} />
-
-            {/* Descripcion */}
-            <Text style={styles.description}>{node?.nodes.detail.description || "Sin descripción"}</Text>
-
-            {/* Campus */}
-            {node?.nodes.campus && (
-                <View style={styles.campus}>
-                    <Text style={styles.textMoreDetail}>
-                        <Text style={styles.boldText}>Campus:</Text> {node?.nodes.campus.symbol} - {node?.nodes.campus.name}
-                    </Text>
-                </View>
-            )}
-
-            {/* Categoria */}
-            {node?.nodes.category && (
-                <View style={styles.categoryContainer}>
-                    {node?.nodes.category.icon && (
-                        <Image
-                            source={{ uri: node?.nodes.category.icon }}
-                            style={styles.icon}
-                            resizeMode="cover"
-                        />
-                    )}
-
-                    <Text style={styles.textMoreDetail}>
-                        <Text style={styles.boldText}>Categoria:</Text> {node?.nodes.category.name}
-                    </Text>
-                </View>
-            )}
-  
+        <View style={styles.container_flex}>
+          <View
+            style={[
+              styles.circle,
+              { backgroundColor: node?.available ? "#2AA646" : "#DC3546" },
+            ]}
+          />
+          <Text
+            style={[
+              styles.available,
+              { color: node?.available ? "#2AA646" : "#DC3546" },
+            ]}
+          >
+            {node?.available ? "Disponible" : "No disponible"}
+          </Text>
         </View>
-    );
+
+        <View
+          margin={3}
+          display={"flex"}
+          flexDirection={"row"}
+          justifyContent={"space-between"}
+        >
+          <Box width={"25%"}>
+            <Button onPress={handleGoFrom} borderRadius={"50"} width={"20"}>
+              <Ionicons name="ios-return-up-back" size={20} color="black" />
+            </Button>
+            <Text textAlign={"center"}>Ir desde</Text>
+          </Box>
+
+          <Box width={"25%"}>
+            <Button onPress={handleGoTo} borderRadius={"50"} width={"20"}>
+              <Ionicons name="return-up-forward" size={20} color="black" />
+            </Button>
+            <Text textAlign={"center"}>Ir hasta</Text>
+          </Box>
+        </View>
+
+        {/* Descripcion */}
+        <Text textAlign={"justify"} flexWrap={"wrap"}>
+          {detail?.description || "Sin descripción"}
+        </Text>
+
+        {subnodes?.length > 0 && (
+          <>
+            <Heading
+              size="sm"
+              textAlign={"right"}
+              onPress={() => setShowSubnodes(!showSubnodes)}
+            >
+              {showSubnodes ? "Ver menos" : "Ver más"}
+            </Heading>
+            {showSubnodes && (
+              <>
+                {/* Divider */}
+                <View style={styles.divider} />
+                <Heading paddingY={3} size="sm">
+                  Lugares dentro del {detail.title}
+                </Heading>
+
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={subnodes}
+                  renderItem={({ item: subnode }) => (
+                    <SubnodeDetail
+                      subnode={subnode}
+                      campus={node?.campus}
+                      block={detail?.title}
+                    />
+                  )}
+                />
+              </>
+            )}
+            
+          </>
+        )}
+        <Text style={styles.notificate} onPress={ () => handleNode(node._id)}>
+          Reportar falta de información del nodo
+        </Text>
+      </View>
+    </>
+  );
 };
 
+const DetailNodeScreen = ({ route }) => {
+  const { nodeId, type } = route.params;
+  const [node, setNode] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setNode(null);
+    setLoading(true);
+
+    const getNode = async () => {
+      let data = null;
+      if (type == BLOCK_NODO_TYPE) {
+        data = await getBlockNodeById(nodeId);
+      } else if (type == ACCESS_NODO_TYPE) {
+        data = await getAccessNodeById(nodeId);
+      } else if (type == INTEREST_NODO_TYPE) {
+        data = await getInterestingNodeById(nodeId);
+      } else if (type === ROUTE_NODO_TYPE) {
+        data = await getRouteNodeById(nodeId);
+        data.name = "Nodo Ruta";
+      }
+
+      setNode(data);
+      setLoading(false);
+    };
+
+    getNode();
+  }, [nodeId]);
+
+  return (
+    <View style={styles.container} n>
+      {loading ? <Loader /> : <NodeDetail node={node} />}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: 'white',
-        paddingHorizontal: 20,
-        marginBottom: 10,
-        height: '100%'
-    },
-    container_flex: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-    },
-    divider: {
-        borderBottomWidth: 1,
-        borderBottomColor: '#EAEAEA',
-        marginTop: 8,
-        marginBottom: 10,
-    },
-    name: {
-        marginTop: 20,
-        fontSize: 22,
-        fontWeight: 'bold',
-    },
-    description: {
-        fontSize: 14,
-        fontWeight: 'normal',
-        marginTop: 5,
-        marginBottom: 15,
-        color: '#AAAAAA',
-    },
-    circle: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        marginRight: 5,
-    },
-    available: {
-        fontSize: 16,
-        marginTop: 15,
-        paddingBottom: 15, // Para que el texto quede a la altura del circulo
-        fontWeight: 'bold'
-    },
-    image: {
-        width: '100%',
-        height: '25%',
-        marginTop: 25,
-        alignSelf: 'center'
-    },
-    icon: {
-        width: 24,
-        height: 24,
-        marginRight: 10,
-    },
-    type: {
-        fontSize: 13,
-        fontWeight: '200',
-    },
-    campus: {
-        marginTop: 10,
-    },
-    boldText: {
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    category: {
-        fontSize: 16,
-        marginTop: 10,
-    },
-    textMoreDetail: {
-        fontSize: 16,
-        fontWeight: '300'
-    }
+  container: {
+    backgroundColor: "white",
+    padding: 0,
+    margin: 0,
+    height: "100%",
+  },
+  notificate: {
+    color: 'red',
+    fontSize: 14,
+    marginTop: 20,
+    alignContent: 'center',
+    textAlign: 'center'
+  },
+  button: {
+    color: 'red', // Color del texto en el botón
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  container_flex: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+  divider: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#EAEAEA",
+    marginTop: 8,
+    marginBottom: 10,
+  },
+  name: {
+    marginTop: 20,
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  description: {
+    fontSize: 14,
+    fontWeight: "normal",
+    marginTop: 5,
+    marginBottom: 15,
+  },
+  circle: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  available: {
+    fontSize: 16,
+    marginTop: 15,
+    paddingBottom: 15, // Para que el texto quede a la altura del circulo
+    fontWeight: "bold",
+  },
+  image: {
+    width: "100%",
+    height: "27%",
+    margin: 0,
+    padding: 0,
+    alignSelf: "center",
+  },
+  icon: {
+    width: 24,
+    height: 24,
+    marginRight: 10,
+  },
+  type: {
+    fontSize: 14,
+    fontWeight: "300",
+  },
+  campus: {
+    marginTop: 10,
+  },
+  boldText: {
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  category: {
+    fontSize: 16,
+    marginTop: 10,
+  },
+  textMoreDetail: {
+    fontSize: 16,
+    fontWeight: "300",
+  },
 });
 
 export default DetailNodeScreen;

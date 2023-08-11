@@ -35,15 +35,15 @@ const ProfileChangePassword = () => {
 
   const saveChange = async (e) => {
     e.preventDefault();
-    if(userPassword.password == ""| userPassword.passwordReWritten == ""){
-        Toast.show({
+    if (userPassword.password == "" | userPassword.passwordReWritten == "") {
+      Toast.show({
         type: "error",
         text1: "Campos incompletos",
         position: "bottom",
       });
       return;
     }
-    if(userPassword.password != userPassword.passwordReWritten){
+    if (userPassword.password != userPassword.passwordReWritten) {
       Toast.show({
         type: "error",
         text1: "Las contraseñas no coinciden",
@@ -61,11 +61,11 @@ const ProfileChangePassword = () => {
     }
     try {
       dispatch(updateUserPassword(userPassword.password));
-        Toast.show({
-          type: "success",
-          text1: "Registro exitoso",
-          position: "bottom",
-        });
+      Toast.show({
+        type: "success",
+        text1: "Registro exitoso",
+        position: "bottom",
+      });
 
     } catch (error) {
       Toast.show({
@@ -97,38 +97,27 @@ const ProfileChangePassword = () => {
           >
             Cambiar Contraseña
           </Heading>
-          <Heading
-            mt="1"
-            color="coolGray.600"
-            _dark={{
-              color: "warmGray.200",
-            }}
-            fontWeight="medium"
-            size="xs"
-          >
-            Registrate para continuar!
-          </Heading>
           <VStack space={3} mt="5">
 
             <FormControl>
               <FormControl.Label>Nueva contraseña </FormControl.Label>
               <Input type="password"
-              placeholder="*******"
-              onChangeText={(text) => handleEdit(text, "password")} />
+                placeholder="*******"
+                onChangeText={(text) => handleEdit(text, "password")} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Reescribe la contraseña</FormControl.Label>
               <Input type="password"
-              placeholder="********"
-              onChangeText={(text) => handleEdit(text, "passwordReWritten")} />
+                placeholder="********"
+                onChangeText={(text) => handleEdit(text, "passwordReWritten")} />
             </FormControl>
 
             <Button mt="2" colorScheme="indigo" onPress={saveChange}>
               Guardar
             </Button>
-            <Button mt="2" colorScheme="orange" onPress={() => navigate(EditProfileName)}>
+            {/* <Button mt="2" colorScheme="orange" onPress={() => navigate(EditProfileName)}>
               Regresar
-            </Button>
+            </Button> */}
           </VStack>
         </Box>
       </Center>

@@ -24,15 +24,15 @@ const reportState = {
   longitude: '',
 };
 
-const ReportOutdatedInformation = () => {
+const ReportOutdatedInformation = ({ route }) => {
   const navigate = useNavigation();
-  const route = useRoute();
-  const node = route.params;
+  // const route = useRoute();
+  const { nodeA } = route.params || {};
   const { user } = useSelector((state) => state.authReducer);
   const [report, setReport] = useState(reportState);
 
   useEffect( ()=> {
-    console.log(node);
+    console.log('ghjghjg  '+ nodeA);
   },[]);
   
   const handleEditReport = async (text, input) => {
@@ -132,8 +132,8 @@ const ReportOutdatedInformation = () => {
                 <Input
                   keyboardType="numeric"
                   id="tittle"
-                  onChangeText={(text) => handleEditReport(text, "tittle")}
-                  value={report.lostPoint.latitude}
+                  // onChangeText={(text) => handleEditReport(text, "tittle")}
+                  // value={report.lostPoint.latitude}
                 />
               </FormControl>
               <FormControl>
@@ -141,23 +141,23 @@ const ReportOutdatedInformation = () => {
                 <Input
                   keyboardType="numeric"
                   id="latitude"
-                  onChangeText={(text) => handleEditReport(text, "latitude")}
-                  value={report.lostPoint.latitude}
+                  // onChangeText={(text) => handleEditReport(text, "latitude")}
+                  // value={report.lostPoint.latitude}
                 />
               </FormControl>
               <FormControl>
                 <FormControl.Label>Longitud</FormControl.Label>
                 <Input
                   keyboardType="numeric"
-                  onChangeText={(text) => handleEditReport(text, "length")}
-                  value={report.lostPoint.length}
+                  // onChangeText={(text) => handleEditReport(text, "length")}
+                  // value={report.lostPoint.length}
                 />
               </FormControl>
               <FormControl>
                 <FormControl.Label>Comentario</FormControl.Label>
                 <TextArea
-                  onChangeText={(text) => handleEditReport(text, "comment")}
-                  value={report.comment}
+                  // onChangeText={(text) => handleEditReport(text, "comment")}
+                  // value={report.comment}
                 />
               </FormControl>
 

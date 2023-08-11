@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#3F51B5"
+      "backgroundColor": "#250b73"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -19,7 +19,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#3F51B5"
-      }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.ACCESS_BACKGROUND_LOCATION"
+      ],
+      "package": "com.codaya007.client"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -35,6 +42,11 @@
           "isAndroidBackgroundLocationEnabled": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "97e06f65-050f-493d-822d-4d8ec11dc8cf"
+      }
+    }
   }
 }

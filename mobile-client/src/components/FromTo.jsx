@@ -8,52 +8,67 @@ import {
     Icon,
     VStack,
     useColorModeValue,
-    Link as LinkStyle,
+    Toast,
 } from "native-base";
 import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { getInterestingNodesByStringSearch } from "../services/Search";
-import { getAllNodes } from "../services/Nodes";
 import { FontAwesome } from '@expo/vector-icons';
-import { FilterName } from "../constants";
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentNode, setDestination, setOrigin, setSearchText } from "../store/slices/searchSlice";
+import { getSearchResults, searchShortestPathByNode } from "../store/actions/searchActions";
 
 const FromTo = () => {
     const navigate = useNavigation().navigate;
-    const [nodes, setNodes] = useState([]);
-    const [destiny, setDestiny] = useState("");
-    const [origin, setOrigin] = useState("");
-    const [showResults, setShowResults] = useState(false);
+    const { destination, origin, searchPathBy = "byNode", errorOnPathSearch } = useSelector(state => state.searchReducer);
+    const [destinyText, setDestinyText] = useState(destination?.detail?.title || "");
+    const [originText, setOriginText] = useState("");
+    const dispatch = useDispatch()
 
     const colorIcon = useColorModeValue("#DADADA");
 
-    const handleSearch = async () => {
+    const handleSearch = (textToSearch = "", type = "origin") => {
         try {
-            const { nodes } = await getInterestingNodesByStringSearch(searchText);
-            setNodes(nodes);
-            setShowResults(true); //! CAMBIAR ESTO
-            handleClearSearch();
+            if (!textToSearch)
+                return Toast.show({
+                    type: "error",
+                    text1: "Ingrese el nombre del lugar que desea buscar",
+                    position: "bottom",
+                });
+
+            dispatch(setSearchText(textToSearch))
+            dispatch(getSearchResults(textToSearch))
+            navigate(ResultSearchName, { type });
+            // handleClearSearch();
         } catch (error) {
-            // Mostrar error
             console.log({ error });
+
+            Toast.show({
+                type: "error",
+                text1: `No se ha podido realizar la busqueda`,
+                position: "bottom",
+            });
         }
     };
-
-    useEffect(() => {
-        if (showResults) {
-            navigate(ResultSearchName, { nodes }); // Redirigir y pasar los nodos como parámetro
-        }
-    }, [showResults]);
 
     const handleClearSearch = (band) => {
         if (band == "origin") {
-            setOrigin("")
+            dispatch(setOrigin(null))
         } else {
-            setDestiny("")
+            dispatch(setDestination(null))
         }
-        setShowResults(false);
+
+        dispatch(setCurrentNode(null))
     };
+
+    useEffect(() => {
+        setDestinyText(destination?.detail?.title || destination?.name || "")
+    }, [destination]);
+
+    useEffect(() => {
+        setOriginText(origin?.detail?.title || origin?.name || "")
+    }, [origin]);
 
     return (
         <Center w="100%" justifyContent="flex-end">
@@ -66,8 +81,8 @@ const FromTo = () => {
                     >
                         <Input
                             type="text"
-                            value={origin}
-                            onChangeText={(text) => setOrigin(text)}
+                            value={originText}
+                            onChangeText={(text) => setOriginText(text)}
                             placeholder="Origen..."
                             backgroundColor="white"
                             borderRadius="100px"
@@ -75,7 +90,7 @@ const FromTo = () => {
                             InputRightElement={
                                 <Button
                                     bg="transparent"
-                                    onPress={() => handleClearSearch("origin")} 
+                                    onPress={() => handleClearSearch("origin")}
                                     _pressed={{ bg: "transparent" }}
                                     _text={{ color: "gray" }}
                                     py={1}
@@ -103,20 +118,20 @@ const FromTo = () => {
                                     />
                                 </Box>
                             }
-                            onSubmitEditing={handleSearch}
+                            onSubmitEditing={() => handleSearch(originText, "origin")}
                         />
 
                         <Input
                             type="text"
-                            value={destiny}
-                            onChangeText={(text) => setDestiny(text)}
+                            value={destinyText}
+                            onChangeText={(text) => setDestinyText(text)}
                             placeholder="Destino..."
                             backgroundColor="white"
                             borderRadius="100px"
                             InputRightElement={
                                 <Button
                                     bg="transparent"
-                                    onPress={() => handleClearSearch("destiny")} 
+                                    onPress={() => handleClearSearch("destiny")}
                                     _pressed={{ bg: "transparent" }}
                                     _text={{ color: "gray" }}
                                     py={1}
@@ -140,8 +155,15 @@ const FromTo = () => {
                                     <FontAwesome name="map-marker" size={24} color={colorIcon} />
                                 </Box>
                             }
-                            onSubmitEditing={handleSearch}
+                            onSubmitEditing={() => handleSearch(destinyText, "destination")}
                         />
+                        <Button margin={1} onPress={() => {
+                            if (searchPathBy === "byNode") {
+                                dispatch(searchShortestPathByNode(origin?._id, destination?._id))
+                            } else {
+                                // TODO: Implementar búsqueda por nomenclatura
+                            }
+                        }}>Buscar ruta</Button>
                     </FormControl>
                 </HStack>
             </VStack>

@@ -8,6 +8,7 @@ import {
   Input,
   KeyboardAvoidingView,
   ScrollView,
+  Text,
   TextArea,
   VStack,
 } from "native-base";
@@ -19,27 +20,11 @@ import { useSelector } from "react-redux";
 //Talvez toque cambiarle el tipo de dato de user y node
 const commentState = {
   content: "",
-  hide: false,
-  user: null,
-  node: null,
 };
 
-const nodoState = {
-  latitude: 0,
-  longitude: 0,
-};
-
-const Comment = () => {
+const Comment = ({ node }) => {
   const { user } = useSelector((state) => state.authReducer);
   const [comment, setComment] = useState(commentState);
-  const [nodo, setNodo] = useState(nodoState);
-
-  const handleTestNode = (text, input) => {
-    setNodo({
-      ...nodo,
-      [input]: text,
-    });
-  };
 
   const handleEditComment = (text, input) => {
     setComment({
@@ -59,49 +44,38 @@ const Comment = () => {
 
     setComment({
       ...comment,
-      user: user._id,
     });
 
     try {
-      //Modificar para que tenga ek id del nodo que selecciono el usuario
-      //Se lo puede hace mediante el useSelector cuando el user e de click sobre el el
-      const result = await axios.get(
-        `${API_BASEURL}/interesting-node/${comment.node}`
-      );
-
-      setComment({
-        ...comment,
-        nodo: result._id,
-      });
-
-      if (comment.content == "" || comment.node == null) {
+      if (comment.content == "") {
         return Toast.show({
           type: "error",
-          text1: "Datos incompletos",
+          text1: "Agrege un comentario",
           position: "bottom",
         });
       }
 
       await axios.post(`${API_BASEURL}/comment/`, {
         content: comment.content,
-        hide: comment.hide,
-        user: comment.user,
-        node: comment.node,
+        hide: false,
+        user: user._id,
+        node: node,
       });
 
       Toast.show({
         type: "success",
-        text1: "Se ha creado el reporte",
+        text1: "Comentario añadido exitosamente",
         position: "bottom",
       });
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: "No se puedo crear el mensaje ",
+        text1: "No se puedo añadir el comentario",
         position: "bottom",
       });
     }
   };
+
   return (
     <ScrollView w={["360", "300"]} h="30">
       <KeyboardAvoidingView
@@ -123,33 +97,13 @@ const Comment = () => {
             >
               Agregar comentario
             </Heading>
-            <Heading
-              mt="1"
-              color="coolGray.600"
-              _dark={{
-                color: "warmGray.200",
-              }}
+            <Text
+              color="coolGray.500"
               fontWeight="medium"
-              size="xs"
             >
               Agregue un nuevo comentario para el lugar seleccionado
-            </Heading>
+            </Text>
             <VStack space={3} mt="5">
-              <FormControl>
-                <FormControl.Label>Latitud del nodo</FormControl.Label>
-                <Input
-                  id="latitude"
-                  onChangeText={(text) => handleTestNode(text, "latitude")}
-                  value={nodo.latitude}
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Longitud de nodo </FormControl.Label>
-                <Input
-                  onChangeText={(text) => handleTestNode(text, "longitude")}
-                  value={nodo.longitude}
-                />
-              </FormControl>
               <FormControl>
                 <FormControl.Label>Comentario</FormControl.Label>
                 <TextArea
