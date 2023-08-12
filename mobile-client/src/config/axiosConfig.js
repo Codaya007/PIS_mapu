@@ -8,7 +8,9 @@ const onRequestSuccess = async (config) => {
   // Realizar alguna tarea asincrónica antes de enviar la solicitud, por ejemplo, una llamada a una API para obtener un token.
   const token = await AsyncStorage.getItem("token");
 
-  config.headers.Authorization = `Bearer ${token}`;
+  if (token) {
+    config.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+  }
 
   return config;
 };
