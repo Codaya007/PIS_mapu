@@ -67,10 +67,12 @@ const getBlocks = async (where = {}, skip, limit) => {
     .limit(limit)
     .populate("faculty")
     .populate("campus")
-    .sort({ number: -1 });
+    .sort({ number: 1 });
+    // .sort({"-number"});
 
   // Añado el detalle
   blocks = await Promise.all(blocks.map(populateNode));
+  blocks.sort((a, b) => a.number - b.number); //? Con esta linea me ordena bien
 
   return blocks;
 };

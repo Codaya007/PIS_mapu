@@ -7,6 +7,7 @@ export const getAllNodes = async () => {
   // console.log(data);
   return { nodes: data?.results };
 };
+
 export const getInterestingNodeById = async (id) => {
   try {
     const { data } = await axios.get(`${API_BASEURL}/interesting-node/${id}`);
