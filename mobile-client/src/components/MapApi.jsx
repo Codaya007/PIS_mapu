@@ -79,7 +79,7 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
           longitude: node?.longitude,
         }}
         title={node?.name}
-        description={node?.type}
+        description={"Ver más"}
         pinColor={node?.color}
         // onPress={setSelectedMarket(true)}
       >

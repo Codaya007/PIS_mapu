@@ -61,16 +61,25 @@ const createBlock = async (blockData) => {
   return block;
 };
 
-const getBlocks = async (where = {}, skip, limit) => {
-  let blocks = await Block.find(where)
-    .skip(skip)
-    .limit(limit)
-    .populate("faculty")
-    .populate("campus")
-    .sort({ number: -1 });
+const getBlocks = async (where = {}, skip, limit, populate = true) => {
+  let blocks = [];
+
+  if (populate) {
+    blocks = await Block.find(where)
+      .skip(skip)
+      .limit(limit)
+      .populate("faculty")
+      .populate("campus")
+      .sort({ number: -1 });
+  } else {
+    blocks = await Block.find(where)
+      .skip(skip)
+      .limit(limit)
+      .sort({ number: -1 });
+  }
 
   // Añado el detalle
-  blocks = await Promise.all(blocks.map(populateNode));
+  if (populate) blocks = await Promise.all(blocks.map(populateNode));
 
   return blocks;
 };
