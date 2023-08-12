@@ -20,6 +20,7 @@ export const ResultSearchName = "Resultados de búsqueda";
 export const MapName = "Mapa";
 export const CommentName = "Comentar";
 export const EditProfileName = "Actualizar perfil";
+export const ProfileName = "Mi perfil";
 export const ChangePasswordName = "Actualizar contraseña";
 export const DetailNodeName = "Detalle";
 export const NomenclatureInfoName = "Nomenclatura Universitaria";
