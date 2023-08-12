@@ -9,10 +9,15 @@ module.exports = {
   },
 
   getAllBlocks: async (req, res) => {
-    const { skip, limit, ...where } = req.query;
+    const { skip, limit, populate, ...where } = req.query;
 
     const totalCount = await blockServices.getCountBlocks(where);
-    const results = await blockServices.getBlocks(where, skip, limit);
+    const results = await blockServices.getBlocks(
+      where,
+      skip,
+      limit,
+      populate !== "false"
+    );
 
     return res.json({ totalCount, results });
   },

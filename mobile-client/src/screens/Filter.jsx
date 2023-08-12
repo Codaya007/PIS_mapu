@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -12,61 +13,93 @@ import {
   useColorModeValue,
   ScrollView,
 } from "native-base";
-
-//----------
 import { Alert } from "native-base";
-import { IconButton } from "native-base";
-import React from "react";
-import { CloseIcon } from "native-base";
-//----------
-
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-
 import { ForgotPasswordName, HomeName, NomenclatureInfoName } from "../constants";
+import { useEffect } from "react";
+import { HomeName } from "../constants";
 import { useNavigation } from "@react-navigation/native";
+import { getCampus } from "../services/campus";
+import { getAllCampuses } from "../store/slices/campusSlice";
+import Toast from "react-native-toast-message";
+import { getBlocks } from "../services/block";
+import { getAllBlocks } from "../store/slices/blockSlice";
+
+const initialForm = {
+  campus: "",
+  block: "",
+  floor: "",
+  environment: ""
+}
 
 const Filter = () => {
-  const { user } = useSelector((state) => state.authReducer);
-  const [Block, setBlock] = React.useState("");
-  const [Campus, setCampus] = React.useState("");
+  const [form, setForm] = useState(initialForm);
+  const { campuses } = useSelector(state => state.campusReducer);
+  const { blocks } = useSelector(state => state.blockReducer);
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
   const navigate = (to) => navigation.navigate(to);
 
-  useEffect(() => {
-    if (user) {
-      navigation.navigate(HomeName);
+  const fetchCampus = async () => {
+    try {
+      const data = await getCampus();
+
+      dispatch(getAllCampuses(data));
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "No se pudieron obtener los campus",
+        position: "bottom"
+      })
     }
-  }, [user]);
+  }
 
   const handleClickInformationNomenclature = () => {
     navigate(NomenclatureInfoName);
   };
 
   // const [showAlert, setShowAlert] = useState(false);
+  const fetchBlocks = async () => {
+    try {
+      const data = await getBlocks(false);
+      dispatch(getAllBlocks(data));
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "No se pudieron obtener los bloques",
+        position: "bottom"
+      })
+    }
+  }
 
-  // const handleShowAlert = () => {
-  //     setShowAlert(true);
-  // };
-
-  // const handleCloseAlert = () => {
-  //     setShowAlert(false);
-  // };
-
-  const start = 1;
-  const end = 100;
-  const bloques = [...Array(end - start + 1).keys()].map(
-    (_, index) => start + index
-  );
+  useEffect(() => {
+    if (!campuses) {
+      fetchCampus();
+    }
+    if (!blocks) {
+      fetchBlocks();
+    }
+  }, []);
 
   const pressedColor = useColorModeValue("#EAEAEA");
+
+  const onInputChange = (value, field) => {
+    setForm({ ...form, [field]: value });
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // TODO implementar búsqueda por nomenclatura
+    console.log({ form });
+  }
 
   return (
     <ScrollView w="100%">
       <Center w="100%" justifyContent="flex-end" paddingBottom={15}>
-        <Alert shadow={2} maxW="400" w="100%" colorScheme="info">
+        <Alert marginBottom={4} shadow={2} maxW="400" w="100%" colorScheme="info">
           <VStack space={1} flexShrink={1} w="100%">
             <HStack
               flexShrink={1}
@@ -107,7 +140,7 @@ const Filter = () => {
                 Campus <Text style={{ color: "red" }}>*</Text>
               </FormControl.Label>
               <Select
-                selectedValue={Campus}
+                selectedValue={form.campus}
                 minWidth="200"
                 accessibilityLabel="Elige el campus"
                 placeholder="Elige el campus"
@@ -115,10 +148,14 @@ const Filter = () => {
                   bg: pressedColor,
                 }}
                 mt={1}
-                onValueChange={(itemValue) => setCampus(itemValue)}
+                onValueChange={(itemValue) => onInputChange(itemValue, "campus")}
               >
-                <Select.Item label="A - Argelia" value="Argelia" />
-                <Select.Item label="M - Motupe" value="Motupe" />
+                <Select.Item key={1} label="Seleccione un campus" value="" />
+                {campuses &&
+                  campuses.map(campus =>
+                    <Select.Item key={campus._id} label={`${campus.symbol} - ${campus.name}`} value={campus._id} />
+                  )
+                }
               </Select>
             </FormControl>
 
@@ -127,7 +164,7 @@ const Filter = () => {
                 Bloque <Text style={{ color: "red" }}>*</Text>
               </FormControl.Label>
               <Select
-                selectedValue={Block}
+                selectedValue={form.block}
                 minWidth="200"
                 accessibilityLabel="Elige el bloque"
                 placeholder="Elige el bloque"
@@ -135,40 +172,40 @@ const Filter = () => {
                   bg: pressedColor,
                 }}
                 mt={1}
-                onValueChange={(itemValue) => setBlock(itemValue)}
+                onValueChange={(itemValue) => onInputChange(itemValue, "block")}
               >
-                {/* <Select.Item label={bloques} value="Argelia" /> */}
-                {bloques.map((bloque) => (
+                <Select.Item key={1} label="Seleccione un bloque" value="" />
+                {blocks && blocks.map((bloque) => (
                   <Select.Item
-                    key={bloque}
-                    label={bloque.toString()}
-                    value={bloque}
+                    key={bloque._id}
+                    label={`Bloque ${bloque.number}`}
+                    value={bloque._id}
                   />
                 ))}
               </Select>
             </FormControl>
             <FormControl>
               <FormControl.Label>Piso</FormControl.Label>
-              <Input type="text" placeholder="2" />
+              <Input onChangeText={floor => onInputChange(floor, "floor")} type="text" placeholder="2" keyboardType="numeric" value={form.floor} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Aula</FormControl.Label>
-              <Input type="number" placeholder="1" />
+              <Input onChangeText={env => onInputChange(env, "environment")} type="text" placeholder="1" value={form.environment} keyboardType="numeric" />
             </FormControl>
             <Text alignSelf="flex-end" mt="1" fontSize={"xs"}>
               <Text style={{ color: "red" }}>* </Text>
               Campos obligatorios
             </Text>
-            <Button mt="2" colorScheme="indigo">
+            <Button mt="2" colorScheme="indigo" onPress={handleSubmit}>
               Buscar
             </Button>
-            <Button
+            {/* <Button
               mt="0"
               colorScheme="coolGray"
               onPress={() => navigate(HomeName)}
             >
               Regresar
-            </Button>
+            </Button> */}
           </VStack>
         </Box>
       </Center>

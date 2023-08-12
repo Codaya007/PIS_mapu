@@ -11,7 +11,7 @@ export function mapISOStringToDate(isoString) {
   return formattedDate;
 }
 
-export function getTimeAgo(isoString, start = "Publicado") {
+export function getTimeAgo(isoString, start = "Publicado hace") {
   const date = new Date(isoString);
   const now = new Date();
   const diff = now - date;
@@ -24,21 +24,21 @@ export function getTimeAgo(isoString, start = "Publicado") {
   const month = 30 * day;
 
   if (diff < minute) {
-    return `${start} hace unos segundos`;
+    return `${start} unos segundos`;
   } else if (diff < hour) {
     const minutes = Math.floor(diff / minute);
-    return `${start} hace ${minutes} minuto${minutes !== 1 ? "s" : ""}`;
+    return `${start} ${minutes} minuto${minutes !== 1 ? "s" : ""}`;
   } else if (diff < day) {
     const hours = Math.floor(diff / hour);
-    return `${start} hace ${hours} hora${hours !== 1 ? "s" : ""}`;
+    return `${start} ${hours} hora${hours !== 1 ? "s" : ""}`;
   } else if (diff < week) {
     const days = Math.floor(diff / day);
-    return `${start} hace ${days} día${days !== 1 ? "s" : ""}`;
+    return `${start} ${days} día${days !== 1 ? "s" : ""}`;
   } else if (diff < month) {
     const weeks = Math.floor(diff / week);
-    return `${start} hace ${weeks} semana${weeks !== 1 ? "s" : ""}`;
+    return `${start} ${weeks} semana${weeks !== 1 ? "s" : ""}`;
   } else {
     const months = Math.floor(diff / month);
-    return `${start} hace ${months} mes${months !== 1 ? "es" : ""}`;
+    return `${start} ${months} mes${months !== 1 ? "es" : ""}`;
   }
 }

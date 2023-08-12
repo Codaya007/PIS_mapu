@@ -71,10 +71,10 @@ function FavoriteList() {
     setListData(newData);
   };
 
-  const onRowDidOpen = () => {};
+  const onRowDidOpen = () => { };
 
   const renderItem = ({ item: node, index }) => {
-    const timeAgo = getTimeAgo(node.createdAt, "Guardado");
+    const timeAgo = getTimeAgo(node.createdAt, "Guardado hace");
 
     return (
       <Box>

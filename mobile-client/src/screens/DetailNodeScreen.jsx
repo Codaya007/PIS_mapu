@@ -1,24 +1,33 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { View, Text, Image, Heading, FlatList, Box, Button } from 'native-base';
-import { ACCESS_NODO_TYPE, BLOCK_NODO_TYPE, HomeName, INTEREST_NODO_TYPE, ROUTE_NODO_TYPE } from '../constants';
+import { ACCESS_NODO_TYPE, BLOCK_NODO_TYPE, HomeName, INTEREST_NODO_TYPE, NodeCommentsName, ROUTE_NODO_TYPE } from '../constants';
 import { getAccessNodeById, getBlockNodeById, getInterestingNodeById, getRouteNodeById } from '../services/Nodes';
+import { getAllCommentsFromNode } from '../services/Comment'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import SubnodeDetail from '../components/SubnodeDetail';
+import CommentItem from '../components/CommentItem';
 import Loader from '../components/Loader';
 import { useDispatch } from 'react-redux';
 import { setCurrentNode, setDestination, setOnSearchProcess, setOrigin } from '../store/slices/searchSlice';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import {
+    CommentName,
+} from "../constants";
 
-const NodeDetail = ({ node = {} }) => {
+const NodeDetail = ({ node = {}, comments = [] }) => {
     const [showSubnodes, setShowSubnodes] = useState(false);
     const { detail } = node || {};
     const { subnodes } = detail || {};
     const navigation = useNavigation();
     const navigate = to => navigation.navigate(to)
     const dispatch = useDispatch();
+
+    const navigateToCommentForm = () => {
+        navigate(CommentName)
+    }
 
     const handleGoFrom = () => {
         dispatch(setOnSearchProcess(true))
@@ -79,17 +88,42 @@ const NodeDetail = ({ node = {} }) => {
                         </Button>
                         <Text textAlign={"center"}>Ir hasta</Text>
                     </Box>
-
-
                 </View>
-
 
                 {/* Descripcion */}
                 <Text textAlign={"justify"} flexWrap={"wrap"}>{detail?.description || "Sin descripción"}</Text>
 
+                <Heading
+                    underline
+                    size={"xs"}
+                    textAlign={"right"}
+                    color={"gray.600"}
+                    onPress={() => navigation.navigate(NodeCommentsName, { comments })}
+                >
+                    {comments?.length} comentario{comments.length === 1 ? "" : "s"}
+                </Heading>
+                {/* <View marginTop={3} flex={1}>
+                    <Text style={styles.title}>Comentarios</Text>
+                    {comments?.length > 0 &&
+                        <>
+                            <FlatList
+                                showsVerticalScrollIndicator={false}
+                                data={comments}
+                                renderItem={({ item: comment }) =>
+                                    <CommentItem
+                                        comment={comment}
+                                        user={comment.user && `${comment.user?.name} ${comment.user?.lastname}`.trim()}
+                                    />
+                                }
+                            />
+                        </>
+                    }
+                    <Button mt={2} borderRadius={50} bgColor="indigo.500" onPress={navigateToCommentForm}>Crear Comentario</Button>
+                </View> */}
+
                 {subnodes?.length > 0 &&
                     <>
-                        <Heading size="sm" textAlign={"right"} onPress={() => setShowSubnodes(!showSubnodes)}>
+                        <Heading size="sm" p={2} textAlign={"right"} onPress={() => setShowSubnodes(!showSubnodes)}>
                             {showSubnodes ? "Ver menos" : "Ver más"}
                         </Heading>
                         {showSubnodes &&
@@ -113,6 +147,7 @@ const NodeDetail = ({ node = {} }) => {
                         }
                     </>
                 }
+
             </View>
         </>
 }
@@ -120,6 +155,7 @@ const NodeDetail = ({ node = {} }) => {
 const DetailNodeScreen = ({ route }) => {
     const { nodeId, type } = route.params;
     const [node, setNode] = useState(null);
+    const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -139,7 +175,10 @@ const DetailNodeScreen = ({ route }) => {
                 data.name = "Nodo Ruta"
             }
 
+            const commentsData = await getAllCommentsFromNode(data._id)
+
             setNode(data);
+            setComments(commentsData.data);
             setLoading(false);
         }
 
@@ -150,7 +189,7 @@ const DetailNodeScreen = ({ route }) => {
         <View style={styles.container}>
             {loading ?
                 <Loader /> :
-                <NodeDetail node={node} />
+                <NodeDetail node={node} comments={comments} />
             }
         </View>
     );
@@ -172,13 +211,26 @@ const styles = StyleSheet.create({
     divider: {
         borderBottomWidth: 1,
         borderBottomColor: '#EAEAEA',
-        marginTop: 8,
+        marginTop: 20,
         marginBottom: 10,
     },
     name: {
         marginTop: 20,
         fontSize: 22,
         fontWeight: 'bold',
+    },
+    buttonComment: {
+        marginTop: 2,
+        flex: 1,  // Establece el flex para que el botón se expanda 
+        backgroundColor: 'transparent',  // Establece el fondo transparente
+        justifyContent: 'space-between', // Alinea el contenido en la dirección principal (vertical)
+        flexDirection: 'row', // Alinea el contenido en una fila horizontal
+        alignItems: 'center', // Alinea el contenido verticalmente en el centro
+    },
+    title: {
+        marginBottom: 10,
+        fontSize: 18,
+        fontWeight: '600',
     },
     description: {
         fontSize: 14,

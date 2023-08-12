@@ -23,8 +23,8 @@ export const loginUser = (email, password) => async (dispatch) => {
   });
 
   await AsyncStorage.setItem("user", JSON.stringify(data?.user));
-  await AsyncStorage.setItem("token", JSON.stringify("Bearer " + data?.token));
-  console.log(data?.token);
+  await AsyncStorage.setItem("token", JSON.stringify(data?.token));
+  // console.log(data?.token);
   dispatch(login(data));
 };
 

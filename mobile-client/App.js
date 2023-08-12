@@ -4,6 +4,7 @@ import * as React from "react";
 import { Provider } from "react-redux";
 import { store } from "./src/store/store.js";
 import Main from "./src/Main";
+import "./src/config/axiosConfig.js";
 
 export default function App() {
   return (
