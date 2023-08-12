@@ -21,7 +21,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import SubnodeDetail from "../components/SubnodeDetail";
 import Loader from "../components/Loader";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setCurrentNode,
   setDestination,
@@ -29,8 +29,9 @@ import {
   setOrigin,
 } from "../store/slices/searchSlice";
 import { Ionicons } from "@expo/vector-icons";
+import { Toast } from "react-native-toast-message/lib/src/Toast";
 
-const NodeDetail = ({ node = {}, navigation }) => {
+const NodeDetail = ({ node = {}}) => {
 
   const [showSubnodes, setShowSubnodes] = useState(false);
   const { detail } = node || {};
@@ -38,6 +39,7 @@ const NodeDetail = ({ node = {}, navigation }) => {
   const navigation = useNavigation();
   const navigate = (to) => navigation.navigate(to);
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.authReducer);
 
   const handleGoFrom = () => {
     dispatch(setOnSearchProcess(true));
@@ -54,15 +56,22 @@ const NodeDetail = ({ node = {}, navigation }) => {
   };
 
   const handleNode = async() => {
-    console.log(node)
-    navigation(ResportOutDatedInformationName, {nodeA: 'asdasd' })
+    if(user){
+      navigation.navigate(ResportOutDatedInformationName, { node } );
+    }else{
+      Toast.show({
+        type: "error",
+        text1: "Debe iniciar sesión",
+        position: "bottom",
+      });
+      // return;
+    }
   }
 
   return !node ? (
     <Text>Nodo no encontrado</Text>
   ) : (
     <>
-        
       {/* Imágen*/}
       {detail?.img && (
         <Box overflow={"hidden"} borderTopRadius={"27"} style={styles.image}>

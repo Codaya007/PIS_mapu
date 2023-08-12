@@ -31,7 +31,7 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
   const mapRef = useRef(null);
   const navigation = useNavigation();
   const { path: originalPath, totalDistance = 0 } = useSelector(state => state.searchReducer)
-
+  const [selectedCoordinate, setSelectedCoordinate] = useState(null);
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
   };
@@ -183,6 +183,12 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
     });
   };
 
+  const handleMapPress = (event) => {
+    console.log('handleMapPress');
+    const { coordinate } = event.nativeEvent;
+    setSelectedCoordinate(coordinate);
+  }
+
   useEffect(() => {
     originalPath && handleShortPath();
   }, [originalPath]);
@@ -205,7 +211,11 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
         userLocationUpdateInterval={5000}
         userLocationFastestInterval={5000}
         onUserLocationChange={handleGpsNode}
+        onPress={ handleMapPress }
       >
+        {selectedCoordinate && (
+          <Marker coordinate={selectedCoordinate} />
+        )}
         <Polyline coordinates={path} strokeColor="#238C23" strokeWidth={6} />
         {showNodesOnMap()}
       </MapView>

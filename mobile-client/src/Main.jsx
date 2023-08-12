@@ -101,6 +101,7 @@ const Main = () => {
           <Drawer.Screen
             name={ResportOutDatedInformationName}
             component={ReportOutdatedInformation}
+            options={{ headerShown:false}}
           />
           <Drawer.Screen name={CommentName} component={Comment} />
         </Drawer.Navigator>

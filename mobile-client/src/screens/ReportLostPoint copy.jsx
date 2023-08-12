@@ -21,8 +21,8 @@ const reportState = {
   comment: "",
   revised: false,
   lostPoint: {
-    latitude: "0",
-    length: "0",
+    latitude: 0,
+    length: 0,
   },
 };
 
@@ -129,6 +129,15 @@ const ReportLostPoint = () => {
               Registre su punto perdido para continuar
             </Heading>
             <VStack space={3} mt="5">
+              <FormControl>
+                <FormControl.Label>Titulo</FormControl.Label>
+                <Input
+                  keyboardType="numeric"
+                  id="tittle"
+                  onChangeText={(text) => handleEditReport(text, "tittle")}
+                  value={report.lostPoint.latitude}
+                />
+              </FormControl>
               <FormControl>
                 <FormControl.Label>Latitud</FormControl.Label>
                 <Input

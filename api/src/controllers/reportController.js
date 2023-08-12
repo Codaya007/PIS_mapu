@@ -23,7 +23,7 @@ module.exports = {
     res.json(report);
   },
 
-  createReport: async (req, res, next) => {
+  createReport: async (req, res) => {
     req.body.user = req.user?.id;
     const report = await reportService.createReport(req.body);
 

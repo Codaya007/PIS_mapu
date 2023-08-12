@@ -14,55 +14,51 @@ import {
 } from "native-base";
 import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
-import { API_BASEURL, HomeName } from "../constants";
+import { HomeName } from "../constants";
 import { useSelector } from "react-redux";
+import { createReport } from "../services/report";
 
 const reportState = {
+  node: '',
+  // user: null,  
   comment: "",
-  revised: false,
-  latitude: '',
-  longitude: '',
 };
 
-const ReportOutdatedInformation = ({ route }) => {
+const ReportOutdatedInformation = () => {
   const navigate = useNavigation();
-  // const route = useRoute();
-  const { nodeA } = route.params || {};
+  const route = useRoute();
+  const { node } = route.params
   const { user } = useSelector((state) => state.authReducer);
   const [report, setReport] = useState(reportState);
 
   useEffect( ()=> {
-    console.log('ghjghjg  '+ nodeA);
+    setReport( {
+      ...report,
+      node: node._id,
+      // user: user._id, //Cambiar por el user registrado
+    });
+
   },[]);
   
   const handleEditReport = async (text, input) => {
-    if (input == "latitude" || input == "length") {
-      setReport({
-        ...report,
-        lostPoint: {
-          ...report.lostPoint,
-          [input]: parseInt(text),
-        },
-      });
-    } else {
-      setReport({
-        ...report,
-        [input]: text,
-      });
-    }
+    setReport({
+      ...report,
+      [input]: text,
+    })
+    
   };
 
   const handleSave = async () => {
-    if (!user) {
-      Toast.show({
-        type: "error",
-        text1: "Debe estar registrado para reportar un punto perdido",
-        position: "bottom",
-      });
-      return;
-    }
+    // if (!report.user) {
+    //   Toast.show({
+    //     type: "error",
+    //     text1: "Debe estar registrado para reportar un punto perdido",
+    //     position: "bottom",
+    //   });
+    //   return;
+    // }
 
-    if (report.lostPoint.latitude == 0 || report.lostPoint.length == 0) {
+    if (!report.node) {
       Toast.show({
         type: "error",
         text1: "La longitud y latitud son obligatorios",
@@ -72,17 +68,16 @@ const ReportOutdatedInformation = ({ route }) => {
     }
 
     try {
-      await axios.post(`${API_BASEURL}/report/`, {
-        comment: report.comment,
-        revised: report.revised,
-        lostPoint: report.lostPoint,
-      });
+      console.log(report)
+      await createReport(report);
 
       Toast.show({
         type: "success",
         text1: "Reporte enviado",
         position: "bottom",
       });
+      navigate.navigate(HomeName);
+
     } catch (error) {
       Toast.show({
         type: "error",
@@ -90,7 +85,6 @@ const ReportOutdatedInformation = ({ route }) => {
         text2: "Intentelo nuevamente",
         position: "bottom",
       });
-      navigate(HomeName);
     }
   };
 
@@ -113,7 +107,7 @@ const ReportOutdatedInformation = ({ route }) => {
               }}
               fontWeight="semibold"
             >
-              Detalle su punto perdidoa
+              Detalle informacion faltante
             </Heading>
             <Heading
               mt="1"
@@ -132,8 +126,8 @@ const ReportOutdatedInformation = ({ route }) => {
                 <Input
                   keyboardType="numeric"
                   id="tittle"
-                  // onChangeText={(text) => handleEditReport(text, "tittle")}
-                  // value={report.lostPoint.latitude}
+                  value={node.detail.description}
+                  isDisabled= {true}
                 />
               </FormControl>
               <FormControl>
@@ -142,26 +136,28 @@ const ReportOutdatedInformation = ({ route }) => {
                   keyboardType="numeric"
                   id="latitude"
                   // onChangeText={(text) => handleEditReport(text, "latitude")}
-                  // value={report.lostPoint.latitude}
+                  value={node.latitude.toString()}
+                  isDisabled={true}
                 />
               </FormControl>
               <FormControl>
                 <FormControl.Label>Longitud</FormControl.Label>
                 <Input
                   keyboardType="numeric"
-                  // onChangeText={(text) => handleEditReport(text, "length")}
-                  // value={report.lostPoint.length}
+                  // onChangeText={(text) => handleEditReport(text, "longitude")}
+                  value={node.longitude.toString()}
+                  isDisabled={true}
                 />
               </FormControl>
               <FormControl>
                 <FormControl.Label>Comentario</FormControl.Label>
                 <TextArea
-                  // onChangeText={(text) => handleEditReport(text, "comment")}
-                  // value={report.comment}
+                  onChangeText={(text) => handleEditReport(text, "comment")}
+                  value={report.comment}
                 />
               </FormControl>
 
-              <Button mt="2" bgColor={"indigo.500"} onPress={(8)}>
+              <Button mt="2" bgColor={"indigo.500"} onPress={handleSave}>
                 Enviar
               </Button>
             </VStack>
