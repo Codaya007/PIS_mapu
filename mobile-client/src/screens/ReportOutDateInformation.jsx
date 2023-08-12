@@ -1,14 +1,15 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import axios from "axios";
 import {
   Box,
   Button,
   Center,
   FormControl,
   Heading,
+  Image,
   Input,
   KeyboardAvoidingView,
   ScrollView,
+  Text,
   TextArea,
   VStack,
 } from "native-base";
@@ -17,11 +18,11 @@ import Toast from "react-native-toast-message";
 import { HomeName } from "../constants";
 import { useSelector } from "react-redux";
 import { createReport } from "../services/report";
+import { StyleSheet } from "react-native";
 
 const reportState = {
   node: '',
-  // user: null,  
-  comment: "",
+  comment: '',
 };
 
 const ReportOutdatedInformation = () => {
@@ -35,7 +36,6 @@ const ReportOutdatedInformation = () => {
     setReport( {
       ...report,
       node: node._id,
-      // user: user._id, //Cambiar por el user registrado
     });
 
   },[]);
@@ -49,14 +49,14 @@ const ReportOutdatedInformation = () => {
   };
 
   const handleSave = async () => {
-    // if (!report.user) {
-    //   Toast.show({
-    //     type: "error",
-    //     text1: "Debe estar registrado para reportar un punto perdido",
-    //     position: "bottom",
-    //   });
-    //   return;
-    // }
+    if (!user) {
+      Toast.show({
+        type: "error",
+        text1: "Debe iniciar sesion para brindar",
+        position: "bottom",
+      });
+      return;
+    }
 
     if (!report.node) {
       Toast.show({
@@ -92,7 +92,7 @@ const ReportOutdatedInformation = () => {
     <ScrollView w={["360", "300"]} h="30">
       <KeyboardAvoidingView
         h={{
-          base: "700px",
+          base: "900px",
           lg: "auto",
         }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -109,45 +109,24 @@ const ReportOutdatedInformation = () => {
             >
               Detalle informacion faltante
             </Heading>
-            <Heading
-              mt="1"
-              color="coolGray.600"
-              _dark={{
-                color: "warmGray.200",
-              }}
-              fontWeight="medium"
-              size="xs"
-            >
-              Registre su punto perdido para continuar
-            </Heading>
             <VStack space={3} mt="5">
               <FormControl>
-                <FormControl.Label>Titulo</FormControl.Label>
-                <Input
-                  keyboardType="numeric"
-                  id="tittle"
-                  value={node.detail.description}
-                  isDisabled= {true}
-                />
+                <FormControl.Label>Descripción:  {node.detail?.description}</FormControl.Label>
+              </FormControl>
+              <Box overflow={"hidden"} borderTopRadius={"27"} style={styles.image}>
+          <Image
+            height={"100%"}
+            width={"100%"}
+            resizeMode="cover"
+            source={{ uri: node?.detail?.img }}
+            alt={node?.detail?.title}
+          />
+        </Box>
+              <FormControl>
+                <FormControl.Label>Latitud:  {node.latitude} </FormControl.Label>
               </FormControl>
               <FormControl>
-                <FormControl.Label>Latitud</FormControl.Label>
-                <Input
-                  keyboardType="numeric"
-                  id="latitude"
-                  // onChangeText={(text) => handleEditReport(text, "latitude")}
-                  value={node.latitude.toString()}
-                  isDisabled={true}
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Longitud</FormControl.Label>
-                <Input
-                  keyboardType="numeric"
-                  // onChangeText={(text) => handleEditReport(text, "longitude")}
-                  value={node.longitude.toString()}
-                  isDisabled={true}
-                />
+                <FormControl.Label>Longitud:  {node.longitude}</FormControl.Label>
               </FormControl>
               <FormControl>
                 <FormControl.Label>Comentario</FormControl.Label>
@@ -160,6 +139,13 @@ const ReportOutdatedInformation = () => {
               <Button mt="2" bgColor={"indigo.500"} onPress={handleSave}>
                 Enviar
               </Button>
+              <Button
+                  mt="2"
+                  colorScheme="orange"
+                  onPress={ () => navigate.goBack() }
+                >
+                  Cancelar
+                </Button>
             </VStack>
           </Box>
         </Center>
@@ -167,5 +153,16 @@ const ReportOutdatedInformation = () => {
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  image: {
+    width: "100%",
+    height: "27%",
+    margin: 0,
+    padding: 0,
+    alignSelf: "center",
+  },
+})
+
 
 export default ReportOutdatedInformation;

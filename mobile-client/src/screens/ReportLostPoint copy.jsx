@@ -16,49 +16,52 @@ import { useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 import { API_BASEURL, HomeName } from "../constants";
 import { useSelector } from "react-redux";
+import { createReport } from "../services/report";
+import MapApi from "../components/MapApi";
 
 const reportState = {
   comment: "",
-  revised: false,
   lostPoint: {
     latitude: 0,
-    length: 0,
+    longitude: 0,
   },
 };
 
 const ReportLostPoint = () => {
   const navigate = useNavigation();
-  const route = useRoute();
-  const node = route.params;
+  // const route = useRoute();
+  // const { selectedCoordinate } = route.params;
   const { user } = useSelector((state) => state.authReducer);
   const [report, setReport] = useState(reportState);
 
   useEffect( ()=> {
-    console.log(node);
-  },[]);
+    console.log(`REPORT ` + report.lostPoint.longitude)
+
+  },[report]);
   
   const handleEditReport = async (text, input) => {
-    if (input == "latitude" || input == "length") {
-      setReport({
-        ...report,
-        lostPoint: {
-          ...report.lostPoint,
-          [input]: parseInt(text),
-        },
-      });
-    } else {
       setReport({
         ...report,
         [input]: text,
       });
-    }
   };
+  
+  const handleUpdateReportCoordinate = (coordinate) => {
+    setReport({
+      ...report,
+      lostPoint: {
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
+      },
+    });
+  };
+
 
   const handleSave = async () => {
     if (!user) {
       Toast.show({
         type: "error",
-        text1: "Debe estar registrado para reportar un punto perdido",
+        text1: "Debe iniciar sesión para reportar un punto perdido",
         position: "bottom",
       });
       return;
@@ -74,18 +77,16 @@ const ReportLostPoint = () => {
     }
 
     try {
-      await axios.post(`${API_BASEURL}/report/`, {
-        comment: report.comment,
-        revised: report.revised,
-        lostPoint: report.lostPoint,
-      });
-
+      await createReport(report);
       Toast.show({
         type: "success",
         text1: "Reporte enviado",
         position: "bottom",
       });
+      navigate.navigate(HomeName);
+
     } catch (error) {
+
       Toast.show({
         type: "error",
         text1: "Error al crear el punto perdido",
@@ -94,19 +95,20 @@ const ReportLostPoint = () => {
       });
       navigate(HomeName);
     }
+
   };
 
   return (
-    <ScrollView w={["360", "300"]} h="30">
+    <ScrollView w={["360", "300"]} h="1000">
       <KeyboardAvoidingView
         h={{
-          base: "700px",
+          base: "800px",
           lg: "auto",
         }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <Center w="100%">
-          <Box safeArea p="2" w="90%" maxW="290" py="8">
+        <Center w="100%" height="100%">
+          <Box safeArea p="2" w="90%" maxW="600" py="1">
             <Heading
               size="lg"
               color="coolGray.800"
@@ -115,55 +117,27 @@ const ReportLostPoint = () => {
               }}
               fontWeight="semibold"
             >
-              Detalle su punto perdidoa
+              Reportar punto perdido
             </Heading>
-            <Heading
-              mt="1"
-              color="coolGray.600"
-              _dark={{
-                color: "warmGray.200",
-              }}
-              fontWeight="medium"
-              size="xs"
-            >
-              Registre su punto perdido para continuar
-            </Heading>
-            <VStack space={3} mt="5">
-              <FormControl>
-                <FormControl.Label>Titulo</FormControl.Label>
-                <Input
-                  keyboardType="numeric"
-                  id="tittle"
-                  onChangeText={(text) => handleEditReport(text, "tittle")}
-                  value={report.lostPoint.latitude}
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Latitud</FormControl.Label>
-                <Input
-                  keyboardType="numeric"
-                  id="latitude"
-                  onChangeText={(text) => handleEditReport(text, "latitude")}
-                  value={report.lostPoint.latitude}
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Longitud</FormControl.Label>
-                <Input
-                  keyboardType="numeric"
-                  onChangeText={(text) => handleEditReport(text, "length")}
-                  value={report.lostPoint.length}
-                />
-              </FormControl>
-              <FormControl>
-                <FormControl.Label>Comentario</FormControl.Label>
+            
+              <Center w="100%">
+                <FormControl>
+                <FormControl.Label>Descripción</FormControl.Label>
                 <TextArea
                   onChangeText={(text) => handleEditReport(text, "comment")}
                   value={report.comment}
                 />
               </FormControl>
-
-              <Button mt="2" bgColor={"indigo.500"} onPress={(8)}>
+              <FormControl marginTop={2}>
+                <FormControl.Label>Seleccione punto</FormControl.Label>
+              </FormControl>
+              <Box safeArea p="2" w="90%" maxW="500" py="1" maxHeight='450'>
+                <MapApi reportNode={true} report={report} updateCoordinate={handleUpdateReportCoordinate}  />
+              </Box>
+              </Center>
+            <VStack space={3} mt="5">
+                
+              <Button mt="2" bgColor={"indigo.500"} onPress={handleSave}>
                 Enviar
               </Button>
             </VStack>

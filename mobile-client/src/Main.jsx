@@ -124,9 +124,11 @@ const AuthUserMenu = () => {
           <Drawer.Screen
             name={ResportOutDatedInformationName}
             component={ReportOutdatedInformation}
-            options={{ headerShown:false}}
+            options={{
+              drawerItemStyle: { display: "none" }, 
+              headerShown: false,
+            }}
           />
-          <Drawer.Screen name={CommentName} component={Comment} />
           <Drawer.Screen
             name={CommentName}
             component={Comment}
