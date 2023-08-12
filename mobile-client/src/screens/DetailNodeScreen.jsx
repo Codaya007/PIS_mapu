@@ -4,7 +4,6 @@ import { View, Row, Text, Image, Heading, FlatList, Box, Button, Divider } from 
 import { ACCESS_NODO_TYPE, BLOCK_NODO_TYPE, HomeName, INTEREST_NODO_TYPE, ROUTE_NODO_TYPE } from '../constants';
 import { getAccessNodeById, getBlockNodeById, getInterestingNodeById, getRouteNodeById } from '../services/Nodes';
 import { getAllCommentsFromNode } from '../services/Comment'
-import { getUserById } from '../services/User'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import SubnodeDetail from '../components/SubnodeDetail';
@@ -14,7 +13,6 @@ import { useDispatch } from 'react-redux';
 import { setCurrentNode, setDestination, setOnSearchProcess, setOrigin } from '../store/slices/searchSlice';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { AntDesign } from '@expo/vector-icons';
 import {
     CommentName,
 } from "../constants";
@@ -28,7 +26,9 @@ const NodeDetail = ({ node = {}, comments = [] }) => {
     const dispatch = useDispatch();
 
     const navigateToCommentDetail = () => {
-        navigate(CommentName)
+        console.log("el node", node);
+        // navigation.navigate(CommentName, { node: node?._id })
+        navigation.navigate(CommentName, { node })
     }
 
     const handleGoFrom = () => {
@@ -106,23 +106,6 @@ const NodeDetail = ({ node = {}, comments = [] }) => {
                     <AntDesign name="right" size={19} color="black" />
                 </View> */}
 
-                <View marginTop={3} >
-                    <Text style={styles.title}>Comentarios</Text>
-                    {comments?.length > 0 &&
-                        <>
-                            <FlatList
-                                showsVerticalScrollIndicator={false}
-                                data={comments}
-                                renderItem={({ item: comment }) =>
-                                    <CommentItem comment={comment} user={"sdfasfdsadf"} />
-                                }
-                            />
-                        </>
-                    }
-                    <Button mt={2} borderRadius={50} bgColor="indigo.500" onPress={navigateToCommentDetail}>Crear Comentario</Button>
-                </View>
-
-
                 {subnodes?.length > 0 &&
                     <>
                         <Heading size="sm" textAlign={"right"} onPress={() => setShowSubnodes(!showSubnodes)}>
@@ -149,6 +132,35 @@ const NodeDetail = ({ node = {}, comments = [] }) => {
                         }
                     </>
                 }
+
+                {/* {comments.lenght > 0 && */}
+                {/* // <> */}
+                <View style={styles.divider} />
+                <View marginTop={3} >
+                    <Text style={styles.title}>Comentarios</Text>
+                    {comments?.length > 0 &&
+                        <>
+                            <FlatList
+                                showsVerticalScrollIndicator={false}
+                                data={comments}
+                                renderItem={({ item: comment }) =>
+                                    <CommentItem comment={comment} user={"sdfasfdsadf"} />
+                                }
+                            />
+                        </>
+                    }
+                    <Button mt={2} borderRadius={50} bgColor="indigo.500" onPress={() => navigateToCommentDetail()}>Crear Comentario</Button>
+                </View>
+                {/* // </> */}
+                {/* } */}
+                {/* {comments.lenght == 0 &&
+                    <>
+                        <View style={styles.divider} />
+                        <View marginTop={3} >
+                            <Text style={styles.title}>No hay comentarios</Text>
+                        </View>
+                    </>
+                } */}
 
                 {/* <Divider style={styles.divider} /> */}
 
@@ -180,9 +192,7 @@ const DetailNodeScreen = ({ route }) => {
             }
             // console.log("dattaaaaaa", data)
             const commentsData = await getAllCommentsFromNode(data._id)
-            console.log("xddddd", commentsData.data)
-            // const userData = await getUserById(commentsData.data[0].user) //! Me sale error 401, que no estoy autorizado. Entre con las credenciales de la viviana
-            // console.log("userdaavasdfsdfsdafsadfsadfs", userData)
+            // console.log("xddddd", commentsData.data)
             setNode(data);
             setComments(commentsData.data);
             setLoading(false);

@@ -16,15 +16,21 @@ import { useState } from "react";
 import Toast from "react-native-toast-message";
 import { API_BASEURL } from "../constants";
 import { useSelector } from "react-redux";
+import { useNavigation } from '@react-navigation/native';
+import {
+  DetailNodeName
+} from "../constants/index"
 
 //Talvez toque cambiarle el tipo de dato de user y node
 const commentState = {
   content: "",
 };
 
-const Comment = ({ node }) => {
+const Comment = ({ route }) => {
+  const { node } = route.params;
   const { user } = useSelector((state) => state.authReducer);
   const [comment, setComment] = useState(commentState);
+  const navigation = useNavigation();
 
   const handleEditComment = (text, input) => {
     setComment({
@@ -55,11 +61,11 @@ const Comment = ({ node }) => {
         });
       }
 
+      console.log("contenido", comment.content, "user", user._id, "node", node);
       await axios.post(`${API_BASEURL}/comment/`, {
         content: comment.content,
-        hide: false,
         user: user._id,
-        node: node,
+        node: node?._id,
       });
 
       Toast.show({
@@ -67,14 +73,32 @@ const Comment = ({ node }) => {
         text1: "Comentario añadido exitosamente",
         position: "bottom",
       });
+      
+      handleCleanInput()
+      handleBack()
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: "No se puedo añadir el comentario",
+        text1: "Ya comento en este lugar o hubo un error desconocido",
         position: "bottom",
       });
+      handleCleanInput()
+      handleBack()
+      // console.log(error);
     }
   };
+
+  const handleBack = () => {
+    navigation.navigate(DetailNodeName, { nodeId: node?._id, type: node?.type });
+  }
+
+  const handleCleanInput = () => {
+    setComment({
+      ...comment,
+      content: '',
+    });
+  }
+
 
   return (
     <ScrollView w={["360", "300"]} h="30">
@@ -113,6 +137,9 @@ const Comment = ({ node }) => {
               </FormControl>
               <Button mt="2" bgColor="indigo.500" onPress={handleSave}>
                 Comentar
+              </Button>
+              <Button mt="0" bgColor="coolGray.500" onPress={handleBack}>
+                Regresar
               </Button>
             </VStack>
           </Box>
