@@ -28,13 +28,15 @@ import {
   ReportLostPointName,
   // MapName,
   FacultiesName,
-  DetailNodeName
+  DetailNodeName,
+  NomenclatureInfoName
 } from "./constants";
 import ReportLostPoint from "./screens/ReportLostPoint";
 import Comment from "./screens/Comment";
 import EditProfile from "./screens/EditProfile";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
 import Faculties from "./screens/Faculties";
+import NomenclatureInfo from "./screens/NomenclatureInfo";
 
 const Drawer = createDrawerNavigator();
 
@@ -96,6 +98,7 @@ const Main = () => {
             component={ReportLostPoint}
           />
           <Drawer.Screen name={CommentName} component={Comment} />
+          <Drawer.Screen name={NomenclatureInfoName} component={NomenclatureInfo} />
         </Drawer.Navigator>
       </NavigationContainer>
     </>

@@ -23,7 +23,7 @@ import { CloseIcon } from "native-base";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
-import { ForgotPasswordName, HomeName } from "../constants";
+import { ForgotPasswordName, HomeName, NomenclatureInfoName } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 
 const Filter = () => {
@@ -40,6 +40,10 @@ const Filter = () => {
       navigation.navigate(HomeName);
     }
   }, [user]);
+
+  const handleClickInformationNomenclature = () => {
+    navigate(NomenclatureInfoName);
+  };
 
   // const [showAlert, setShowAlert] = useState(false);
 
@@ -71,7 +75,7 @@ const Filter = () => {
               justifyContent="space-between"
             >
               <HStack space={2} flexShrink={1} alignItems="center">
-                <Alert.Icon />
+                <Alert.Icon onPress={handleClickInformationNomenclature}/>
                 <Heading fontSize="md" fontWeight="medium" color="coolGray.800">
                   Nomenclatura
                 </Heading>
