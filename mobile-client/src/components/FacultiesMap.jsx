@@ -72,19 +72,17 @@ export default function FacultiesMap({ faculty, faculties }) {
   }, [faculties, faculty]);
 
   useEffect(() => {
-    console.log("Cambió mapRef.current",);
-
     const handleInitialLocation = async () => {
       if (mapRef.current) {
         await mapRef.current.animateCamera({
           center: {
             latitude: -4.032925984682419,
-            longitude: - 79.20254656812386,
+            longitude: -79.20254656812386,
           },
           pitch: 0,
           heading: 0,
           altitude: 300, //altitud en metros para ios, ignorado por android
-          zoom: 13 //zoom para android, ignorado por ios
+          zoom: 12 //zoom para android, ignorado por ios
         }, 5000);
       }
     };
@@ -98,16 +96,16 @@ export default function FacultiesMap({ faculty, faculties }) {
         ref={mapRef}
         style={styles.map}
         initialRegion={{
-          latitude: -0.19964851407494397,
-          latitudeDelta: 100,
-          longitude: -78.48328033483989,
-          longitudeDelta: 100,
+          latitude: -4.032925984682419,
+          latitudeDelta: 20,
+          longitude: -79.20254656812386,
+          longitudeDelta: 20,
         }}
         showsUserLocation={true}
-        followsUserLocation={false}
-        userLocationPriority="high"
-        userLocationUpdateInterval={5000}
-        userLocationFastestInterval={5000}
+      // followsUserLocation={false}
+      // userLocationPriority="high"
+      // userLocationUpdateInterval={5000}
+      // userLocationFastestInterval={5000}
       >
         {polygons?.map(({ polygon = [], color }, index) => (
           <Polygon

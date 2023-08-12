@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Box, Select, FormControl } from "native-base";
+import { Box, Select } from "native-base";
 import { getFaculties } from "../services/faculty";
 import Toast from "react-native-toast-message";
 import FacultiesMap from "../components/FacultiesMap";
