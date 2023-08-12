@@ -74,7 +74,7 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
           longitude: node?.longitude,
         }}
         title={node?.name}
-        description={node?.type}
+        description={"Ver más"}
         pinColor={node?.color}
       >
         <Callout onPress={() => handlePressClickNode(node)}>
