@@ -98,14 +98,14 @@ const SearchBar = () => {
           onPress={() => navigate(FilterName)}
           _text={{
             fontSize: "sm",
-            fontWeight: "400",
-            color: "coolGray.500",
+            fontWeight: "600",
+            color: "red.600",
           }}
           alignSelf="flex-start"
           mt="1"
           ml="5"
         >
-          Búsqueda avanzada
+          Búsqueda por nomenclatura
         </LinkStyle>
       </VStack>
     </Center>

@@ -68,7 +68,6 @@ const getBlocks = async (where = {}, skip, limit) => {
     .populate("faculty")
     .populate("campus")
     .sort({ number: 1 });
-    // .sort({"-number"});
 
   // Añado el detalle
   blocks = await Promise.all(blocks.map(populateNode));
