@@ -17,12 +17,12 @@ export const ReportLostPointName = "Reportar punto perdido";
 export const ResultSearchName = "Resultados de búsqueda";
 export const MapName = "Mapa";
 export const CommentName = "Comentar";
+export const NodeCommentsName = "Comentarios";
 export const EditProfileName = "Actualizar perfil";
 export const ProfileName = "Mi perfil";
 export const ChangePasswordName = "Actualizar contraseña";
 export const DetailNodeName = "Detalle";
 export const NomenclatureInfoName = "Nomenclatura Universitaria";
-
 
 //! Tipos de nodo
 export const ROUTE_NODO_TYPE = "Ruta";

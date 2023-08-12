@@ -30,7 +30,8 @@ import {
   // MapName,
   FacultiesName,
   DetailNodeName,
-  ProfileName
+  ProfileName,
+  NodeCommentsName
 } from "./constants";
 import ReportLostPoint from "./screens/ReportLostPoint";
 import Comment from "./screens/Comment";
@@ -149,6 +150,14 @@ const AuthUserMenu = () => {
               drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
             }}
           />
+          <Drawer.Screen
+            name={NodeCommentsName}
+            component={CommentDetail}
+            options={{
+              drawerLabel: () => null,
+              drawerItemStyle: { display: "none" },
+            }}
+          />
           <Drawer.Screen name={AboutName} component={About} />
           {/*  LOGOUT ACTION */}
         </Drawer.Navigator>
@@ -204,11 +213,27 @@ const MainUserMenu = () => {
             }}
           />
           <Drawer.Screen
+            name={CommentName}
+            component={Comment}
+            options={{
+              drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+              drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+            }}
+          />
+          <Drawer.Screen
             name={DetailNodeName}
             component={DetailNodeScreen}
             options={{
               drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
               drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+            }}
+          />
+          <Drawer.Screen
+            name={NodeCommentsName}
+            component={CommentDetail}
+            options={{
+              drawerLabel: () => null,
+              drawerItemStyle: { display: "none" },
             }}
           />
           <Drawer.Screen name={AboutName} component={About} />

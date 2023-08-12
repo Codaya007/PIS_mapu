@@ -1,22 +1,43 @@
-import { View, Text, Heading } from 'native-base'
+import { View, Text, FlatList, Box, Button } from 'native-base'
 import React from 'react'
 import CommentItem from '../components/CommentItem'
+import { StyleSheet } from 'react-native';
+import { useRoute } from '@react-navigation/native';
+import { CommentName } from '../constants';
 
-export default function CommentDetail({ comments }) {
+export default function CommentDetail({ navigation }) {
+    const route = useRoute();
 
-    return  <View marginTop={2} >
-        {/* {comments?.length > 0 &&
+    const { comments = [] } = route.params;
+
+    const navigateToCommentForm = () => {
+        navigation.navigate(CommentName)
+    }
+
+    return <View margin={3} flex={1}>
+        {/* <Text style={styles.title}>Comentarios</Text> */}
+        {comments?.length > 0 ?
             <>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     data={comments}
                     renderItem={({ item: comment }) =>
-                        // <Text>{comment.content}</Text>
-                        <CommentItem comment={comment} user={"sdfasfdsadf"} />
+                        <CommentItem
+                            comment={comment}
+                            user={comment.user && `${comment.user?.name} ${comment.user?.lastname}`.trim()}
+                        />
                     }
                 />
-            </>
-        } */}
-        // ! Pensaba ponerle para que pueda visualizar su comentario y eliminarlo, o una vista a todos los comentarios que tiene ese nodo, porque la pantalla de detalle de nodo esta muy sobrecargada
+            </> : <Box>Aún no hay comentarios</Box>
+        }
+        <Button mt={2} borderRadius={50} bgColor="indigo.500" onPress={navigateToCommentForm}>Comentar</Button>
     </View>
 }
+
+const styles = StyleSheet.create({
+    title: {
+        marginBottom: 10,
+        fontSize: 18,
+        fontWeight: '600',
+    },
+});
