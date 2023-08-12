@@ -64,7 +64,6 @@ const NodeDetail = ({ node = {}}) => {
         text1: "Debe iniciar sesión",
         position: "bottom",
       });
-      // return;
     }
   }
 

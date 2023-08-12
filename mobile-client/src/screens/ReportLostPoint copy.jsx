@@ -34,10 +34,6 @@ const ReportLostPoint = () => {
   const { user } = useSelector((state) => state.authReducer);
   const [report, setReport] = useState(reportState);
 
-  useEffect( ()=> {
-    console.log(`REPORT ` + report.lostPoint.longitude)
-
-  },[report]);
   
   const handleEditReport = async (text, input) => {
       setReport({
