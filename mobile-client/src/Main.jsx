@@ -11,7 +11,7 @@ import Filter from "./screens/Filter";
 import ResultSearch from "./components/ResultSearch";
 import CommentDetail from "./screens/CommentDetail";
 import ForgotPasswordForm from "./screens/ForgotPasswordForm";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { DrawerContentScrollView, DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   AboutName,
@@ -38,10 +38,32 @@ import EditProfile from "./screens/EditProfile";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
 import Faculties from "./screens/Faculties";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "./store/slices/authSlice";
+import { login, logout } from "./store/slices/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View } from "native-base";
 
 const Drawer = createDrawerNavigator();
+
+function AppDrawerContent(props) {
+  const dispatch = useDispatch();
+
+  return (
+    <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
+      {/*all of the drawer items*/}
+      <DrawerItemList {...props} style={{ borderWidth: 0 }} />
+      <View style={{ flex: 1, marginVertical: 20, borderWidth: 0 }}>
+        <DrawerItem
+          label="Cerrar sesión"
+          onPress={() => {
+            AsyncStorage.clear();
+            dispatch(logout())
+          }}
+          style={{ flex: 1, justifyContent: 'flex-end' }}
+        />
+      </View>
+    </DrawerContentScrollView>
+  );
+}
 
 const Main = () => {
   const { user } = useSelector(state => state.authReducer);
@@ -70,7 +92,7 @@ const AuthUserMenu = () => {
   return (
     <>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Home" >
+        <Drawer.Navigator initialRouteName="Home" drawerContent={props => <AppDrawerContent {...props} />}  >
           <Drawer.Screen name={HomeName} component={Home} />
           <Drawer.Screen
             name={ProfileName}

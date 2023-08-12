@@ -193,13 +193,13 @@ const Filter = () => {
             <Button mt="2" colorScheme="indigo" onPress={handleSubmit}>
               Buscar
             </Button>
-            <Button
+            {/* <Button
               mt="0"
               colorScheme="coolGray"
               onPress={() => navigate(HomeName)}
             >
               Regresar
-            </Button>
+            </Button> */}
           </VStack>
         </Box>
       </Center>

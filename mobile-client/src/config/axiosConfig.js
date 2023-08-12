@@ -9,7 +9,9 @@ const onRequestSuccess = async (config) => {
   const token = await AsyncStorage.getItem("token");
 
   if (token) {
-    config.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+    const bearerToken = `Bearer ${JSON.parse(token)}`;
+    // console.log({ bearerToken, token });
+    config.headers.Authorization = bearerToken;
   }
 
   return config;
