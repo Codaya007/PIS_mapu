@@ -23,6 +23,7 @@ export const ChangePasswordName = "Actualizar contraseña";
 export const DetailNodeName = "Detalle";
 export const NomenclatureInfoName = "Nomenclatura Universitaria";
 
+
 //! Tipos de nodo
 export const ROUTE_NODO_TYPE = "Ruta";
 export const INTEREST_NODO_TYPE = "Interés";

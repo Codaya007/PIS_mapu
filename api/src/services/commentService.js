@@ -26,10 +26,15 @@ const createComment = async (commentData) => {
   return newComment;
 };
 
-const getComments = async (where = {}, skip, limit, mobile, populate) => {
+const getComments = async (where = {}, node, skip, limit, mobile, populate) => {
   await applyRegex(where, mobile);
 
   let comments = [];
+
+  if (node) {
+    where.node = node;
+  }
+
 
   if (skip || limit) {
     comments = populate
@@ -85,8 +90,11 @@ const getCommentById = async (_id, populate = true) => {
   return comment;
 };
 
-const getCountComments = async (where = {}, mobile) => {
+const getCountComments = async (where = {}, node, mobile) => {
   await applyRegex(where, mobile);
+  if (node) {
+    where.node = node;
+  }
   return await Comment.count(where);
 };
 

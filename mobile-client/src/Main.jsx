@@ -9,6 +9,7 @@ import DetailNodeScreen from "./screens/DetailNodeScreen";
 import Filter from "./screens/Filter";
 // import MapApi from "./components/MapApi";
 import ResultSearch from "./components/ResultSearch";
+import CommentDetail from "./screens/CommentDetail";
 import ForgotPasswordForm from "./screens/ForgotPasswordForm";
 import { DrawerContentScrollView, DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";

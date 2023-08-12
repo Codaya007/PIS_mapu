@@ -61,25 +61,17 @@ const createBlock = async (blockData) => {
   return block;
 };
 
-const getBlocks = async (where = {}, skip, limit, populate = true) => {
-  let blocks = [];
-
-  if (populate) {
-    blocks = await Block.find(where)
-      .skip(skip)
-      .limit(limit)
-      .populate("faculty")
-      .populate("campus")
-      .sort({ number: -1 });
-  } else {
-    blocks = await Block.find(where)
-      .skip(skip)
-      .limit(limit)
-      .sort({ number: -1 });
-  }
+const getBlocks = async (where = {}, skip, limit) => {
+  let blocks = await Block.find(where)
+    .skip(skip)
+    .limit(limit)
+    .populate("faculty")
+    .populate("campus")
+    .sort({ number: 1 });
 
   // Añado el detalle
-  if (populate) blocks = await Promise.all(blocks.map(populateNode));
+  blocks = await Promise.all(blocks.map(populateNode));
+  blocks.sort((a, b) => a.number - b.number); //? Con esta linea me ordena bien
 
   return blocks;
 };
