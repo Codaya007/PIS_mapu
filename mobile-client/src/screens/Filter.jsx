@@ -15,10 +15,8 @@ import {
 } from "native-base";
 import { Alert } from "native-base";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 import { ForgotPasswordName, HomeName, NomenclatureInfoName } from "../constants";
 import { useEffect } from "react";
-import { HomeName } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import { getCampus } from "../services/campus";
 import { getAllCampuses } from "../store/slices/campusSlice";

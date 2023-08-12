@@ -145,7 +145,6 @@ const AuthUserMenu = () => {
             component={ReportLostPoint}
           />
           <Drawer.Screen name={CommentName} component={Comment} />
-          <Drawer.Screen name={NomenclatureInfoName} component={NomenclatureInfo} />
           <Drawer.Screen
             name={CommentName}
             component={Comment}
@@ -162,6 +161,7 @@ const AuthUserMenu = () => {
               drawerItemStyle: { display: "none" },
             }}
           />
+          <Drawer.Screen name={NomenclatureInfoName} component={NomenclatureInfo} />
           <Drawer.Screen name={AboutName} component={About} />
           {/*  LOGOUT ACTION */}
         </Drawer.Navigator>
@@ -240,6 +240,7 @@ const MainUserMenu = () => {
               drawerItemStyle: { display: "none" },
             }}
           />
+          <Drawer.Screen name={NomenclatureInfoName} component={NomenclatureInfo} />
           <Drawer.Screen name={AboutName} component={About} />
         </Drawer.Navigator>
       </NavigationContainer>

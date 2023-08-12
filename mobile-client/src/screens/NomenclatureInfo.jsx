@@ -1,8 +1,12 @@
 import React from "react";
-import { Box, Heading, Text, ScrollView, Image } from "native-base";
+import { Box, Heading, Text, ScrollView, Image, Link as LinkStyle } from "native-base";
 import { SafeAreaView } from "react-native";
+import { FilterName } from "../constants";
+import { useNavigation } from "@react-navigation/native";
 
 const NomenclatureInfo = () => {
+  const navigation = useNavigation();
+  const navigate = (to) => navigation.navigate(to);
   return (
     <SafeAreaView>
       <ScrollView borderRadius="md" padding="4">
@@ -16,6 +20,20 @@ const NomenclatureInfo = () => {
             y Sub Ambiente 2. A través de esta nomenclatura, podemos ubicarnos
             de manera precisa en cada espacio de nuestras instalaciones.
           </Text>
+          <Heading size="sm" p={4}>
+            Veámoslo con un ejemplo...
+          </Heading>
+          <Image
+            source={{ uri: 'https://mapu-bucket.s3.amazonaws.com/1691873436204_64d7f09c26c6886bc0119048.png' }}
+            alt="Nomenclatura"
+            size="200px"
+            width="100%"
+            // height="100%"
+            resizeMode="contain"
+            borderRadius="md"
+            // marginTop="-10"
+            marginBottom="4"
+          />
           <Text textAlign={"justify"}>
             <Heading size="sm" ml="-1">
               Campus:{" "}
@@ -60,22 +78,19 @@ const NomenclatureInfo = () => {
             Espacio independiente identificado dentro de un Ambiente. Su uso se centra
             en oficinas administrativas.
           </Text>
-          <Heading size="sm" p={4}>
-            Veámoslo con un ejemplo...
-          </Heading>
-          <Image
-            source={{ uri: 'https://cdn.vox-cdn.com/thumbor/9HfS_-ugBoHDaLskP6ssJ8_nIkY=/0x22:1584x851/fit-in/1200x630/cdn.vox-cdn.com/uploads/chorus_asset/file/24415978/rick_and_morty_s4_image.png' }}
-            alt="Nomenclatura"
-            size="20px"
-            width="100%"
-            // height="100%"
-            resizeMode="contain"
-            borderRadius="md"
-            // marginTop="-10"
-            marginBottom="4"
-          />
-          <Text>adf</Text>
+          <LinkStyle
+              onPress={() => navigate(FilterName)}
+              _text={{
+                color: "indigo.500",
+                fontWeight: "medium",
+                fontSize: "sm",
+              }}
+              marginTop="2"
+            >
+              Búsqueda por Nomenclatura
+            </LinkStyle>
         </Box>
+        <Text marginBottom="4"></Text>
       </ScrollView>
     </SafeAreaView>
   );
