@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const blockSchema = new Schema({
   number: {
-    type: String,
+    type: Number,
     required: true,
     unique: true,
     min: 1,
