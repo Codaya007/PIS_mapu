@@ -63,11 +63,11 @@ const FromTo = () => {
     };
 
     useEffect(() => {
-        setDestinyText(destination?.detail?.title || destination?.name || "")
+        setDestinyText(destination?.title || destination?.name || "")
     }, [destination]);
 
     useEffect(() => {
-        setOriginText(origin?.detail?.title || origin?.name || "")
+        setOriginText(origin?.title || origin?.name || "")
     }, [origin]);
 
     return (

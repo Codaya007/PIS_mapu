@@ -1,7 +1,4 @@
-import {
-  getInterestingNodesByStringSearch,
-  getShortestPath,
-} from "../../services/Search";
+import { getSearchString, getShortestPath } from "../../services/Search";
 import {
   clearError,
   searchText,
@@ -15,7 +12,7 @@ export const getSearchResults = (search) => async (dispatch) => {
     dispatch(setLoadingSearch(true));
     dispatch(clearError());
 
-    const results = await getInterestingNodesByStringSearch(search);
+    const results = await getSearchString(search);
 
     dispatch(searchText(results));
   } catch (error) {
