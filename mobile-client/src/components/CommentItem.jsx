@@ -7,13 +7,13 @@ import { useSelector } from "react-redux";
 // const lorem = "Lorem ipsum dolor sit amet, consectetur adipisicing elit. At provident delectus nisi repudiandae recusandae. Quae fugit quos est temporibus saepe asperiores a, eligendi aperiam voluptatum magni deserunt commodi porro libero."
 
 export default function CommentDetail({ comment, handleDeleteComment }) {
-    const userFullName = commentUser?.name ? `${commentUser?.name} ${commentUser?.lastname}`.trim() : "Desconocido";
     const { user: currentUser } = useSelector(state => state.authReducer);
     const commentUser = comment?.user;
+    const userFullName = commentUser?.name ? `${commentUser?.name} ${commentUser?.lastname}`.trim() : "Desconocido";
 
     return <Box mb={2} bgColor={"gray.300"} borderRadius={"10"} display={"flex"} flexDirection={"row"} p={3} justifyContent={"space-between"}>
         <View>
-            <Avatar src={commentUser?.avatar} alt={userFullName} />
+            <Avatar source={{ uri: commentUser?.avatar }} alt={userFullName} />
         </View>
         <View width={"80%"}>
             <Box display={"flex"} flexDirection={"row"} justifyContent={"space-between"} alignContent={"center"}>
