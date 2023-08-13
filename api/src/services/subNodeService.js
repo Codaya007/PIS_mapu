@@ -14,9 +14,11 @@ const mapSubNode = (row) => {
   result.latitude = row.LATITUD;
   result.longitude = row.LONGITUD;
   result.category = row.CATEGORIA;
-  result.floor = row.PISO;
-  result.enviroment = row.AMBIENTE;
-  result.subenviroment = row.SUBAMBIENTE;
+  result.nomenclature = {
+    floor: row.PISO,
+    environment: row.AMBIENTE,
+    subEnvironment: row.SUBAMBIENTE
+  }
 
   return result;
 };
