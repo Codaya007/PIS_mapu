@@ -22,7 +22,7 @@ const initialState = {
   type: "Mi Ubicación",
 };
 
-export default function MapApi({ nodeSelected, onSelect = false, reportNode, report, updateCoordinate  }) {
+export default function MapApi({ nodeSelected, onSelect = false, reportNode, report, updateCoordinate }) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [path, setPath] = useState([]);
   const [nodeMarkerStart, setNodeMarkerStart] = useState("");
@@ -31,7 +31,7 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
   const mapRef = useRef(null);
   const navigation = useNavigation();
   const { path: originalPath, totalDistance = 0 } = useSelector(state => state.searchReducer)
-  const [selectedCoordinate, setSelectedCoordinate] = useState(null);
+  // const [selectedCoordinate, setSelectedCoordinate] = useState(null);
   const [selectedMarket, setSelectedMarket] = useState(false);
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
@@ -47,7 +47,7 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
         text1: "Error al cargar nodos",
         position: "bottom",
       });
-      console.log({ error });
+      console.log(error.response?.data || error.message);
     }
   };
 
@@ -81,7 +81,7 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
         title={node?.name}
         description={"Ver más"}
         pinColor={node?.color}
-        // onPress={setSelectedMarket(true)}
+      // onPress={setSelectedMarket(true)}
       >
         <Callout onPress={() => handlePressClickNode(node)}>
         </Callout>
@@ -194,9 +194,9 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
 
   const handleMapPress = (event) => {
     const { coordinate } = event.nativeEvent;
-    if(!selectedMarket){
+    if (!selectedMarket) {
       updateCoordinate(coordinate)
-    }else{
+    } else {
       setSelectedMarket(false)
     }
   }
@@ -223,9 +223,9 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
         userLocationUpdateInterval={5000}
         userLocationFastestInterval={5000}
         onUserLocationChange={handleGpsNode}
-        onPress={ reportNode && handleMapPress }
+        onPress={reportNode && handleMapPress}
       >
-        { reportNode && report.lostPoint && (
+        {reportNode && report?.lostPoint && (
           <Marker coordinate={report.lostPoint} />
         )}
         <Polyline coordinates={path} strokeColor="#238C23" strokeWidth={6} />

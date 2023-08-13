@@ -9,6 +9,7 @@ import DetailNodeScreen from "./screens/DetailNodeScreen";
 import Filter from "./screens/Filter";
 // import MapApi from "./components/MapApi";
 import ResultSearch from "./components/ResultSearch";
+import CommentDetail from "./screens/CommentDetail";
 import ForgotPasswordForm from "./screens/ForgotPasswordForm";
 import { DrawerContentScrollView, DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
@@ -30,7 +31,8 @@ import {
   FacultiesName,
   DetailNodeName,
   ResportOutDatedInformationName,
-  ProfileName
+  ProfileName,
+  NodeCommentsName
 } from "./constants";
 import ReportOutdatedInformation from "./screens/ReportOutDateInformation";
 import Comment from "./screens/Comment";
@@ -142,12 +144,12 @@ const AuthUserMenu = () => {
             name={ReportLostPointName}
             component={ReportLostPoint}
           />
-          
+
           <Drawer.Screen
             name={ResportOutDatedInformationName}
             component={ReportOutdatedInformation}
             options={{
-              drawerItemStyle: { display: "none" }, 
+              drawerItemStyle: { display: "none" },
               headerShown: false,
             }}
           />
@@ -157,6 +159,14 @@ const AuthUserMenu = () => {
             options={{
               drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
               drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+            }}
+          />
+          <Drawer.Screen
+            name={NodeCommentsName}
+            component={CommentDetail}
+            options={{
+              drawerLabel: () => null,
+              drawerItemStyle: { display: "none" },
             }}
           />
           <Drawer.Screen name={AboutName} component={About} />
@@ -214,11 +224,27 @@ const MainUserMenu = () => {
             }}
           />
           <Drawer.Screen
+            name={CommentName}
+            component={Comment}
+            options={{
+              drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
+              drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+            }}
+          />
+          <Drawer.Screen
             name={DetailNodeName}
             component={DetailNodeScreen}
             options={{
               drawerLabel: () => null, // Oculta el texto del enlace en el Drawer
               drawerItemStyle: { display: "none" }, // Oculta completamente la opción del Drawer
+            }}
+          />
+          <Drawer.Screen
+            name={NodeCommentsName}
+            component={CommentDetail}
+            options={{
+              drawerLabel: () => null,
+              drawerItemStyle: { display: "none" },
             }}
           />
           <Drawer.Screen name={AboutName} component={About} />

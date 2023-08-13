@@ -19,15 +19,17 @@ module.exports = {
   getAllComments: async (req, res) => {
     const {
       mobile = "false",
+      node,
       populate,
       skip = 0,
       limit = 10,
       ...where
     } = req.query;
 
-    const totalCount = await commentService.getCountComments(where, mobile);
+    const totalCount = await commentService.getCountComments(where, node, mobile);
     const results = await commentService.getComments(
       where,
+      node,
       skip,
       limit,
       mobile,
