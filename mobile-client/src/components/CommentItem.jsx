@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 export default function CommentDetail({ comment, handleDeleteComment }) {
     const userFullName = commentUser?.name ? `${commentUser?.name} ${commentUser?.lastname}`.trim() : "Desconocido";
     const { user: currentUser } = useSelector(state => state.authReducer);
-    const commentUser = currentUser || comment?.user;
+    const commentUser = comment?.user;
 
     return <Box mb={2} bgColor={"gray.300"} borderRadius={"10"} display={"flex"} flexDirection={"row"} p={3} justifyContent={"space-between"}>
         <View>
