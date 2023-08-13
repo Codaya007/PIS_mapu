@@ -32,20 +32,20 @@ const ReportOutdatedInformation = () => {
   const { user } = useSelector((state) => state.authReducer);
   const [report, setReport] = useState(reportState);
 
-  useEffect( ()=> {
-    setReport( {
+  useEffect(() => {
+    setReport({
       ...report,
       node: node._id,
     });
 
-  },[]);
-  
+  }, []);
+
   const handleEditReport = async (text, input) => {
     setReport({
       ...report,
       [input]: text,
     })
-    
+
   };
 
   const handleSave = async () => {
@@ -68,12 +68,11 @@ const ReportOutdatedInformation = () => {
     }
 
     try {
-      console.log(report)
       await createReport(report);
 
       Toast.show({
         type: "success",
-        text1: "Reporte enviado",
+        text1: "Reporte enviado. Gracias por su información",
         position: "bottom",
       });
       navigate.navigate(HomeName);
@@ -98,7 +97,7 @@ const ReportOutdatedInformation = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <Center w="100%">
-          <Box safeArea p="2" w="90%" maxW="290" py="8">
+          <Box safeArea p="2" w="95%" py="8">
             <Heading
               size="lg"
               color="coolGray.800"
@@ -107,29 +106,30 @@ const ReportOutdatedInformation = () => {
               }}
               fontWeight="semibold"
             >
-              Detalle informacion faltante
+              Detalle información faltante
             </Heading>
             <VStack space={3} mt="5">
               <FormControl>
                 <FormControl.Label>Descripción:  {node.detail?.title || "No hay descripción "}</FormControl.Label>
               </FormControl>
-              <Box overflow={"hidden"} borderTopRadius={"27"} style={styles.image}>
-          <Image
-            height={"100%"}
-            width={"100%"}
-            resizeMode="cover"
-            source={{ uri: node?.detail?.img }}
-            alt={node?.detail?.img }
-          />
-        </Box>
+              {node?.detail?.img &&
+                <Box overflow={"hidden"} borderTopRadius={"27"} style={styles.image}>
+                  <Image
+                    height={"100%"}
+                    width={"100%"}
+                    resizeMode="cover"
+                    source={{ uri: node?.detail?.img }}
+                    alt={node.name || node?.detail?.title}
+                  />
+                </Box>}
               <FormControl>
-                <FormControl.Label>Latitud:  {node.latitude} </FormControl.Label>
+                <FormControl.Label>Coordenadas:  [{node.latitude}, {node.longitude}] </FormControl.Label>
               </FormControl>
-              <FormControl>
+              {/* <FormControl>
                 <FormControl.Label>Longitud:  {node.longitude}</FormControl.Label>
-              </FormControl>
+              </FormControl> */}
               <FormControl>
-                <FormControl.Label>Comentario</FormControl.Label>
+                <FormControl.Label>Indique qué información está desactualizada o incompleta</FormControl.Label>
                 <TextArea
                   onChangeText={(text) => handleEditReport(text, "comment")}
                   value={report.comment}
@@ -140,12 +140,12 @@ const ReportOutdatedInformation = () => {
                 Enviar
               </Button>
               <Button
-                  mt="2"
-                  colorScheme="orange"
-                  onPress={ () => navigate.goBack() }
-                >
-                  Cancelar
-                </Button>
+                mt="2"
+                colorScheme="orange"
+                onPress={() => navigate.goBack()}
+              >
+                Cancelar
+              </Button>
             </VStack>
           </Box>
         </Center>

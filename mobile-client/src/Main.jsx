@@ -36,7 +36,7 @@ import {
   NodeCommentsName
 } from "./constants";
 import ReportOutdatedInformation from "./screens/ReportOutDateInformation";
-import Comment from "./screens/Comment";
+import Comment from "./screens/CommentForm";
 import EditProfile from "./screens/EditProfile";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
 import Faculties from "./screens/Faculties";

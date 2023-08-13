@@ -5,7 +5,6 @@ import {
   Center,
   FormControl,
   Heading,
-  Input,
   KeyboardAvoidingView,
   ScrollView,
   Text,
@@ -14,17 +13,23 @@ import {
 } from "native-base";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
-import { API_BASEURL } from "../constants";
-import { useSelector } from "react-redux";
+import { API_BASEURL, NodeCommentsName } from "../constants";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { getAllCommentsFromNode } from "../services/Comment";
+import { getAllComments } from "../store/slices/commentSlice";
 
 //Talvez toque cambiarle el tipo de dato de user y node
 const commentState = {
   content: "",
 };
 
-const Comment = ({ node }) => {
+const CommentForm = ({ }) => {
   const { user } = useSelector((state) => state.authReducer);
   const [comment, setComment] = useState(commentState);
+  const { currentNode } = useSelector(state => state.commentReducer);
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const handleEditComment = (text, input) => {
     setComment({
@@ -54,23 +59,30 @@ const Comment = ({ node }) => {
           position: "bottom",
         });
       }
-
-      await axios.post(`${API_BASEURL}/comment/`, {
+      const data = {
         content: comment.content,
-        hide: false,
-        user: user._id,
-        node: node,
-      });
+        // hide: false,
+        user: user?._id,
+        node: currentNode?._id,
+      };
 
+      await axios.post(`${API_BASEURL}/comment/`, data);
+
+      const commentsData = await getAllCommentsFromNode(currentNode?._id)
+      dispatch(getAllComments(commentsData));
+
+      navigation.navigate(NodeCommentsName)
       Toast.show({
         type: "success",
         text1: "Comentario añadido exitosamente",
         position: "bottom",
       });
+      setComment("");
     } catch (error) {
+      console.log(error.response?.data);
       Toast.show({
         type: "error",
-        text1: "No se puedo añadir el comentario",
+        text1: error.response?.data?.message || "No se pudo añadir el comentario",
         position: "bottom",
       });
     }
@@ -122,4 +134,4 @@ const Comment = ({ node }) => {
   );
 };
 
-export default Comment;
+export default CommentForm;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, ScrollView } from 'react-native';
 import { View, Text, Image, Heading, Box, Button, Divider, Flex } from 'native-base';
-import { ACCESS_NODO_TYPE, BLOCK_NODO_TYPE, HomeName, INTEREST_NODO_TYPE, NodeCommentsName, ROUTE_NODO_TYPE } from '../constants';
+import { ACCESS_NODO_TYPE, BLOCK_NODO_TYPE, HomeName, INTEREST_NODO_TYPE, NodeCommentsName, ROUTE_NODO_TYPE, ResportOutDatedInformationName } from '../constants';
 import { getAccessNodeById, getBlockNodeById, getInterestingNodeById, getRouteNodeById } from '../services/Nodes';
 import { getAllCommentsFromNode } from '../services/Comment'
 import { useState } from 'react';
@@ -12,9 +12,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentNode, setDestination, setOnSearchProcess, setOrigin } from '../store/slices/searchSlice';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { getAllComments, setCommentCurrentNode } from '../store/slices/commentSlice';
+import Toast from "react-native-toast-message"
 
-const NodeDetail = ({ node = {}, comments = [] }) => {
-  const { detail } = node || {};
+const NodeDetail = ({ }) => {
+  const { comments, currentNode: node = {} } = useSelector(state => state.commentReducer);
+  const { detail } = node;
   const { subnodes } = detail || {};
   const { user } = useSelector(state => state.authReducer);
   const navigation = useNavigation();
@@ -155,9 +158,12 @@ const NodeDetail = ({ node = {}, comments = [] }) => {
                 size={"xs"}
                 textAlign={"right"}
                 color={"gray.600"}
-                onPress={() => navigation.navigate(NodeCommentsName, { comments })}
+                onPress={() => {
+                  dispatch(setCommentCurrentNode(node));
+                  navigation.navigate(NodeCommentsName, { comments, node: node?._id })
+                }}
               >
-                {comments?.length} comentario{comments.length === 1 ? "" : "s"}
+                {comments?.length || 0} comentario{comments?.length === 1 ? "" : "s"}
               </Heading>
             </Box>
             <Divider marginY={4} />
@@ -165,7 +171,7 @@ const NodeDetail = ({ node = {}, comments = [] }) => {
             <Button
               colorScheme={"yellow"}
               borderRadius={50}
-              onPress={() => handleNode(node._id)}
+              onPress={() => handleNode(node?._id)}
             >
               <Text underline textAlign={"center"}>
                 La información está desactualizada? Reportar
@@ -179,33 +185,45 @@ const NodeDetail = ({ node = {}, comments = [] }) => {
 }
 
 const DetailNodeScreen = ({ route }) => {
-  const { nodeId, type } = route.params;
+  const { type } = route.params;
   const [node, setNode] = useState(null);
-  const [comments, setComments] = useState([]);
+  const { currentNode, comments } = useSelector(state => state.commentReducer);
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
+  const nodeId = currentNode?._id;
 
   useEffect(() => {
     setNode(null);
     setLoading(true);
 
     const getNode = async () => {
-      let data = null;
-      if (type == BLOCK_NODO_TYPE) {
-        data = await getBlockNodeById(nodeId)
-      } else if (type == ACCESS_NODO_TYPE) {
-        data = await getAccessNodeById(nodeId)
-      } else if (type == INTEREST_NODO_TYPE) {
-        data = await getInterestingNodeById(nodeId)
-      } else if (type === ROUTE_NODO_TYPE) {
-        data = await getRouteNodeById(nodeId);
-        data.name = "Nodo Ruta"
+      try {
+        let data = null;
+
+        if (type == BLOCK_NODO_TYPE) {
+          data = await getBlockNodeById(nodeId)
+        } else if (type == ACCESS_NODO_TYPE) {
+          data = await getAccessNodeById(nodeId)
+        } else if (type == INTEREST_NODO_TYPE) {
+          data = await getInterestingNodeById(nodeId)
+        } else if (type === ROUTE_NODO_TYPE) {
+          data = await getRouteNodeById(nodeId);
+          data.name = "Nodo Ruta"
+        }
+
+        const commentsData = await getAllCommentsFromNode(nodeId)
+        setNode(data);
+        dispatch(getAllComments(commentsData));
+      } catch (error) {
+        console.log(error?.response?.data);
+        Toast.show({
+          type: "error",
+          text1: "No se pudieron cargar los comentarios",
+          position: "bottom"
+        });
+      } finally {
+        setLoading(false);
       }
-
-      const commentsData = await getAllCommentsFromNode(data._id)
-
-      setNode(data);
-      setComments(commentsData.data);
-      setLoading(false);
     }
 
     getNode();

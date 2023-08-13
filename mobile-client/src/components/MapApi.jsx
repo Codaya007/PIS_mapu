@@ -8,9 +8,10 @@ import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 
 import {
-  DetailNodeName, ReportLostPointName
+  DetailNodeName
 } from "../constants/index"
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { setCommentCurrentNode } from "../store/slices/commentSlice";
 
 const initialState = {
   coordinates: ["0", "0"],
@@ -36,6 +37,7 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
   };
+  const dispatch = useDispatch();
 
   const handleNodes = async () => {
     try {
@@ -47,6 +49,7 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
         text1: "Error al cargar nodos",
         position: "bottom",
       });
+      console.log({ error });
       console.log(error.response?.data || error.message);
     }
   };
@@ -64,6 +67,7 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
 
   const handlePressClickNode = (node) => {
     setSelectedMarket(true)
+    dispatch(setCommentCurrentNode(node));
     navigation.navigate(DetailNodeName, { nodeId: node?._id, type: node?.type });
   }
 
@@ -103,7 +107,7 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
 
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
-      console.log(location.coords)
+      // console.log(location.coords)
       if (mapRef.current) {
         await mapRef.current.animateCamera({
           center: {
@@ -227,7 +231,7 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
         userLocationUpdateInterval={5000}
         userLocationFastestInterval={5000}
         onUserLocationChange={handleGpsNode}
-        onPress={reportNode && handleMapPress}
+        onPress={reportNode ? handleMapPress : () => { }}
       >
         {reportNode && report?.lostPoint && (
           <Marker coordinate={report.lostPoint} />
