@@ -18,6 +18,13 @@ nodeRouter.get("/", nodeController.getAllNodes);
 nodeRouter.get("/coordinates", nodeController.getAllCoordinates);
 
 /**
+ * @route GET /nomenclature
+ * @desc Obtener el nodo por nomenclatura
+ * @access Public
+ */
+nodeRouter.get("/nomenclature", nodeController.getNodeByNomenclature);
+
+/**
  * @route GET /:id
  * @desc Obtener el nodo por id
  * @access Public

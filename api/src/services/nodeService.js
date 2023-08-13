@@ -1,3 +1,5 @@
+const Campus = require("../models/Campus");
+const Block = require("../models/Block");
 const Node = require("../models/Node");
 const Detail = require("../models/Detail");
 const Adjacency = require("../models/Adjacency");
@@ -9,6 +11,7 @@ const { isValidObjectId } = require("mongoose");
 const {
   timeBetweenCoordinates,
   getDistanceBetweenCoordinates,
+  generateLocationString,
 } = require("../helpers/index");
 const SubNode = require("../models/SubNode");
 const { ROUTE_NODO_TYPE, COLORS_DICTIONARY } = require("../constants");
@@ -301,6 +304,57 @@ const timeCoordinates = async (origin, destination, speed) => {
   return (time = { minutes, seconds });
 };
 
+const getNodeByNomenclature = async (
+  campusSymbol = "",
+  blockNumber,
+  floor,
+  environment
+) => {
+  const campus = await Campus.findOne({
+    symbol: campusSymbol.trim(),
+  });
+
+  if (!campus) {
+    throw new NotExist(`El campus ${campusSymbol} no existe`);
+  }
+
+  const block = await Block.findOne({
+    number: parseInt(blockNumber),
+  });
+
+  if (!block) {
+    throw new NotExist(`El bloque ${blockNumber} no existe`);
+  }
+
+  if (campus?._id?.toString() !== block?.campus?.toString()) {
+    throw new ValidationError(
+      `El bloque ${blockNumber} no pertenece al campus ${campusSymbol}`
+    );
+  }
+
+  const node = await Node.findOne({ _id: block?.node, deletedAt: null })
+    .populate("detail")
+    .lean();
+
+  if (!node) {
+    throw new NotExist(`No se ha encontrado la información del lugar`);
+  }
+  node.floor = floor;
+  node.environment = environment;
+  node.block = block;
+  node.campus = campus;
+
+  const message = generateLocationString(node);
+
+  return {
+    message,
+    node: {
+      _id: node._id,
+      name: node.detail?.title || "Bloque " + block.number,
+    },
+  };
+};
+
 module.exports = {
   nodeAlreadyExists,
   createNode,
@@ -313,4 +367,5 @@ module.exports = {
   updateNodeById,
   deleteNodeById,
   timeCoordinates,
+  getNodeByNomenclature,
 };

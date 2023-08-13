@@ -45,7 +45,7 @@ const FromTo = () => {
 
             Toast.show({
                 type: "error",
-                text1: `No se ha podido realizar la busqueda`,
+                text1: `No se ha podido realizar la búsqueda`,
                 position: "bottom",
             });
         }
