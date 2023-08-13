@@ -30,14 +30,16 @@ import {
   // MapName,
   FacultiesName,
   DetailNodeName,
+  ResportOutDatedInformationName,
   ProfileName,
   NodeCommentsName
 } from "./constants";
-import ReportLostPoint from "./screens/ReportLostPoint";
+import ReportOutdatedInformation from "./screens/ReportOutDateInformation";
 import Comment from "./screens/Comment";
 import EditProfile from "./screens/EditProfile";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
 import Faculties from "./screens/Faculties";
+import ReportLostPoint from "./screens/ReportLostPoint copy";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "./store/slices/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -141,6 +143,15 @@ const AuthUserMenu = () => {
           <Drawer.Screen
             name={ReportLostPointName}
             component={ReportLostPoint}
+          />
+
+          <Drawer.Screen
+            name={ResportOutDatedInformationName}
+            component={ReportOutdatedInformation}
+            options={{
+              drawerItemStyle: { display: "none" },
+              headerShown: false,
+            }}
           />
           <Drawer.Screen
             name={CommentName}
