@@ -5,6 +5,7 @@ const blockNodeServices = require("./blockNodeService");
 const { isValidObjectId } = require("mongoose");
 const validateBlocksExcelFile = require("../helpers/validateBlocksFile");
 const { uploadImageToS3 } = require("../helpers/s3Helpers");
+const ValidationError = require("../errors/ValidationError");
 
 const populateNode = async (block) => {
   const formated = block.toJSON();
@@ -149,6 +150,13 @@ const masiveUpload = async (file) => {
   }
 };
 
+const findNodeNomenclature = async (nomenclature) => {
+  const result = await getBlockById(nomenclature.block);
+  const idNode = result.node._id;
+  
+  return idNode;
+};
+
 module.exports = {
   createBlock,
   getBlocks,
@@ -159,4 +167,5 @@ module.exports = {
   getBlockById,
   masiveUpload,
   blockNumberAlreadyExists,
+  findNodeNomenclature,
 };

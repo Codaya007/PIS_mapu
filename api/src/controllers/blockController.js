@@ -55,4 +55,10 @@ module.exports = {
 
     return res.json(deleteBlock);
   },
+
+  findNodeByNomenclature: async (req, res, next) => {
+    const idNode = await blockServices.findNodeNomenclature(req.body);
+
+    return res.json({idNode});
+  },
 };

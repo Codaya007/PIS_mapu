@@ -66,4 +66,6 @@ blockRouter.put(
  */
 blockRouter.delete("/:id", isAdmin, blockController.deleteBlock);
 
+blockRouter.post("/nomenclature", blockController.findNodeByNomenclature);
+
 module.exports = blockRouter;
