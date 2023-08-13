@@ -28,8 +28,8 @@ const ResultSearch = ({ navigation, route }) => {
         dispatch(setDestination(nodeSelected))
       }
     } else {
-      dispatch(setCurrentNode(nodeSelected));
     }
+    dispatch(setCurrentNode(nodeSelected));
 
     navigate(HomeName);
     dispatch(setSearchResults(null))
@@ -52,37 +52,45 @@ const ResultSearch = ({ navigation, route }) => {
         <Loader /> :
         <ScrollView w="100%">
           <Box safeArea p="1" py="0" w="100%">
-            <VStack space={1} mt="5">
-              {searchTextResults && searchTextResults.length > 0 ? searchTextResults?.map((node) => (
-                <Button
-                  key={node._id}
-                  onPress={() => handleNodePress(node)}
-                  justifyContent="flex-start"
-                  w="100%"
-                  maxW="500"
-                  bg="#EEE"
-                  _pressed={{ bg: pressedColor }}
-                >
-                  <Text fontSize="16" fontWeight="bold">
-                    {node.detail.title}{" "}
-                  </Text>
-                  <Text
-                    fontSize="13"
-                    fontWeight="light"
-                    textAlign="left"
-                    marginLeft={3}
+            <VStack space={1}>
+              {searchTextResults && searchTextResults.length > 0 ?
+                searchTextResults?.map((node) => (
+                  <Button
+                    key={node._id}
+                    onPress={() => handleNodePress(node)}
+                    justifyContent="flex-start"
+                    w="100%"
+                    maxW="500"
+                    bg="#EEE"
+                    _pressed={{ bg: pressedColor }}
                   >
-                    {node.detail.description}
-                  </Text>
-                  <Text fontSize="12" marginLeft={3}>
-                    {node.campus.name}
-                  </Text>
-                </Button>
-              )) : <Text>No se encontraron resultados para '{searchText}'</Text>}
+                    <Text fontSize="16" fontWeight="bold">
+                      {node.title}
+                    </Text>
+                    <Text
+                      fontSize="13"
+                      fontWeight="light"
+                      textAlign="left"
+                      marginLeft={3}
+                    >
+                      {node.description || "Sin descripción"}
+                    </Text>
+                    <Box display={"flex"} justifyContent={"space-between"} flexDirection={"row"}>
+                      <Text fontSize="12">
+                        {node.campusName}
+                      </Text>
+                      {node.nomenclature?.campus &&
+                        <Text color={"red.500"}>
+                          {node.nomenclature?.campus} {node.nomenclature?.block} {node.nomenclature?.floor} {node.nomenclature?.environment}
+                        </Text>
+                      }
+                    </Box>
+                  </Button>
+                )) : <Text>No se encontraron resultados para '{searchText}'</Text>}
             </VStack>
           </Box>
         </ScrollView>}
-    </VStack>
+    </VStack >
   );
 };
 

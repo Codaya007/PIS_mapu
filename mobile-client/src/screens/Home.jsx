@@ -51,7 +51,7 @@ export default function Home() {
         ) : (
           <SearchBar />
         )}
-        {currentNode &&
+        {currentNode && !onSearchProcess &&
           <Box
             position={"absolute"}
             top={"570"}
@@ -66,10 +66,10 @@ export default function Home() {
             padding={3}
           >
             <Heading size={"md"} padding={2}>
-              {currentNode?.detail?.title}
+              {currentNode?.title}
             </Heading>
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-              <Text width={"70%"} textAlign={"justify"}>{currentNode?.detail?.description}</Text>
+              <Text width={"70%"} textAlign={"justify"}>{currentNode?.description || "Sin descripción"}</Text>
               <Box width={"25%"}>
                 <Button onPress={() => {
                   dispatch(setOnSearchProcess(true))

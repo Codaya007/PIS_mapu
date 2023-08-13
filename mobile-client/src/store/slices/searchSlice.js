@@ -51,7 +51,7 @@ export const searchSlice = createSlice({
       state.searchText = action.payload;
     },
     searchText: (state, action) => {
-      state.searchTextResults = action.payload;
+      state.searchTextResults = action.payload?.results;
     },
     setSearchResults: (state, action) => {
       state.searchTextResults = action.payload;

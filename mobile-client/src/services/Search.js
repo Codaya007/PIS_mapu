@@ -1,12 +1,10 @@
 import axios from "axios";
 import { API_BASEURL } from "../constants";
 
-export const getInterestingNodesByStringSearch = async (search) => {
-  const { data } = await axios.get(
-    `${API_BASEURL}/interesting-node?search=${search}`
-  );
+export const getSearchString = async (search) => {
+  const { data } = await axios.get(`${API_BASEURL}/search?search=${search}`);
 
-  return data?.results;
+  return data;
 };
 
 export const getShortestPath = async (
