@@ -6,8 +6,6 @@ import {
   FormControl,
   Heading,
   Image,
-  Input,
-  KeyboardAvoidingView,
   ScrollView,
   Text,
   TextArea,
@@ -45,14 +43,13 @@ const ReportOutdatedInformation = () => {
       ...report,
       [input]: text,
     })
-
   };
 
   const handleSave = async () => {
     if (!user) {
       Toast.show({
         type: "error",
-        text1: "Debe iniciar sesion para brindar",
+        text1: "Debe iniciar sesión",
         position: "bottom",
       });
       return;
@@ -80,76 +77,70 @@ const ReportOutdatedInformation = () => {
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: "Error al crear el punto perdido",
-        text2: "Intentelo nuevamente",
+        text1: error.response?.data?.message || "No se pudo enviar el reporte",
+        text2: "Inténtelo nuevamente",
         position: "bottom",
       });
     }
   };
 
   return (
-    <ScrollView w={["360", "300"]} h="30">
-      <KeyboardAvoidingView
-        h={{
-          base: "900px",
-          lg: "auto",
-        }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <Center w="100%">
-          <Box safeArea p="2" w="95%" py="8">
-            <Heading
-              size="lg"
-              color="coolGray.800"
-              _dark={{
-                color: "warmGray.50",
-              }}
-              fontWeight="semibold"
-            >
-              Detalle información faltante
-            </Heading>
-            <VStack space={3} mt="5">
-              <FormControl>
-                <FormControl.Label>Descripción:  {node.detail?.title || "No hay descripción "}</FormControl.Label>
-              </FormControl>
-              {node?.detail?.img &&
-                <Box overflow={"hidden"} borderTopRadius={"27"} style={styles.image}>
-                  <Image
-                    height={"100%"}
-                    width={"100%"}
-                    resizeMode="cover"
-                    source={{ uri: node?.detail?.img }}
-                    alt={node.name || node?.detail?.title}
-                  />
-                </Box>}
-              <FormControl>
-                <FormControl.Label>Coordenadas:  [{node.latitude}, {node.longitude}] </FormControl.Label>
-              </FormControl>
-              {/* <FormControl>
+    <ScrollView>
+      <Center w="100%" padding={3}>
+        <Box safeArea w="95%">
+          <Heading
+            size="lg"
+            color="coolGray.800"
+            _dark={{
+              color: "warmGray.50",
+            }}
+            fontWeight="semibold"
+          >
+            Reporte de información faltante
+          </Heading>
+          <VStack space={3} mt="5">
+            <FormControl>
+              <FormControl.Label>Descripción</FormControl.Label>
+              <Text>{node.detail?.title || "No hay descripción "}</Text>
+            </FormControl>
+            {node?.detail?.img &&
+              <Box overflow={"hidden"} borderTopRadius={"27"} style={styles.image}>
+                <Image
+                  height={"100%"}
+                  width={"100%"}
+                  resizeMode="cover"
+                  source={{ uri: node?.detail?.img }}
+                  alt={node.name || node?.detail?.title}
+                />
+              </Box>}
+            <FormControl>
+              <FormControl.Label>Coordenadas</FormControl.Label>
+              <Text>[{node.latitude}, {node.longitude}] </Text>
+            </FormControl>
+            {/* <FormControl>
                 <FormControl.Label>Longitud:  {node.longitude}</FormControl.Label>
               </FormControl> */}
-              <FormControl>
-                <FormControl.Label>Indique qué información está desactualizada o incompleta</FormControl.Label>
-                <TextArea
-                  onChangeText={(text) => handleEditReport(text, "comment")}
-                  value={report.comment}
-                />
-              </FormControl>
+            <FormControl>
+              <FormControl.Label>Indique qué información está desactualizada o incompleta</FormControl.Label>
+              <TextArea
+                onChangeText={(text) => handleEditReport(text, "comment")}
+                value={report.comment}
+              />
+            </FormControl>
 
-              <Button mt="2" bgColor={"indigo.500"} onPress={handleSave}>
-                Enviar
-              </Button>
-              <Button
-                mt="2"
-                colorScheme="orange"
-                onPress={() => navigate.goBack()}
-              >
-                Cancelar
-              </Button>
-            </VStack>
-          </Box>
-        </Center>
-      </KeyboardAvoidingView>
+            <Button mt="2" bgColor={"indigo.500"} onPress={handleSave}>
+              Enviar
+            </Button>
+            <Button
+              mt="2"
+              colorScheme="orange"
+              onPress={() => navigate.goBack()}
+            >
+              Cancelar
+            </Button>
+          </VStack>
+        </Box>
+      </Center>
     </ScrollView>
   );
 };
