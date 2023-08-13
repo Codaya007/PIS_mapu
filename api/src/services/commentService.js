@@ -15,9 +15,9 @@ const createComment = async (commentData) => {
     node: commentData.node,
   });
 
-  if (userComments) {
+  if (userComments > 2) {
     throw new ValidationError(
-      "Ya se escribió un comentario para este punto de interés"
+      "Ya escribió suficientes comentarios para este lugar"
     );
   }
 
@@ -35,7 +35,6 @@ const getComments = async (where = {}, node, skip, limit, mobile, populate) => {
     where.node = node;
   }
 
-
   if (skip || limit) {
     comments = populate
       ? await Comment.find(where).skip(skip).limit(limit).populate("user")
@@ -50,12 +49,13 @@ const getComments = async (where = {}, node, skip, limit, mobile, populate) => {
 };
 
 const validateNode = async (nodeId) => {
-  const node = await nodeService.getNodeById(nodeId);
-  if (node.type != constants.INTEREST_NODO_TYPE) {
-    throw new ValidationError(
-      "El comentario debe escribirse en un Nodo de Interes"
-    );
-  }
+  // const node =
+  await nodeService.getNodeById(nodeId);
+  // if (node.type != constants.INTEREST_NODO_TYPE && node) {
+  //   throw new ValidationError(
+  //     "El comentario debe escribirse en un Nodo de Interes"
+  //   );
+  // }
 
   return true;
 };
