@@ -31,8 +31,6 @@ export default function MapApi({
 }) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [path, setPath] = useState([]);
-  const [nodeMarkerStart, setNodeMarkerStart] = useState("");
-  const [nodeMarkerEnd, setNodeMarkerEnd] = useState("");
   const [gpsNode, setGpsNode] = useState(initialState);
   const mapRef = useRef(null);
   const navigation = useNavigation();
@@ -76,9 +74,6 @@ export default function MapApi({
     navigation.navigate(DetailNodeName, { nodeId: node?._id, type: node?.type });
   }
 
-  // const handleReportLostPoint = async () => {
-  //   navigation.navigate(ReportLostPointName, { selectedCoordinate });
-  // }
   const printNode = (node) => {
     return (
       <Marker
@@ -90,7 +85,6 @@ export default function MapApi({
         title={node?.name}
         description={"Ver más"}
         pinColor={node?.color}
-      // onPress={setSelectedMarket(true)}
       >
         <Callout onPress={() => handlePressClickNode(node)}>
         </Callout>
@@ -181,17 +175,6 @@ export default function MapApi({
 
   const showInformation = () => { };
 
-  const handleNode = (node) => {
-    showInformation();
-
-    if (nodeMarkerStart == "") {
-      setNodeMarkerStart(node._id);
-    } else if (nodeMarkerEnd == "") {
-      setNodeMarkerEnd(node._id);
-    }
-
-  };
-
   const showNodesOnMap = () => {
     return nodesPoint.map((node) => {
       if (node.type !== "Ruta" && !onSelect) {
@@ -228,7 +211,8 @@ export default function MapApi({
           pitch: 0,
           heading: 0,
           altitude: 300, //altitud en metros para ios, ignorado por android
-          zoom: 20 //zoom para android, ignorado por ios
+          zoom: 20, //zoom para android, ignorado por ios
+          color: "green"
         }, 5000);
       }
     }

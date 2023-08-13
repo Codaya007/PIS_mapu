@@ -21,7 +21,7 @@ import { getSearchResults, searchShortestPathByNode } from "../store/actions/sea
 
 const FromTo = () => {
     const navigate = useNavigation().navigate;
-    const { destination, origin, searchPathBy = "byNode", errorOnPathSearch } = useSelector(state => state.searchReducer);
+    const { destination, origin, searchPathBy = "byNode" } = useSelector(state => state.searchReducer);
     const [destinyText, setDestinyText] = useState(destination?.detail?.title || "");
     const [originText, setOriginText] = useState("");
     const dispatch = useDispatch()
@@ -40,7 +40,6 @@ const FromTo = () => {
             dispatch(setSearchText(textToSearch))
             dispatch(getSearchResults(textToSearch))
             navigate(ResultSearchName, { type });
-            // handleClearSearch();
         } catch (error) {
             console.log({ error });
 
@@ -53,10 +52,12 @@ const FromTo = () => {
     };
 
     const handleClearSearch = (band) => {
-        if (band == "origin") {
+        if (band === "origin") {
             dispatch(setOrigin(null))
+            setOriginText("")
         } else {
             dispatch(setDestination(null))
+            setDestination("")
         }
 
         dispatch(setCurrentNode(null))
@@ -72,13 +73,9 @@ const FromTo = () => {
 
     return (
         <Center w="100%" justifyContent="flex-end">
-            <VStack p="1" py="0" w="100%" mt="5" backgroundColor="white" pb="3">
+            <VStack py="0" w="100%" backgroundColor="white">
                 <HStack w="100%">
-                    <FormControl
-                        mr="2"
-                        mt="1"
-                        isRequired
-                    >
+                    <FormControl p={1} isRequired>
                         <Input
                             type="text"
                             value={originText}
