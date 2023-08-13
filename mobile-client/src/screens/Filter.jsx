@@ -15,8 +15,8 @@ import {
 } from "native-base";
 import { Alert } from "native-base";
 import { useDispatch, useSelector } from "react-redux";
+import { ForgotPasswordName, HomeName, NomenclatureInfoName } from "../constants";
 import { useEffect } from "react";
-import { HomeName } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 import { getCampus } from "../services/campus";
 import { getAllCampuses } from "../store/slices/campusSlice";
@@ -54,10 +54,14 @@ const Filter = () => {
     }
   }
 
+  const handleClickInformationNomenclature = () => {
+    navigate(NomenclatureInfoName);
+  };
+
+  // const [showAlert, setShowAlert] = useState(false);
   const fetchBlocks = async () => {
     try {
       const data = await getBlocks(false);
-
       dispatch(getAllBlocks(data));
     } catch (error) {
       Toast.show({
@@ -102,7 +106,7 @@ const Filter = () => {
               justifyContent="space-between"
             >
               <HStack space={2} flexShrink={1} alignItems="center">
-                <Alert.Icon />
+                <Alert.Icon onPress={handleClickInformationNomenclature}/>
                 <Heading fontSize="md" fontWeight="medium" color="coolGray.800">
                   Nomenclatura
                 </Heading>

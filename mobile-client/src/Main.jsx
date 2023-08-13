@@ -30,6 +30,7 @@ import {
   // MapName,
   FacultiesName,
   DetailNodeName,
+  NomenclatureInfoName,
   ResportOutDatedInformationName,
   ProfileName,
   NodeCommentsName
@@ -39,6 +40,7 @@ import Comment from "./screens/Comment";
 import EditProfile from "./screens/EditProfile";
 import ProfileChangePassword from "./screens/ProfileChangePassword";
 import Faculties from "./screens/Faculties";
+import NomenclatureInfo from "./screens/NomenclatureInfo";
 import ReportLostPoint from "./screens/ReportLostPoint copy";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "./store/slices/authSlice";
@@ -144,7 +146,6 @@ const AuthUserMenu = () => {
             name={ReportLostPointName}
             component={ReportLostPoint}
           />
-
           <Drawer.Screen
             name={ResportOutDatedInformationName}
             component={ReportOutdatedInformation}
@@ -169,6 +170,7 @@ const AuthUserMenu = () => {
               drawerItemStyle: { display: "none" },
             }}
           />
+          <Drawer.Screen name={NomenclatureInfoName} component={NomenclatureInfo} />
           <Drawer.Screen name={AboutName} component={About} />
           {/*  LOGOUT ACTION */}
         </Drawer.Navigator>
@@ -247,6 +249,7 @@ const MainUserMenu = () => {
               drawerItemStyle: { display: "none" },
             }}
           />
+          <Drawer.Screen name={NomenclatureInfoName} component={NomenclatureInfo} />
           <Drawer.Screen name={AboutName} component={About} />
         </Drawer.Navigator>
       </NavigationContainer>
