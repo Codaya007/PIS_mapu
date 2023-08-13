@@ -111,7 +111,7 @@ const ReportOutdatedInformation = () => {
             </Heading>
             <VStack space={3} mt="5">
               <FormControl>
-                <FormControl.Label>Descripción:  {node.detail?.description}</FormControl.Label>
+                <FormControl.Label>Descripción:  {node.detail?.title || "No hay descripción "}</FormControl.Label>
               </FormControl>
               <Box overflow={"hidden"} borderTopRadius={"27"} style={styles.image}>
           <Image
@@ -119,7 +119,7 @@ const ReportOutdatedInformation = () => {
             width={"100%"}
             resizeMode="cover"
             source={{ uri: node?.detail?.img }}
-            alt={node?.detail?.title}
+            alt={node?.detail?.img }
           />
         </Box>
               <FormControl>
