@@ -1,6 +1,6 @@
 //! Usar esto para consultar a la api Deployada
 export const API_BASEURL = "https://mapupis.fly.dev";
-// export const API_BASEURL = "http://192.168.16.101:3000";
+// export const API_BASEURL = "http://192.168.100.9:3000";
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -14,6 +14,8 @@ export const ForgotPasswordName = "Olvidé mi contraseña";
 export const AboutName = "Acerca de";
 export const FilterName = "Filtro";
 export const ReportLostPointName = "Reportar punto perdido";
+export const ResportOutDatedInformationName =
+  "Reportar información desactualizada";
 export const ResultSearchName = "Resultados de búsqueda";
 export const MapName = "Mapa";
 export const CommentName = "Comentar";

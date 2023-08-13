@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 
 import {
-  DetailNodeName
+  DetailNodeName, ReportLostPointName
 } from "../constants/index"
 import { useSelector } from "react-redux";
 
@@ -22,7 +22,7 @@ const initialState = {
   type: "Mi Ubicación",
 };
 
-export default function MapApi({ nodeSelected, onSelect = false }) {
+export default function MapApi({ nodeSelected, onSelect = false, reportNode, report, updateCoordinate }) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [path, setPath] = useState([]);
   const [nodeMarkerStart, setNodeMarkerStart] = useState("");
@@ -31,7 +31,8 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
   const mapRef = useRef(null);
   const navigation = useNavigation();
   const { path: originalPath, totalDistance = 0 } = useSelector(state => state.searchReducer)
-
+  // const [selectedCoordinate, setSelectedCoordinate] = useState(null);
+  const [selectedMarket, setSelectedMarket] = useState(false);
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
   };
@@ -46,7 +47,7 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
         text1: "Error al cargar nodos",
         position: "bottom",
       });
-      console.log({ error });
+      console.log(error.response?.data || error.message);
     }
   };
 
@@ -62,9 +63,13 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
   };
 
   const handlePressClickNode = (node) => {
+    setSelectedMarket(true)
     navigation.navigate(DetailNodeName, { nodeId: node?._id, type: node?.type });
   }
 
+  // const handleReportLostPoint = async () => {
+  //   navigation.navigate(ReportLostPointName, { selectedCoordinate });
+  // }
   const printNode = (node) => {
     return (
       <Marker
@@ -76,6 +81,7 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
         title={node?.name}
         description={"Ver más"}
         pinColor={node?.color}
+      // onPress={setSelectedMarket(true)}
       >
         <Callout onPress={() => handlePressClickNode(node)}>
         </Callout>
@@ -97,7 +103,7 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
 
       const location = await Location.getCurrentPositionAsync({});
       const { latitude, longitude } = location.coords;
-
+      console.log(location.coords)
       if (mapRef.current) {
         await mapRef.current.animateCamera({
           center: {
@@ -110,6 +116,8 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
           zoom: 15 //zoom para android, ignorado por ios
         }, 5000);
       }
+      updateCoordinate(location.coords)
+
     };
 
     handleInitialLocation();
@@ -173,6 +181,7 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
     } else if (nodeMarkerEnd == "") {
       setNodeMarkerEnd(node._id);
     }
+
   };
 
   const showNodesOnMap = () => {
@@ -182,6 +191,15 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
       }
     });
   };
+
+  const handleMapPress = (event) => {
+    const { coordinate } = event.nativeEvent;
+    if (!selectedMarket) {
+      updateCoordinate(coordinate)
+    } else {
+      setSelectedMarket(false)
+    }
+  }
 
   useEffect(() => {
     originalPath && handleShortPath();
@@ -205,9 +223,13 @@ export default function MapApi({ nodeSelected, onSelect = false }) {
         userLocationUpdateInterval={5000}
         userLocationFastestInterval={5000}
         onUserLocationChange={handleGpsNode}
+        onPress={reportNode && handleMapPress}
       >
+        {reportNode && report?.lostPoint && (
+          <Marker coordinate={report.lostPoint} />
+        )}
         <Polyline coordinates={path} strokeColor="#238C23" strokeWidth={6} />
-        {showNodesOnMap()}
+        {!reportNode && showNodesOnMap()}
       </MapView>
       <StatusBar style="auto" />
     </View>
