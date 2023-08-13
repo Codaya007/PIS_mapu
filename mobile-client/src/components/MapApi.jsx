@@ -6,7 +6,6 @@ import { getAllNodes } from "../services/Nodes";
 import Toast from "react-native-toast-message";
 import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
-
 import {
   DetailNodeName
 } from "../constants/index"
@@ -23,7 +22,13 @@ const initialState = {
   type: "Mi Ubicación",
 };
 
-export default function MapApi({ nodeSelected, onSelect = false, reportNode, report, updateCoordinate }) {
+export default function MapApi({
+  nodeSelected,
+  onSelect = false,
+  reportNode,
+  report,
+  updateCoordinate = () => { }
+}) {
   const [nodesPoint, setNodesPoint] = useState([]);
   const [path, setPath] = useState([]);
   const [nodeMarkerStart, setNodeMarkerStart] = useState("");
@@ -32,12 +37,12 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
   const mapRef = useRef(null);
   const navigation = useNavigation();
   const { path: originalPath, totalDistance = 0 } = useSelector(state => state.searchReducer)
-  // const [selectedCoordinate, setSelectedCoordinate] = useState(null);
   const [selectedMarket, setSelectedMarket] = useState(false);
+  const dispatch = useDispatch();
+
   const onRegionChange = (region) => {
     // console.log(region); // Visualizar las coordenadas
   };
-  const dispatch = useDispatch();
 
   const handleNodes = async () => {
     try {
@@ -142,7 +147,6 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
 
   const handleShortPath = () => {
     try {
-
       setPath(createArrayToMap(originalPath));
 
       Toast.show({
@@ -212,6 +216,25 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
       setPath([])
     }
   }, [originalPath]);
+
+  useEffect(() => {
+    const focusSelectedNode = async () => {
+      if (nodeSelected && mapRef.current) {
+        await mapRef.current.animateCamera({
+          center: {
+            latitude: nodeSelected?.latitude,
+            longitude: nodeSelected?.longitude,
+          },
+          pitch: 0,
+          heading: 0,
+          altitude: 300, //altitud en metros para ios, ignorado por android
+          zoom: 20 //zoom para android, ignorado por ios
+        }, 5000);
+      }
+    }
+
+    focusSelectedNode();
+  }, [nodeSelected]);
 
   return (
     <View style={styles.container}>
