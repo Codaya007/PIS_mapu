@@ -202,7 +202,11 @@ export default function MapApi({ nodeSelected, onSelect = false, reportNode, rep
   }
 
   useEffect(() => {
-    originalPath && handleShortPath();
+    if (originalPath) {
+      handleShortPath()
+    } else {
+      setPath([])
+    }
   }, [originalPath]);
 
   return (

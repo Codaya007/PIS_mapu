@@ -91,6 +91,13 @@ export const searchSlice = createSlice({
     setLoadingSearch: (state, action) => {
       state.loadingSearch = action.payload || false;
     },
+    restoreRouteSearch: (state, action) => {
+      state.path = null;
+      state.steps = null;
+      state.totalDistance = 0;
+      state.additionalMessage = null;
+      state.resultAccessNode = null;
+    },
   },
 });
 
@@ -110,6 +117,7 @@ export const {
   setError,
   setOnSearchProcess,
   setLoadingSearch,
+  restoreRouteSearch,
 } = searchSlice.actions;
 
 export default searchSlice.reducer;

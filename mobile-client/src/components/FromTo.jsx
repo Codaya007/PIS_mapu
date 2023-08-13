@@ -16,7 +16,7 @@ import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
-import { setCurrentNode, setDestination, setOrigin, setSearchText } from "../store/slices/searchSlice";
+import { restoreRouteSearch, setCurrentNode, setDestination, setOrigin, setSearchText } from "../store/slices/searchSlice";
 import { getSearchResults, searchShortestPathByNode } from "../store/actions/searchActions";
 
 const FromTo = () => {
@@ -158,6 +158,7 @@ const FromTo = () => {
                             onSubmitEditing={() => handleSearch(destinyText, "destination")}
                         />
                         <Button margin={1} onPress={() => {
+                            dispatch(restoreRouteSearch())
                             if (searchPathBy === "byNode") {
                                 dispatch(searchShortestPathByNode(origin?._id, destination?._id))
                             } else {
