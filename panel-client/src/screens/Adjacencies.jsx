@@ -78,8 +78,14 @@ function App() {
       try {
         const { results } = await getAllCoordinates({ adjacencies: true });
 
+        results.map((node, index) => {
+          if (node.type === ROUTE_NODO_TYPE) {
+            node.name = `${node.name} ${index + 1}`
+          }
+        })
         setAllNodes(results);
-        setNodesData(results.filter((node) => node.type !== ROUTE_NODO_TYPE));
+        setNodesData(results)
+        // setNodesData(results.filter((node) => node.type !== ROUTE_NODO_TYPE));
       } catch (error) {
         toast.error("No se han podido obtener las coordenadas");
       }
