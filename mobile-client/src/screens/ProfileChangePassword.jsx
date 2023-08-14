@@ -63,7 +63,7 @@ const ProfileChangePassword = () => {
       dispatch(updateUserPassword(userPassword.password));
       Toast.show({
         type: "success",
-        text1: "Registro exitoso",
+        text1: "Cambio exitoso",
         position: "bottom",
       });
 

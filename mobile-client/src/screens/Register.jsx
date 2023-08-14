@@ -13,23 +13,41 @@ import {
   Checkbox,
 } from "native-base";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Toast from "react-native-toast-message";
-import Login from "./Login";
+// import Login from "./Login";
 import { API_BASEURL, LoginName } from "../constants";
+
+const initialState = {
+  name: "",
+  lastname: "",
+  email: ""
+};
 
 const Register = () => {
   const navigation = useNavigation();
-  const [name, setName] = useState("");
-  const [lastname, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [userForm, setUserForm] = useState(initialState);
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
+
+  // useEffect( () => {
+
+  // }, [name, lastname, ]);
+
+  const handleChange = (text, input) => {
+    setUserForm({ ...userForm, [input]: text });
+  }
   const handleRegister = async () => {
-    if (!name || !lastname || !email || !password || !passwordAgain) {
+    // console.log('Name' + userForm.name); 
+    // console.log('Lastname' + userForm.lastname);
+    // console.log('Email' + userForm.email);
+    // console.log('Passwoord' + password); 
+  
+
+    if (userForm.name == "" || userForm.lastname == "" || userForm.email == "" || password == ""  || passwordAgain == "") {
       Toast.show({
         type: "error",
         text1: "Campos incompletos",
@@ -65,14 +83,9 @@ const Register = () => {
       });
       return;
     }
-
+    userForm.password = password;
     try {
-      const response = await axios.post(`${API_BASEURL}/auth/register`, {
-        name,
-        lastname,
-        email,
-        password,
-      });
+      const response = await axios.post(`${API_BASEURL}/auth/register`, userForm);
 
       if (response.status == 200) {
         Toast.show({
@@ -133,15 +146,15 @@ const Register = () => {
           <VStack space={3} mt="5">
             <FormControl>
               <FormControl.Label>Nombre</FormControl.Label>
-              <Input onChangeText={setName} value={name} />
+              <Input onChangeText={ (text) => handleChange(text, 'name')} value={userForm.name} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Apellido</FormControl.Label>
-              <Input onChangeText={setLastName} value={lastname} />
+              <Input onChangeText={(text) => handleChange(text, 'lastname')} value={userForm.lastname} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Email</FormControl.Label>
-              <Input onChangeText={setEmail} value={email} />
+              <Input onChangeText={(text) => handleChange(text, 'email')} value={userForm.email} />
             </FormControl>
             <FormControl>
               <FormControl.Label>Contraseña</FormControl.Label>
