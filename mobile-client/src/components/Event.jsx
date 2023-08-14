@@ -10,18 +10,35 @@ import {
 } from "native-base";
 import React from "react";
 import { getTimeAgo, mapISOStringToDate } from "../helpers";
+import { Entypo } from '@expo/vector-icons';
+import { useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { setCurrentNode, setSearchText } from "../store/slices/searchSlice";
+import { HomeName } from "../constants";
 
 const Event = ({ event = {} }) => {
-  const { name, sinceDate, untilDate, description, price, img, createdAt } =
+  const { name, sinceDate, untilDate, description, price, img, createdAt, node } =
     event;
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const timeAgo = createdAt ? getTimeAgo(createdAt) : null;
   const activeDate =
     sinceDate && untilDate
       ? `Del ${mapISOStringToDate(sinceDate)} al ${mapISOStringToDate(
-          untilDate
-        )}`
+        untilDate
+      )}`
       : null;
+
+  const handlePress = () => {
+    if (node?._id) {
+      node.title = node.detail?.title || "Sin nombre";
+      dispatch(setCurrentNode(node));
+      dispatch(setSearchText(node.title))
+
+      navigation.navigate(HomeName);
+    }
+  }
 
   return (
     <Box alignItems="center">
@@ -90,7 +107,7 @@ const Event = ({ event = {} }) => {
             </Center>
           )}
         </Box>
-        <Stack p="4" space={3}>
+        <Stack p={5} space={3}>
           <Stack space={2}>
             <Heading size="md" ml="-1">
               {name}
@@ -98,12 +115,7 @@ const Event = ({ event = {} }) => {
             {activeDate && (
               <Text
                 fontSize="xs"
-                _light={{
-                  color: "violet.500",
-                }}
-                _dark={{
-                  color: "violet.400",
-                }}
+                color={"gray"}
                 fontWeight="500"
                 ml="-0.5"
                 mt="-1"
@@ -112,7 +124,11 @@ const Event = ({ event = {} }) => {
               </Text>
             )}
           </Stack>
-          <Text fontWeight="400">{description}</Text>
+          <Text fontWeight="400" textAlign={"justify"}>{description}</Text>
+          {node && <Text onPress={handlePress} textAlign={"right"} p={1} color={"violet.400"}>
+            <Entypo name="location-pin" size={24} color="black" />
+            {node?.detail?.title || "-"}
+          </Text>}
           <HStack alignItems="center" space={4} justifyContent="space-between">
             <HStack alignItems="center">
               <Text

@@ -1,12 +1,42 @@
+// export function mapISOStringToDate(isoString) {
+//   const date = new Date(isoString);
+//   const day = date.getDate();
+//   const month = date.getMonth() + 1;
+//   const year = date.getFullYear();
+
+//   const formattedDate = `${day < 10 ? "0" + day : day}-${
+//     month < 10 ? "0" + month : month
+//   }-${year}`;
+
+//   return formattedDate;
+// }
+
 export function mapISOStringToDate(isoString) {
+  const months = [
+    "enero",
+    "febrero",
+    "marzo",
+    "abril",
+    "mayo",
+    "junio",
+    "julio",
+    "agosto",
+    "septiembre",
+    "octubre",
+    "noviembre",
+    "diciembre",
+  ];
+
   const date = new Date(isoString);
   const day = date.getDate();
-  const month = date.getMonth() + 1;
+  const month = months[date.getMonth()];
   const year = date.getFullYear();
+  const currentYear = new Date().getFullYear();
 
-  const formattedDate = `${day < 10 ? "0" + day : day}-${
-    month < 10 ? "0" + month : month
-  }-${year}`;
+  let formattedDate = `${day} de ${month}`;
+  if (year !== currentYear) {
+    formattedDate += ` del ${year}`;
+  }
 
   return formattedDate;
 }

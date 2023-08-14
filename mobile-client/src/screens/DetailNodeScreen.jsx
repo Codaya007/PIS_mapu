@@ -15,7 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import { getAllComments, setCommentCurrentNode } from '../store/slices/commentSlice';
 import Toast from "react-native-toast-message"
 
-const NodeDetail = ({ }) => {
+const NodeDetail = ({ type }) => {
   const { comments, currentNode: node = {} } = useSelector(state => state.commentReducer);
   const { detail } = node;
   const { subnodes } = detail || {};
@@ -83,7 +83,7 @@ const NodeDetail = ({ }) => {
                 {detail?.title || node.name || "Sin nombre"}
               </Heading>
               {/* Tipo de nodo */}
-              <Text style={styles.type}>Punto de {node?.type?.name} {node?.campus?.name && `campus ${node.campus?.name}`}</Text>
+              <Text style={styles.type}>Punto de {type} {node?.campus?.name && `campus ${node.campus?.name}`}</Text>
             </Box>
             <Divider marginY={4} />
 
@@ -233,7 +233,7 @@ const DetailNodeScreen = ({ route }) => {
     <View style={styles.container} flex={1}>
       {loading ?
         <Loader /> :
-        <NodeDetail node={node} comments={comments} />
+        <NodeDetail type={type} node={node} comments={comments} />
       }
     </View>
   );
@@ -274,13 +274,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '300',
   },
-  campus: {
-    marginTop: 10,
-  },
-  category: {
-    fontSize: 16,
-    marginTop: 10,
-  }
 });
 
 export default DetailNodeScreen;

@@ -1,26 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  // Adicionales
+  onSearchProcess: false,
+  currentNode: null,
   origin: null,
   destination: null,
+  // Resultados de la ruta
   path: null,
   steps: null,
   resultMessage: null,
   resultAccessNode: null,
   totalDistance: 0,
+  errorOnPathSearch: null,
+  loadingSearch: false,
+  // Buscador de texto
   searchText: "",
   searchTextResults: null,
-  searchPathBy: "byNode",
-  nomenclature: {
-    campus: "",
-    block: "",
-    floor: "",
-    environment: "",
-  },
-  currentNode: null,
-  errorOnPathSearch: null,
-  onSearchProcess: false,
-  loadingSearch: false,
 };
 
 export const searchSlice = createSlice({
@@ -65,17 +61,6 @@ export const searchSlice = createSlice({
       state.resultAccessNode = null;
       state.totalDistance = 0;
     },
-    setSearchType: (state, action) => {
-      state.searchPathBy = action.payload;
-    },
-    setNomenclature: (state, action) => {
-      const { campus, block, floor, environment } = action.payload;
-
-      state.nomenclature.campus = campus || "";
-      state.nomenclature.block = block || "";
-      state.nomenclature.floor = floor || "";
-      state.nomenclature.environment = environment || "";
-    },
     setCurrentNode: (state, action) => {
       state.currentNode = action.payload;
     },
@@ -109,8 +94,6 @@ export const {
   setSearchText,
   searchText,
   restartSearch,
-  setSearchType,
-  setNomenclature,
   setCurrentNode,
   setSearchResults,
   clearError,

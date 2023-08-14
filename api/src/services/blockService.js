@@ -7,7 +7,8 @@ const validateBlocksExcelFile = require("../helpers/validateBlocksFile");
 const { uploadImageToS3 } = require("../helpers/s3Helpers");
 
 const populateNode = async (block) => {
-  const formated = block.toJSON();
+  // const formated = block.toJSON();
+  const formated = { ...block };
 
   if (block.node) {
     formated.node = await blockNodeServices.getBlockNodeById(block.node);
@@ -61,16 +62,28 @@ const createBlock = async (blockData) => {
   return block;
 };
 
-const getBlocks = async (where = {}, skip, limit) => {
-  let blocks = await Block.find(where)
-    .skip(skip)
-    .limit(limit)
-    .populate("faculty")
-    .populate("campus")
-    .sort({ number: 1 });
+const getBlocks = async (where = {}, skip, limit, populate) => {
+  let blocks = [];
 
+  if (populate) {
+    blocks = await Block.find(where)
+      .skip(skip)
+      .limit(limit)
+      .populate("faculty")
+      .populate("campus")
+      .sort({ number: 1 })
+      .lean();
+  } else {
+    blocks = await Block.find(where)
+      .skip(skip)
+      .limit(limit)
+      .sort({ number: 1 })
+      .lean();
+  }
   // Añado el detalle
-  blocks = await Promise.all(blocks.map(populateNode));
+  if (populate) {
+    blocks = await Promise.all(blocks.map(populateNode));
+  }
   blocks.sort((a, b) => a.number - b.number); //? Con esta linea me ordena bien
 
   return blocks;
@@ -90,7 +103,10 @@ const getBlockById = async (id) => {
   if (!isValidObjectId(id))
     throw new ValidationError("El id debe ser un ObjectId");
 
-  let block = await Block.findById(id).populate("faculty").populate("campus");
+  let block = await Block.findById(id)
+    .populate("faculty")
+    .populate("campus")
+    .lean();
 
   if (!block) throw new NotExist("Nodo no encontrado");
 

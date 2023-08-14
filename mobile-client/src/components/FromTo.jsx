@@ -8,7 +8,6 @@ import {
     Icon,
     VStack,
     useColorModeValue,
-    Toast,
 } from "native-base";
 import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
@@ -18,10 +17,11 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { restoreRouteSearch, setCurrentNode, setDestination, setOrigin, setSearchText } from "../store/slices/searchSlice";
 import { getSearchResults, searchShortestPathByNode } from "../store/actions/searchActions";
+import Toast from "react-native-toast-message";
 
 const FromTo = () => {
     const navigate = useNavigation().navigate;
-    const { destination, origin, searchPathBy = "byNode", errorOnPathSearch } = useSelector(state => state.searchReducer);
+    const { destination, origin } = useSelector(state => state.searchReducer);
     const [destinyText, setDestinyText] = useState(destination?.detail?.title || "");
     const [originText, setOriginText] = useState("");
     const dispatch = useDispatch()
@@ -40,23 +40,25 @@ const FromTo = () => {
             dispatch(setSearchText(textToSearch))
             dispatch(getSearchResults(textToSearch))
             navigate(ResultSearchName, { type });
-            // handleClearSearch();
         } catch (error) {
             console.log({ error });
 
             Toast.show({
                 type: "error",
-                text1: `No se ha podido realizar la busqueda`,
+                text1: `Error`,
+                text2: `No se ha podido realizar la búsqueda`,
                 position: "bottom",
             });
         }
     };
 
     const handleClearSearch = (band) => {
-        if (band == "origin") {
+        if (band === "origin") {
             dispatch(setOrigin(null))
+            setOriginText("")
         } else {
             dispatch(setDestination(null))
+            setDestination("")
         }
 
         dispatch(setCurrentNode(null))
@@ -72,13 +74,9 @@ const FromTo = () => {
 
     return (
         <Center w="100%" justifyContent="flex-end">
-            <VStack p="1" py="0" w="100%" mt="5" backgroundColor="white" pb="3">
+            <VStack py="0" w="100%" backgroundColor="white">
                 <HStack w="100%">
-                    <FormControl
-                        mr="2"
-                        mt="1"
-                        isRequired
-                    >
+                    <FormControl p={1} isRequired>
                         <Input
                             type="text"
                             value={originText}
@@ -158,12 +156,15 @@ const FromTo = () => {
                             onSubmitEditing={() => handleSearch(destinyText, "destination")}
                         />
                         <Button margin={1} onPress={() => {
-                            dispatch(restoreRouteSearch())
-                            if (searchPathBy === "byNode") {
-                                dispatch(searchShortestPathByNode(origin?._id, destination?._id))
-                            } else {
-                                // TODO: Implementar búsqueda por nomenclatura
+                            if (!origin || !destination) {
+                                return Toast.show({
+                                    type: "error",
+                                    text1: "Seleccione un origen y un destino",
+                                    position: "bottom"
+                                })
                             }
+                            dispatch(restoreRouteSearch())
+                            dispatch(searchShortestPathByNode(origin?._id, destination?._id))
                         }}>Buscar ruta</Button>
                     </FormControl>
                 </HStack>

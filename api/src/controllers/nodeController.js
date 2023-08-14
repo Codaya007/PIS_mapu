@@ -3,7 +3,8 @@ const nodeService = require("../services/nodeService.js");
 module.exports = {
   getNode: async (req, res) => {
     const id = req.params.id;
-    const results = await nodeService.getNodeById(id);
+    const { adjacencies } = req.query;
+    const results = await nodeService.getNodeById(id, adjacencies !== "false");
 
     return res.json(results);
   },
@@ -70,5 +71,20 @@ module.exports = {
     const time = await nodeService.timeCoordinates(origin, destination, speed);
 
     return res.json(time);
+  },
+
+  getNodeByNomenclature: async (req, res) => {
+    const { campus, block, floor, environment } = req.query;
+
+    console.log(req.query);
+
+    const result = await nodeService.getNodeByNomenclature(
+      campus,
+      block,
+      floor,
+      environment
+    );
+
+    return res.json(result);
   },
 };

@@ -6,6 +6,7 @@ import {
   Heading,
   Image,
   Input,
+  Text,
   Textarea,
   VStack,
 } from "@chakra-ui/react";
@@ -20,6 +21,9 @@ import {
 } from "../services/eventServices";
 import { fetchEvents } from "../store/actions/eventActions";
 import { handleFileChange } from "./BlockForm";
+import NodeSelector from "../components/NodeSelector";
+import { getAllCoordinates } from "../services/nodeServices";
+import { ROUTE_NODO_TYPE } from "../constants";
 
 const initialState = {
   name: "",
@@ -28,10 +32,13 @@ const initialState = {
   description: "",
   price: null,
   img: "",
+  node: "",
 };
 
 const EventsForm = () => {
   const [event, setEvent] = useState(initialState);
+  const [allNodes, setAllNodes] = useState([]);
+  const [selectedNode, setSelectedNode] = useState(null);
   const dispacth = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -58,6 +65,7 @@ const EventsForm = () => {
         let untilDateString = new Date(eventDB.untilDate);
         sinceDateString = sinceDateString.toISOString().slice(0, 16);
         untilDateString = untilDateString.toISOString().slice(0, 16);
+        console.log(eventDB.node);
         setEvent({
           name: eventDB.name,
           sinceDate: sinceDateString,
@@ -65,7 +73,12 @@ const EventsForm = () => {
           description: eventDB.description,
           price: eventDB.price,
           img: eventDB.img,
+          node: eventDB?.node?._id,
         });
+        if (eventDB.node) {
+          eventDB.node.name = eventDB.node?.detail?.title || "Sin nombre";
+          setSelectedNode(eventDB?.node)
+        }
       };
 
       getEvent();
@@ -92,6 +105,20 @@ const EventsForm = () => {
       toast.error(error.response?.data?.message);
     }
   };
+
+
+  useEffect(() => {
+    const getMarkers = async () => {
+      try {
+        const { results } = await getAllCoordinates({ adjacencies: false });
+
+        setAllNodes(results.filter(node => node.type !== ROUTE_NODO_TYPE));
+      } catch (error) {
+        toast.error("No se han podido obtener las coordenadas");
+      }
+    };
+    getMarkers();
+  }, []);
 
   return (
     <Box
@@ -170,6 +197,22 @@ const EventsForm = () => {
               value={event.price || ""}
               onChange={handleChange}
               borderColor="gray.500"
+            />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel htmlFor="dean">Lugar</FormLabel>
+            <Text>{selectedNode?.name || "-"}</Text>
+            <NodeSelector
+              nodes={allNodes}
+              onSelectNode={(node) => {
+                setSelectedNode(node);
+                setEvent({ ...event, node: node?._id })
+              }}
+              clearSelection={() => {
+                setEvent({ ...event, node: "" });
+                setSelectedNode(null)
+              }}
             />
           </FormControl>
 

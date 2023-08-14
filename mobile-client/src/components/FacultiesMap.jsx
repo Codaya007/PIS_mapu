@@ -81,8 +81,6 @@ export default function FacultiesMap({ faculty, faculties }) {
           },
           pitch: 0,
           heading: 0,
-          altitude: 300, //altitud en metros para ios, ignorado por android
-          zoom: 12 //zoom para android, ignorado por ios
         }, 5000);
       }
     };
@@ -97,9 +95,9 @@ export default function FacultiesMap({ faculty, faculties }) {
         style={styles.map}
         initialRegion={{
           latitude: -4.032925984682419,
-          latitudeDelta: 20,
+          latitudeDelta: 0.095,
           longitude: -79.20254656812386,
-          longitudeDelta: 20,
+          longitudeDelta: 0.095,
         }}
         showsUserLocation={true}
       // followsUserLocation={false}

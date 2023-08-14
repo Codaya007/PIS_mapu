@@ -136,6 +136,69 @@ const timeBetweenCoordinates = (origin, destination, speed) => {
   return time;
 };
 
+function cardinalToOrdinalLetters(number) {
+  if (typeof number !== "number" || Number.isNaN(number)) {
+    return "";
+    // throw new Error('El valor ingresado debe ser un número válido.');
+  }
+
+  const units = [
+    "",
+    "primer",
+    "segundo",
+    "tercer",
+    "cuarto",
+    "quinto",
+    "sexto",
+    "séptimo",
+    "octavo",
+    "noveno",
+  ];
+  const tens = [
+    "",
+    "décimo",
+    "vigésimo",
+    "trigésimo",
+    "cuadragésimo",
+    "quincuagésimo",
+    "sexagésimo",
+    "septuagésimo",
+    "octogésimo",
+    "nonagésimo",
+  ];
+
+  if (number >= 1 && number <= 9) {
+    return units[number];
+  }
+
+  const tensDigit = Math.floor(number / 10);
+  const unitsDigit = number % 10;
+
+  return tens[tensDigit] + (unitsDigit > 0 ? ` ${units[unitsDigit]}` : "");
+}
+
+function generateLocationString(node) {
+  const { block, floor, environment, detail } = node;
+
+  const campusSymbol = node.campus?.symbol || "";
+  const blockNumber = block?.number || "";
+  const floorString = floor
+    ? `${cardinalToOrdinalLetters(parseInt(floor))} piso del`
+    : "";
+  const blockTitle = detail?.title || "Bloque sin nombre";
+  const campusName = node.campus?.name
+    ? `del campus '${node.campus?.name}'`
+    : "campus";
+
+  const completeNomenclature = `${campusSymbol} ${blockNumber} ${floor || ""} ${
+    environment || ""
+  }`;
+
+  const locationString = `El espacio ${completeNomenclature.trim()} se encuentra en el ${floorString} ${blockTitle} ${campusName}`;
+
+  return locationString.trim();
+}
+
 module.exports = {
   getDistanceBetweenCoordinates,
   degreesToRadians,
@@ -146,4 +209,6 @@ module.exports = {
   getEndOfMonth,
   generateQRcode,
   timeBetweenCoordinates,
+  cardinalToOrdinalLetters,
+  generateLocationString,
 };

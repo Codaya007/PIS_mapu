@@ -9,7 +9,7 @@ import {
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { HomeName } from "../constants";
-import { clearError, setCurrentNode, setDestination, setOrigin, setSearchResults } from "../store/slices/searchSlice";
+import { clearError, setCurrentNode, setDestination, setOrigin, setSearchResults, setSearchText } from "../store/slices/searchSlice";
 import Loader from "./Loader";
 import Toast from "react-native-toast-message"
 
@@ -27,9 +27,10 @@ const ResultSearch = ({ navigation, route }) => {
       } else {
         dispatch(setDestination(nodeSelected))
       }
-    } else {
     }
+
     dispatch(setCurrentNode(nodeSelected));
+    dispatch(setSearchText(""))
 
     navigate(HomeName);
     dispatch(setSearchResults(null))
@@ -39,7 +40,8 @@ const ResultSearch = ({ navigation, route }) => {
     if (errorOnPathSearch && !loadingSearch) {
       Toast.show({
         type: "error",
-        text1: errorOnPathSearch,
+        text1: "Error al buscar",
+        text2: errorOnPathSearch,
         position: "bottom"
       });
       dispatch(clearError())
