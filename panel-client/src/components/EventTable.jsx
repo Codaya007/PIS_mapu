@@ -22,6 +22,7 @@ function EventTable({ events, handleEdit, handleDelete }) {
           <Th>Titulo</Th>
           <Th>Descripción</Th>
           <Th>Precio</Th>
+          <Th>Lugar</Th>
           <Th>Desde</Th>
           <Th>Hasta</Th>
         </Tr>
@@ -32,6 +33,7 @@ function EventTable({ events, handleEdit, handleDelete }) {
             <Td>{event.name || "-"}</Td>
             <Td>{event.description || "-"}</Td>
             <Td>{event.price ? `$${event.price}` : "Evento gratuito"}</Td>
+            <Td>{event.node?.detail?.title || "-"}</Td>
             <Td>{new Date(event.sinceDate).toLocaleString()}</Td>
             <Td>{new Date(event.untilDate).toLocaleString()}</Td>
             <Td>

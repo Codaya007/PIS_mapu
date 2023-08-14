@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-//TODO: AGREGAR EL CAMPO HORA??
 const eventSchema = new Schema({
   name: {
     type: String,
@@ -27,6 +26,12 @@ const eventSchema = new Schema({
   img: {
     type: String,
     required: false,
+  },
+  node: {
+    type: Schema.Types.ObjectId,
+    ref: "Node",
+    required: false,
+    default: null,
   },
 });
 

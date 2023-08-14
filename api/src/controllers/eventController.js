@@ -4,7 +4,8 @@ const NotExist = require("../errors/NotExist");
 module.exports = {
   getEventById: async (req, res) => {
     const { id } = req.params;
-    const result = await eventService.getEventById(id);
+    const { populate = "true" } = req.query;
+    const result = await eventService.getEventById(id, populate !== "false");
 
     return res.json(result);
   },
@@ -15,6 +16,7 @@ module.exports = {
       search,
       skip = 0,
       limit = 10,
+      populate = "true",
       ...where
     } = req.query;
 
@@ -25,7 +27,8 @@ module.exports = {
       search,
       where,
       skip,
-      limit
+      limit,
+      populate !== "false"
     );
 
     return res.json({ totalCount, results });

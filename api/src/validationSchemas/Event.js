@@ -5,6 +5,9 @@ const createEventSchema = Joi.object({
   name: Joi.string().required().messages({
     "*": "El campo 'Nombre' es requerido",
   }),
+  node: Joi.string().messages({
+    "*": "El campo 'node' debe ser un string",
+  }),
   sinceDate: Joi.date().required().messages({
     "*": "El campo 'Fecha de inicio' es requerido",
   }),
@@ -29,6 +32,9 @@ const updateEventSchema = Joi.object({
   }),
   name: Joi.string().optional().messages({
     "*": "El campo 'Nombre' es opcional",
+  }),
+  node: Joi.string().messages({
+    "*": "El campo 'node' debe ser un string",
   }),
   sinceDate: Joi.date().optional().messages({
     "*": "El campo 'Fecha de inicio' es opcional",

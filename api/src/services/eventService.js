@@ -1,8 +1,15 @@
 const Event = require("../models/Event");
+const Detail = require("../models/Detail");
 const FieldExistingError = require("../errors/FieldExistingError");
 const NotExist = require("../errors/NotExist");
 const ValidationError = require("../errors/ValidationError");
 const { isValidObjectId } = require("mongoose");
+
+const populateDetail = async (event = {}) => {
+  if (event.node) {
+    event.node.detail = await Detail.findOne({ _id: event.node.detail });
+  }
+};
 
 const createEvent = async (eventData) => {
   const existingEvent = await Event.findOne({ name: eventData.name });
@@ -16,9 +23,22 @@ const createEvent = async (eventData) => {
   return event;
 };
 
-const getEvents = async (mobile, search, where = {}, skip, limit) => {
+const getEvents = async (
+  mobile,
+  search,
+  where = {},
+  skip,
+  limit,
+  populate = false
+) => {
   await applyRegex(mobile, search, where);
-  const events = await Event.find(where).skip(skip).limit(limit);
+  const events = populate
+    ? await Event.find(where).skip(skip).limit(limit).populate("node").lean()
+    : await Event.find(where).skip(skip).limit(limit).lean();
+
+  if (populate) {
+    await Promise.all(events.map(populateDetail));
+  }
 
   return events;
 };
@@ -36,11 +56,16 @@ const applyRegex = async (mobile, search, where) => {
   }
 };
 
-const getEventById = async (_id) => {
+const getEventById = async (_id, populate = false) => {
   if (!isValidObjectId(_id))
     throw new ValidationError("El id debe ser un ObjectId");
-  const event = await Event.findOne({ _id });
+  const event = populate
+    ? await Event.findOne({ _id }).populate("node").lean()
+    : await Event.findOne({ _id }).lean();
+
   if (!event) throw new NotExist("El evento no se encontro");
+
+  if (populate) await populateDetail(event);
 
   return event;
 };
