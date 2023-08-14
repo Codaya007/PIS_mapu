@@ -14,9 +14,9 @@ const blockNumberAlreadyExists = async (number) => {
 };
 
 const categoryIsValid = async (category) => {
-  const result = await Category.findOne({ _id: category });
+  // const result = await Category.findOne({ _id: category });
 
-  return !!result;
+  return true;
 };
 
 const facultyIsValid = async (fac) => {

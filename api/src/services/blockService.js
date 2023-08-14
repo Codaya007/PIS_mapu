@@ -37,7 +37,7 @@ const mapBlock = (row) => {
       title: `Bloque ${row.NUMERO}`,
       description: null,
       img: row.IMAGEN || null,
-      category: row.CATEGORIA,
+      // category: row.CATEGORIA,
     },
   };
 
