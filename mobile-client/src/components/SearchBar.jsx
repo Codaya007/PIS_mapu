@@ -28,11 +28,13 @@ const SearchBar = () => {
 
   const handleSearch = () => {
     dispatch(setCurrentNode(null))
-    if (!searchText) return Toast.show({
-      type: "error",
-      text1: "Ingrese el nombre del lugar que desea buscar",
-      position: "bottom",
-    });
+    if (!searchText) {
+      return Toast.show({
+        type: "error",
+        text1: "Ingrese el nombre del lugar que desea buscar",
+        position: "bottom",
+      });
+    }
 
     dispatch(getSearchResults(searchText))
     navigate(ResultSearchName)
@@ -44,21 +46,16 @@ const SearchBar = () => {
 
   return (
     <Center w="100%" justifyContent="flex-end">
-      <VStack p="1" py="0" w="100%" mt="5">
+      <VStack py="0" w="100%">
         <HStack w="100%">
-          <FormControl
-            // maxW="275"
-            mr="2"
-            mt="1"
-            isRequired
-          >
+          <FormControl p={1} isRequired>
             <Input
               type="text"
               value={searchText}
               onChangeText={(text) => dispatch(setSearchText(text))}
               placeholder="Laboratorio de electromecánica..."
               backgroundColor="white"
-              borderRadius="100px"
+              borderRadius="50"
               InputRightElement={
                 <Button
                   bg="transparent"
@@ -101,9 +98,7 @@ const SearchBar = () => {
             fontWeight: "600",
             color: "red.600",
           }}
-          alignSelf="flex-start"
-          mt="1"
-          ml="5"
+          p="1"
         >
           Búsqueda por nomenclatura
         </LinkStyle>

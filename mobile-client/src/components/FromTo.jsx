@@ -8,7 +8,6 @@ import {
     Icon,
     VStack,
     useColorModeValue,
-    Toast,
 } from "native-base";
 import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
@@ -18,10 +17,11 @@ import { FontAwesome } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { restoreRouteSearch, setCurrentNode, setDestination, setOrigin, setSearchText } from "../store/slices/searchSlice";
 import { getSearchResults, searchShortestPathByNode } from "../store/actions/searchActions";
+import Toast from "react-native-toast-message";
 
 const FromTo = () => {
     const navigate = useNavigation().navigate;
-    const { destination, origin, searchPathBy = "byNode" } = useSelector(state => state.searchReducer);
+    const { destination, origin } = useSelector(state => state.searchReducer);
     const [destinyText, setDestinyText] = useState(destination?.detail?.title || "");
     const [originText, setOriginText] = useState("");
     const dispatch = useDispatch()
@@ -45,7 +45,8 @@ const FromTo = () => {
 
             Toast.show({
                 type: "error",
-                text1: `No se ha podido realizar la búsqueda`,
+                text1: `Error`,
+                text2: `No se ha podido realizar la búsqueda`,
                 position: "bottom",
             });
         }
@@ -155,12 +156,15 @@ const FromTo = () => {
                             onSubmitEditing={() => handleSearch(destinyText, "destination")}
                         />
                         <Button margin={1} onPress={() => {
-                            dispatch(restoreRouteSearch())
-                            if (searchPathBy === "byNode") {
-                                dispatch(searchShortestPathByNode(origin?._id, destination?._id))
-                            } else {
-                                // TODO: Implementar búsqueda por nomenclatura
+                            if (!origin || !destination) {
+                                return Toast.show({
+                                    type: "error",
+                                    text1: "Seleccione un origen y un destino",
+                                    position: "bottom"
+                                })
                             }
+                            dispatch(restoreRouteSearch())
+                            dispatch(searchShortestPathByNode(origin?._id, destination?._id))
                         }}>Buscar ruta</Button>
                     </FormControl>
                 </HStack>

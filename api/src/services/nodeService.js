@@ -339,6 +339,7 @@ const getNodeByNomenclature = async (
   if (!node) {
     throw new NotExist(`No se ha encontrado la información del lugar`);
   }
+
   node.floor = floor;
   node.environment = environment;
   node.block = block;
@@ -352,6 +353,8 @@ const getNodeByNomenclature = async (
       _id: node._id,
       name: node.detail?.title || "Bloque " + block.number,
       img: node.detail?.img || null,
+      latitude: node.latitude,
+      longitude: node.longitude,
     },
   };
 };

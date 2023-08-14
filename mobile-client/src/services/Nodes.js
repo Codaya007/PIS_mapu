@@ -18,6 +18,35 @@ export const getInterestingNodeById = async (id) => {
   }
 };
 
+export const getNodeById = async (id, adjacencies = false) => {
+  try {
+    const url = `${API_BASEURL}/node/${id}?adjacencies=${adjacencies}`;
+    console.log({ url });
+    const { data } = await axios.get(url);
+
+    return data;
+  } catch (error) {
+    console.error("No se pudo encontrar el nodo", error);
+
+    throw error;
+  }
+};
+
+export const getNodeByNomenclature = async (nomenclature = {}) => {
+  try {
+    const { campus, block = "", floor = "", environment = "" } = nomenclature;
+    const url = `${API_BASEURL}/node/nomenclature?campus=${campus}&block=${block}&floor=${floor}&environment=${environment}`;
+
+    const { data } = await axios.get(url);
+
+    return data;
+  } catch (error) {
+    console.error("No se pudo encontrar el lugar", error);
+
+    throw error;
+  }
+};
+
 export const getBlockNodeById = async (id) => {
   const { data } = await axios.get(`${API_BASEURL}/block-node/${id}`);
   // console.log("dfad: ", data);

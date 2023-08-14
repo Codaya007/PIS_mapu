@@ -6,7 +6,7 @@ import About from "./screens/About";
 import Events from "./screens/Events";
 // import Favorites from "./screens/Favorites";
 import DetailNodeScreen from "./screens/DetailNodeScreen";
-import Filter from "./screens/Filter";
+import NomenclatureForm from "./screens/NomenclatureForm";
 // import MapApi from "./components/MapApi";
 import ResultSearch from "./components/ResultSearch";
 import CommentDetail from "./screens/CommentDetail";
@@ -107,7 +107,7 @@ const AuthUserMenu = () => {
           <Drawer.Screen name={EventsName} component={Events} />
           <Drawer.Screen
             name={FilterName}
-            component={Filter}
+            component={NomenclatureForm}
             options={{
               drawerItemStyle: { display: "none" }
             }}
@@ -151,7 +151,7 @@ const AuthUserMenu = () => {
             component={ReportOutdatedInformation}
             options={{
               drawerItemStyle: { display: "none" },
-              headerShown: false,
+              // headerShown: false,
             }}
           />
           <Drawer.Screen
@@ -211,7 +211,7 @@ const MainUserMenu = () => {
           <Drawer.Screen name={EventsName} component={Events} />
           <Drawer.Screen
             name={FilterName}
-            component={Filter}
+            component={NomenclatureForm}
             options={{
               drawerLabel: () => null,
               drawerItemStyle: { display: "none" },

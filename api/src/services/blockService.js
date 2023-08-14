@@ -7,7 +7,8 @@ const validateBlocksExcelFile = require("../helpers/validateBlocksFile");
 const { uploadImageToS3 } = require("../helpers/s3Helpers");
 
 const populateNode = async (block) => {
-  const formated = block.toJSON();
+  // const formated = block.toJSON();
+  const formated = { ...block };
 
   if (block.node) {
     formated.node = await blockNodeServices.getBlockNodeById(block.node);
