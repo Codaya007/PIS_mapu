@@ -27,9 +27,9 @@ export default function Home() {
     dispatch(setOnSearchProcess(!onSearchProcess));
   };
 
-  const bottomActive = scalePixelToDp(-575);
+  const bottomActive = scalePixelToDp(-520);
   const right = scalePixelToDp(-5);
-  const bottomInactive = scalePixelToDp(-618);
+  const bottomInactive = scalePixelToDp(-600);
 
   useEffect(() => {
     if (errorOnPathSearch) {
