@@ -47,8 +47,10 @@ export const updateUser = (user) => async (dispatch) => {
       lastname: user.lastname,
       email: user.email,
       avatar: user.avatar,
-      notification: user.notification,
-      spam: user.spam,
+      settings: {
+        notification: user.settings.notification,
+        spam: user.settings.spam,
+      },
     },
     {
       headers: {
