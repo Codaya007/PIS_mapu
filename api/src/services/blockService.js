@@ -103,7 +103,10 @@ const getBlockById = async (id) => {
   if (!isValidObjectId(id))
     throw new ValidationError("El id debe ser un ObjectId");
 
-  let block = await Block.findById(id).populate("faculty").populate("campus");
+  let block = await Block.findById(id)
+    .populate("faculty")
+    .populate("campus")
+    .lean();
 
   if (!block) throw new NotExist("Nodo no encontrado");
 

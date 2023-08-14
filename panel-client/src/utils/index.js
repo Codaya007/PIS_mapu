@@ -49,6 +49,8 @@ export const deleteDbFields = (obj) => {
   delete obj.createdAt;
   delete obj.deletedAt;
   delete obj.updatedAt;
+
+  return obj;
 };
 
 export const getRandomIntInRange = (i, f) => {

@@ -203,9 +203,19 @@ const BlockForm = () => {
         });
 
         const mapedSubnodes = subnodes.map((sub) => {
-          const res = { ...sub };
-          deleteDbFields(sub);
-          return res;
+
+          deleteDbFields(sub.nomenclature)
+          return {
+            _id: sub._id,
+            latitude: sub.latitude,
+            longitude: sub.longitude,
+            name: sub.name,
+            description: sub.description,
+            img: sub.img,
+            category: sub.category,
+            nomenclature: { ...sub.nomenclature, _id: undefined },
+
+          };
         });
 
         setSubnodes(mapedSubnodes);
@@ -233,6 +243,8 @@ const BlockForm = () => {
         s.nomenclature.subEnvironment =
           parseInt(s.nomenclature.subEnvironment) || null;
       });
+
+      console.log(subnodes[0]);
 
       const data = {
         ...block,
@@ -468,7 +480,7 @@ const BlockForm = () => {
         </Box>
 
         {subnodes?.map((subnode, index) => {
-          console.log(subnode);
+          // console.log(subnode);
 
           return (
             <VStack key={index} spacing={4} margin={4}>
@@ -492,7 +504,7 @@ const BlockForm = () => {
                   } catch (error) {
                     toast.error(
                       error.response?.data?.message ||
-                        "No se pudo eliminar el subnodo"
+                      "No se pudo eliminar el subnodo"
                     );
                   }
                 }}
@@ -530,7 +542,7 @@ const BlockForm = () => {
                 <FormLabel>Imágen subnodo</FormLabel>
                 {subnode.img && <Image width={"250px"} src={subnode.img} />}
                 <Input
-                  required
+                  required={!subnode?._id}
                   accept={[".png", ".jpeg", ".svg", ".jpg"]}
                   type="file"
                   name="img"
