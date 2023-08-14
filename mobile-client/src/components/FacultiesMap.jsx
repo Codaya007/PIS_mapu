@@ -37,11 +37,11 @@ export default function FacultiesMap({ faculty, faculties }) {
 
         setPolygons(polygonCoordinates);
 
-        Toast.show({
-          type: "success",
-          text1: faculty.name,
-          position: "bottom",
-        });
+        // Toast.show({
+        //   type: "success",
+        //   text1: faculty.name,
+        //   position: "top",
+        // });
       } else {
         setPolygons([])
         Toast.show({

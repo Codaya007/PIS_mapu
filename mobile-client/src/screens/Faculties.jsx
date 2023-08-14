@@ -1,6 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Box, Select } from "native-base";
+import { Box, Heading, Select, Text } from "native-base";
 import { getFaculties } from "../services/faculty";
 import Toast from "react-native-toast-message";
 import FacultiesMap from "../components/FacultiesMap";
@@ -21,7 +21,7 @@ export default function Faculties() {
       Toast.show({
         type: "error",
         text1: "No se han podido obtener las facultades",
-        position: "bottom",
+        position: "top",
       });
       console.log({ error });
     }
@@ -51,6 +51,12 @@ export default function Faculties() {
           </Box>
         </Box>
       </View>
+      {faculty &&
+        <Box width={"100%"} p={3} bgColor={"gray.200"} style={{ position: "absolute", bottom: 0 }}>
+          <Heading paddingY={2}>{faculty?.name}</Heading>
+          <Heading size={"xs"}>{faculty?.dean || "-"}</Heading>
+          <Text paddingY={3}>{faculty?.description || "-"}</Text>
+        </Box>}
     </View >
   );
 }
