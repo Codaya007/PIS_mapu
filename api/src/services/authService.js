@@ -24,8 +24,7 @@ const login = async (email, password) => {
 const register = async ({ password, ...newInfo }) => {
   // Busco el rol del usuario normal
   const role = await Role.findOne({ name: NORMAL_ROLE_NAME });
-
-  if (role) newInfo.role = role.name;
+  if (role) newInfo.role = role._id;
 
   const hashedPassword = await hashPassword(password);
   newInfo.password = hashedPassword;
