@@ -351,6 +351,7 @@ const getNodeByNomenclature = async (
     node: {
       _id: node._id,
       name: node.detail?.title || "Bloque " + block.number,
+      img: node.detail?.img || null,
     },
   };
 };
