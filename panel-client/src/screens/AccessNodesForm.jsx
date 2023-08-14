@@ -20,16 +20,9 @@ import {
   fetchAccesNodeById,
   updateAccessNodeById,
 } from "../services/accessNodeServices";
-
 import { getCampuses } from "../services/campusServices";
-
-// import { MapContainer, TileLayer } from "react-leaflet";
-// import MapWithDrawNodes from "../components/MapWithDrawNodes";
-
 import MapSelector from "../components/MapToSelect";
-
 import { updateImageToS3 } from "../services/imageServices";
-
 import { fetchAccessNodes } from "../store/actions/accessNodeActions";
 
 const initialState = {
@@ -55,18 +48,6 @@ const AccessNodesForm = () => {
   const dispacth = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  // const center = [-4.032747, -79.202405];
-  // const zoom = 18;
-  // const markerRef = useRef();
-
-  // const handleMarkerDrawn = (markerCoordinates) => {
-  //   const coordinates = markerCoordinates.geometry.coordinates;
-  //   setAccessNode((prevState) => ({
-  //     ...prevState,
-  //     latitude: coordinates[1],
-  //     longitude: coordinates[0],
-  //   }));
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -302,7 +283,7 @@ const AccessNodesForm = () => {
                 name="image"
                 accept=".png, .jpg, .jpeg, .svg"
                 onChange={handleImageChange}
-                required
+                required={!id}
                 borderColor="gray.500"
               />
             </FormControl>

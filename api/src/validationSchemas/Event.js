@@ -5,7 +5,7 @@ const createEventSchema = Joi.object({
   name: Joi.string().required().messages({
     "*": "El campo 'Nombre' es requerido",
   }),
-  node: Joi.string().messages({
+  node: Joi.string().allow("").messages({
     "*": "El campo 'node' debe ser un string",
   }),
   sinceDate: Joi.date().required().messages({
