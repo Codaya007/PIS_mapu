@@ -19,3 +19,12 @@ export const BLOCK_NODO_TYPE = "Bloque";
 
 export const DEFAULT_MAP_CENTER = [-4.032747, -79.202405];
 export const DEFAULT_MAP_ZOOM = 18;
+
+export const BLOCKS_MASIVE_UPLOAD =
+  "https://mapu-bucket.s3.amazonaws.com/1691990062418_64d9b82e52e0ff4253edf983.xlsx";
+export const INTERESTING_NODES_MASIVE_UPLOAD =
+  "https://mapu-bucket.s3.amazonaws.com/1691992078939_64d9c00ec8819f493b29aeba.xlsx";
+export const ACCESS_NODES_MASIVE_UPLOAD =
+  "https://mapu-bucket.s3.amazonaws.com/1691992487161_64d9c1a7c8819f493b29aefa.xlsx";
+export const SUBNODES_MASIVE_UPLOAD =
+  "https://mapu-bucket.s3.amazonaws.com/1691993032083_64d9c3c884f8a6ae91839082.xlsx";

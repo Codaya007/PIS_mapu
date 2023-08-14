@@ -30,3 +30,12 @@ export const updateNodeAdjacencies = async (_id, adjacencies, toDelete) => {
     ],
   });
 };
+
+export const masiveUploadSubnode = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const { data } = await axios.post(`${API_BASEURL}/subnode/upload`, formData);
+
+  return data;
+};

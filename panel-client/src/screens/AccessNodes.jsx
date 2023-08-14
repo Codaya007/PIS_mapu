@@ -5,9 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import AccessNodeTable from "../components/AccessNodeTable";
 import Loader from "../components/Loader";
-import { deleteAccessNodeById } from "../services/accessNodeServices";
+import { deleteAccessNodeById, masiveUploadAccessNodes } from "../services/accessNodeServices";
 import { fetchAccessNodes } from "../store/actions/accessNodeActions";
 import { getWithoutFetchSlice, setPage } from "../store/slices/accessNodeSlice";
+import { ACCESS_NODES_MASIVE_UPLOAD } from "../constants";
+import { useRef } from "react";
+import { useState } from "react";
 
 function AccessNodes() {
   const {
@@ -19,6 +22,7 @@ function AccessNodes() {
   } = useSelector((state) => state.accessNodeReducer);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [uploading, setUploading] = useState(false);
 
   // console.log(accessNodes[0]);
 
@@ -54,7 +58,7 @@ function AccessNodes() {
     } catch (error) {
       toast.error(
         error?.response?.data?.message ||
-          "No se pudo eliminar el punto de interés"
+        "No se pudo eliminar el punto de acceso"
       );
     }
   };
@@ -62,6 +66,42 @@ function AccessNodes() {
   const handleCreate = () => {
     navigate("/create-access-node");
   };
+
+  const fileInputRef = useRef(null);
+
+  const handleMasiveUpload = async () => {
+    // Abre el diálogo de selección de archivos
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = async (event) => {
+    try {
+      setUploading(true)
+      const file = event.target.files[0];
+      if (file) {
+        const { results, success } = await masiveUploadAccessNodes(file);
+
+        if (!success) {
+          toast.error("No se pudieron cargar los puntos de acceso, revise el archivo corregido", { position: "top-left" })
+
+          return window.open(results, '_blank', 'noreferrer')
+        }
+
+        toast.success("Puntos de acceso cargados exitosamente");
+        dispatch(fetchAccessNodes())
+      }
+    } catch (error) {
+      console.log({ error });
+      const { success, results } = error.response?.data || {};
+
+      toast.error("No se pudieron cargar los puntos de acceso")
+      if (results && !success)
+        return window.open(results, '_blank', 'noreferrer')
+    } finally {
+      setUploading(false)
+    }
+  };
+
 
   return (
     <Box mx={4} my={8}>
@@ -72,8 +112,34 @@ function AccessNodes() {
         <Button
           bgColor="blue.600"
           color="white"
+          onClick={uploading ?
+            () => { toast.warning("Espere que se procese el archivo") } : handleMasiveUpload
+          }
+          m={4}
+          alignSelf={"flex-end"}
+        >
+          {uploading ? "Cargando..." : "Carga masiva"}
+        </Button>
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+          onChange={handleFileChange}
+        />
+        <Button
+          bgColor="blue.600"
+          color="white"
+          onClick={() => window.open(ACCESS_NODES_MASIVE_UPLOAD, '_blank', 'noreferrer')}
+          m={4}
+          alignSelf={"flex-end"}
+        >
+          Descargar plantilla
+        </Button>
+        <Button
+          bgColor="blue.600"
+          color="white"
           onClick={handleCreate}
-          mb={4}
+          m={4}
           alignSelf={"flex-end"}
         >
           Crear punto

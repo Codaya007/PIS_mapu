@@ -33,6 +33,15 @@ export const createBlock = async (block) => {
   return data;
 };
 
+export const masiveUploadBlocks = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const { data } = await axios.post(`${API_BASEURL}/block/upload`, formData);
+
+  return data;
+};
+
 export const deleteBlockById = async (id) => {
   const { data } = await axios.delete(`${API_BASEURL}/block/${id}`);
 

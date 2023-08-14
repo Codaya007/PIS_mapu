@@ -40,3 +40,15 @@ export const deleteAccessNodeById = async (id) => {
 
   return data;
 };
+
+export const masiveUploadAccessNodes = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const { data } = await axios.post(
+    `${API_BASEURL}/access-node/upload`,
+    formData
+  );
+
+  return data;
+};

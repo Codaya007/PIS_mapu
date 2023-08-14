@@ -44,3 +44,15 @@ export const deleteInterestingNodeById = async (id) => {
 
   return data;
 };
+
+export const masiveUploadInterestingNodes = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const { data } = await axios.post(
+    `${API_BASEURL}/interesting-node/upload`,
+    formData
+  );
+
+  return data;
+};
