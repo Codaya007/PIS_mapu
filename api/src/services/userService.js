@@ -29,15 +29,23 @@ const getUserById = async (_id) => {
   return user;
 };
 
-const createUser = async (newUser) => {
+const createUser = async ({ password, ...newUser }) => {
   const userExists = await User.findOne({ email: newUser.email });
+
+  const hashedPassword = await hashPassword(password);
+  newUser.password = hashedPassword;
 
   if (userExists) {
     throw new ValidationError(`El email ${newUser.email} ya está registrado`);
   }
 
-  const user = await User.create(newUser);
-
+  const user = await User.create({
+    ...newUser,
+    settings: {
+      nofitication: true,
+      spam: true,
+    },
+  });
   return user;
 };
 
