@@ -13,7 +13,7 @@ export const getInterestingNodeById = async (id) => {
     const { data } = await axios.get(`${API_BASEURL}/interesting-node/${id}`);
     return data;
   } catch (error) {
-    console.error("Error al obtener datos del nodo interesante:", error);
+    // console.error("Error al obtener datos del nodo interesante:", error);
     throw error;
   }
 };
@@ -26,7 +26,7 @@ export const getNodeById = async (id, adjacencies = false) => {
 
     return data;
   } catch (error) {
-    console.error("No se pudo encontrar el nodo", error);
+    // console.error("No se pudo encontrar el nodo", error);
 
     throw error;
   }
@@ -41,7 +41,7 @@ export const getNodeByNomenclature = async (nomenclature = {}) => {
 
     return data;
   } catch (error) {
-    console.error("No se pudo encontrar el lugar", error);
+    // console.error("No se pudo encontrar el lugar", error);
 
     throw error;
   }
