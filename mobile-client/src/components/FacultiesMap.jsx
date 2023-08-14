@@ -33,20 +33,40 @@ export default function FacultiesMap({ faculty, faculties }) {
     if (faculty) {
       if (faculty && faculty?.polygons?.length > 0) {
         const color = getRandomColor();
-        const polygonCoordinates = faculty?.polygons.map(polygon => ({ polygon: formatPolygon(polygon), color }));
+        let center = null;
+        const polygonCoordinates = faculty?.polygons.map(polygon => {
+          if (!center) center = polygon[0];
+
+          return { polygon: formatPolygon(polygon), color }
+        })
 
         setPolygons(polygonCoordinates);
 
+        const animateCamera = async (center = []) => {
+          if (mapRef.current) {
+            await mapRef.current.animateCamera({
+              center: {
+                latitude: center[0],
+                longitude: center[1],
+              },
+              pitch: 0,
+              heading: 0,
+              altitude: 250, //altitud en metros para ios, ignorado por android
+              zoom: 15 //zoom para android, ignorado por ios
+            }, 5000);
+          }
+        }
+        animateCamera(center)
         // Toast.show({
         //   type: "success",
         //   text1: faculty.name,
-        //   position: "top",
+        //   position: "bottom",
         // });
       } else {
         setPolygons([])
         Toast.show({
           type: "error",
-          text1: `La facultad no tiene áreas grográficas definidas.`,
+          text1: `La facultad no tiene áreas geográficas definidas.`,
           position: "bottom",
         });
       }
