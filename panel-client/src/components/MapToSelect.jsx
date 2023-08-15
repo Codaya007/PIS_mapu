@@ -1,6 +1,12 @@
 import { Box } from "@chakra-ui/react";
 import React, { useMemo, useRef, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import {
+  CircleMarker,
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+} from "react-leaflet";
 
 function DraggableMarker({
   initialPosition,
@@ -31,14 +37,7 @@ function DraggableMarker({
       position={position}
       ref={markerRef}
     >
-      <Popup minWidth={90}>
-        {name}
-        {/* <span onClick={toggleDraggable}>
-          {draggable
-            ? "Marker is draggable"
-            : "Click here to make marker draggable"}
-        </span> */}
-      </Popup>
+      <Popup minWidth={90}>{name}</Popup>
     </Marker>
   );
 }
@@ -48,8 +47,9 @@ const MapSelector = ({
   name = "Punto seleccionado",
   width = "100%",
   height = "60vh",
-  zoom = 15,
+  zoom = 20,
   center = [-4.032741325743228, -79.20238582262152],
+  nodes = [],
 }) => {
   return (
     <Box p={4} width={width} height={height}>
@@ -65,6 +65,17 @@ const MapSelector = ({
           name={name}
           handleChangePointer={handleChangePointer}
         />
+        {nodes.map((node) => (
+          // El resto de nodos
+          <CircleMarker
+            center={node.coordinates}
+            key={node._id}
+            radius={5}
+            pathOptions={{ color: node?.color || "pink" }}
+          >
+            <Popup>{node.name}</Popup>
+          </CircleMarker>
+        ))}
       </MapContainer>
     </Box>
   );

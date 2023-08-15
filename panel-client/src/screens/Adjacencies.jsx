@@ -71,7 +71,7 @@ function App() {
       toast.info("Adyacencias actualizadas exitosamente");
     } catch (error) {
       console.log({ error });
-      toast.error("No se pudieron actualizar las adyacencias :(");
+      toast.error("No se pudieron actualizar todas las adyacencias");
     }
   };
 

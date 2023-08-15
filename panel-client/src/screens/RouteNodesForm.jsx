@@ -22,18 +22,20 @@ import {
   updateRouteNodeById,
 } from "../services/routeNodeServices";
 
+import { getAllCoordinates } from "../services/nodeServices";
 import { fetchRouteNodes } from "../store/actions/routeNodeActions";
 
 const initialState = {
   latitude: 0,
   longitude: 0,
-  available: false,
+  available: true,
   campus: "",
 };
 
 const RouteNodesForm = () => {
   const [routeNode, setRouteNode] = useState(initialState);
   const [campuses, setCampuses] = useState([]);
+  const [nodes, setNodes] = useState([]);
   const dispacth = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
@@ -61,6 +63,16 @@ const RouteNodesForm = () => {
     }
   };
 
+  const getMarkers = async () => {
+    try {
+      const { results } = await getAllCoordinates({ adjacencies: false });
+
+      setNodes(results);
+    } catch (error) {
+      toast.error("No se han podido obtener las coordenadas");
+    }
+  };
+
   useEffect(() => {
     if (id) {
       const getRouteNodeDb = async () => {
@@ -80,6 +92,10 @@ const RouteNodesForm = () => {
     fetchCampuses();
   }, [id]);
 
+  useEffect(() => {
+    getMarkers();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -87,19 +103,21 @@ const RouteNodesForm = () => {
       // Aquí puedes hacer la llamada a tu API para guardar el nuevo interesting node
       if (id) {
         await updateRouteNodeById(id, routeNode);
-        navigate("/route-node");
+        setRouteNode(initialState);
         toast.success("Actualización exitosa");
       } else {
         await createRouteNode(routeNode);
+        setRouteNode(initialState);
         toast.success("Nodo ruta creado");
       }
 
       dispacth(fetchRouteNodes());
-      navigate("/route-node");
     } catch (error) {
       toast.error(error.response?.data?.message);
     }
   };
+
+  console.log(nodes[0]);
 
   return (
     <Box
@@ -166,7 +184,10 @@ const RouteNodesForm = () => {
               Nodo Ruta
             </Heading>
 
-            <MapSelector handleChangePointer={handleChangePointer} />
+            <MapSelector
+              nodes={nodes}
+              handleChangePointer={handleChangePointer}
+            />
           </Box>
 
           <FormControl>
