@@ -1,4 +1,4 @@
-import { Fab, Box } from 'native-base';
+import { Fab, Box, Text, Heading, Button } from 'native-base';
 import { View, StyleSheet, Dimensions, PixelRatio } from "react-native";
 import MapApi from "../components/MapApi";
 import SearchBar from "../components/SearchBar";
@@ -7,13 +7,22 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { clearError, setOnSearchProcess } from '../store/slices/searchSlice';
+import { clearError, restartSearch, setOnSearchProcess } from '../store/slices/searchSlice';
 import { useEffect } from 'react';
 import Toast from "react-native-toast-message";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { currentNode, errorOnPathSearch, onSearchProcess } = useSelector(state => state.searchReducer);
+  const {
+    currentNode,
+    errorOnPathSearch,
+    onSearchProcess,
+    resultMessage,
+    resultAccessNode,
+    totalDistance,
+    origin,
+    destination
+  } = useSelector(state => state.searchReducer);
 
   // Función para convertir píxeles a dp
   const scalePixelToDp = (pixelValue) => {
@@ -49,36 +58,36 @@ export default function Home() {
           <SearchBar />
         )}
       </View>
-      {/* {currentNode && !onSearchProcess &&
-        <Box
-          position={"absolute"}
-          bottom={"2"}
-          right={"2%"}
-          left={"2%"}
-          width={"96%"}
+      {(!!totalDistance && origin && destination) &&
+        <Box position="absolute"
+          bottom={0}
+          width={"72%"}
+          left={0}
           bgColor={"white"}
-          zIndex={3}
-          borderRadius={"15"}
-          padding={2}
+          borderRadius={5}
+          margin={2}
+          p={1}
         >
-          <Heading size={"md"} padding={2}>
-            {currentNode?.title}
-          </Heading>
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            <Text width={"70%"} textAlign={"justify"}>{currentNode?.description || "Sin descripción"}</Text>
-            <Box width={"25%"}>
-              <Button onPress={() => {
-                dispatch(setOnSearchProcess(true))
-                dispatch(setDestination(currentNode))
-                dispatch(setCurrentNode(null))
-              }} borderRadius={"50"} width={"20"}>
-                <Ionicons name="return-up-forward" size={20} color="black" />
-              </Button>
-              <Text>Cómo llegar</Text>
-            </Box>
-          </View>
-        </Box>
-      } */}
+          <Box p={2}>
+            <Heading size={"xs"}>Indicaciones:</Heading>
+            <Text>Desde '{origin.title || origin.name || "el punto de origen seleccionado"}' hasta '{destination.title || destination.name || "el punto de destino seleccionado"}' hay {parseInt(totalDistance)} metros de distancia.</Text>
+            <Text>Puede visualizar la ruta en el mapa</Text>
+          </Box>
+          {!!resultMessage && <Box p={1}>
+            <Heading size={"xs"}>Información adicional:</Heading>
+            <Text>{resultMessage || "-"}</Text>
+          </Box>}
+          <Button
+            colorScheme={"red"}
+            width={"80%"}
+            marginX={"auto"}
+            marginY={1}
+            variant={"subtle"}
+            onPress={() => { dispatch(restartSearch()) }}
+          >
+            Quitar ruta
+          </Button>
+        </Box>}
       <Box
         position="absolute"
         bottom={0}

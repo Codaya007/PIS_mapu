@@ -25,9 +25,21 @@ export const searchSlice = createSlice({
   reducers: {
     setOrigin: (state, action) => {
       state.origin = action.payload;
+
+      state.path = null;
+      state.steps = null;
+      state.resultMessage = null;
+      state.resultAccessNode = null;
+      state.totalDistance = 0;
     },
     setDestination: (state, action) => {
       state.destination = action.payload;
+
+      state.path = null;
+      state.steps = null;
+      state.resultMessage = null;
+      state.resultAccessNode = null;
+      state.totalDistance = 0;
     },
     setPath: (state, action) => {
       const {
@@ -53,8 +65,8 @@ export const searchSlice = createSlice({
       state.searchTextResults = action.payload;
     },
     restartSearch: (state, action) => {
-      state.origin = null;
-      state.destination = null;
+      // state.origin = null;
+      // state.destination = null;
       state.path = null;
       state.steps = null;
       state.resultMessage = null;

@@ -1,10 +1,10 @@
 import {
   Box,
-  Button,
   Text,
   VStack,
   useColorModeValue,
   ScrollView,
+  Pressable,
 } from "native-base";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +14,7 @@ import Loader from "./Loader";
 import Toast from "react-native-toast-message"
 
 const ResultSearch = ({ navigation, route }) => {
-  const pressedColor = useColorModeValue("#EAEAEA");
+  // const pressedColor = useColorModeValue("#EAEAEA");
   const { searchText = "", searchTextResults = [], loadingSearch, errorOnPathSearch } = useSelector(state => state.searchReducer);
   const navigate = (to) => navigation.navigate(to);
   const dispatch = useDispatch()
@@ -53,44 +53,41 @@ const ResultSearch = ({ navigation, route }) => {
       {loadingSearch ?
         <Loader /> :
         <ScrollView w="100%">
-          <Box safeArea p="1" py="0" w="100%">
-            <VStack space={1}>
-              {searchTextResults && searchTextResults.length > 0 ?
-                searchTextResults?.map((node) => (
-                  <Button
-                    key={node._id}
-                    onPress={() => handleNodePress(node)}
-                    justifyContent="flex-start"
-                    w="100%"
-                    maxW="500"
-                    bg="#EEE"
-                    _pressed={{ bg: pressedColor }}
+          <VStack space={1} >
+            {searchTextResults && searchTextResults.length > 0 ?
+              searchTextResults?.map((node, i) => (
+                <Pressable
+                  p={2}
+                  m={1}
+                  borderRadius={7}
+                  key={i}
+                  backgroundColor={"#EEE"}
+                  onPress={() => handleNodePress(node)}
+                >
+                  <Text fontSize="16" fontWeight="bold">
+                    {node.title || "Sin nombre"}
+                  </Text>
+                  <Text
+                    fontSize="13"
+                    fontWeight="light"
+                    textAlign="left"
+                    paddingY={1}
                   >
-                    <Text fontSize="16" fontWeight="bold">
-                      {node.title}
+                    {node.description || "Sin descripción"}
+                  </Text>
+                  <Box width={"90%"} display={"flex"} justifyContent={"space-between"} flexDirection={"row"}>
+                    <Text fontSize="12">
+                      Campus {node.campusName}
                     </Text>
-                    <Text
-                      fontSize="13"
-                      fontWeight="light"
-                      textAlign="left"
-                      marginLeft={3}
-                    >
-                      {node.description || "Sin descripción"}
-                    </Text>
-                    <Box display={"flex"} justifyContent={"space-between"} flexDirection={"row"}>
-                      <Text fontSize="12">
-                        {node.campusName}
+                    {node.nomenclature &&
+                      <Text color={"orange.400"}>
+                        #{node.nomenclature?.campus || ""} {node.nomenclature?.block || ""} {node.nomenclature?.floor || ""} {node.nomenclature?.environment || ""}
                       </Text>
-                      {node.nomenclature?.campus &&
-                        <Text color={"red.500"}>
-                          {node.nomenclature?.campus} {node.nomenclature?.block} {node.nomenclature?.floor} {node.nomenclature?.environment}
-                        </Text>
-                      }
-                    </Box>
-                  </Button>
-                )) : <Text>No se encontraron resultados para '{searchText}'</Text>}
-            </VStack>
-          </Box>
+                    }
+                  </Box>
+                </Pressable>
+              )) : <Text>No se encontraron resultados para '{searchText}'</Text>}
+          </VStack>
         </ScrollView>}
     </VStack >
   );

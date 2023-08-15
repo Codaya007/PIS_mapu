@@ -8,6 +8,7 @@ import {
     Icon,
     VStack,
     useColorModeValue,
+    Spinner,
 } from "native-base";
 import { useEffect, useState } from "react";
 import { ResultSearchName } from "../constants";
@@ -15,15 +16,17 @@ import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
-import { restoreRouteSearch, setCurrentNode, setDestination, setOrigin, setSearchText } from "../store/slices/searchSlice";
-import { getSearchResults, searchShortestPathByNode } from "../store/actions/searchActions";
+import { clearError, restartSearch, restoreRouteSearch, setCurrentNode, setDestination, setOrigin, setPath, setSearchText } from "../store/slices/searchSlice";
+import { getSearchResults } from "../store/actions/searchActions";
 import Toast from "react-native-toast-message";
+import { getShortestPath } from "../services/Search";
 
 const FromTo = () => {
     const navigate = useNavigation().navigate;
     const { destination, origin } = useSelector(state => state.searchReducer);
     const [destinyText, setDestinyText] = useState(destination?.detail?.title || "");
     const [originText, setOriginText] = useState("");
+    const [loadingRoute, setLoadingRoute] = useState(false);
     const dispatch = useDispatch()
 
     const colorIcon = useColorModeValue("#DADADA");
@@ -37,6 +40,8 @@ const FromTo = () => {
                     position: "bottom",
                 });
 
+            // dispatch(restartSearch())
+            dispatch(setCurrentNode(null))
             dispatch(setSearchText(textToSearch))
             dispatch(getSearchResults(textToSearch))
             navigate(ResultSearchName, { type });
@@ -53,6 +58,7 @@ const FromTo = () => {
     };
 
     const handleClearSearch = (band) => {
+        // dispatch(restartSearch())
         if (band === "origin") {
             dispatch(setOrigin(null))
             setOriginText("")
@@ -62,6 +68,27 @@ const FromTo = () => {
         }
 
         dispatch(setCurrentNode(null))
+    };
+
+    const searchShortestPathByNode = async (origin, destination, originNode) => {
+        try {
+            setLoadingRoute(true)
+            dispatch(clearError());
+            // dispatch(setCurrentNode(null))
+            const results = await getShortestPath("byNode", origin, destination);
+
+            dispatch(setPath(results));
+            // dispatch(setCurrentNode(originNode))
+        } catch (error) {
+            console.log(error.response?.data?.message || error.message);
+            Toast.show({
+                type: "error",
+                text1: error.response?.data?.message || "No se ha podido buscar la ruta",
+                position: "bottom"
+            })
+        } finally {
+            setLoadingRoute(false)
+        }
     };
 
     useEffect(() => {
@@ -164,8 +191,8 @@ const FromTo = () => {
                                 })
                             }
                             dispatch(restoreRouteSearch())
-                            dispatch(searchShortestPathByNode(origin?._id, destination?._id))
-                        }}>Buscar ruta</Button>
+                            searchShortestPathByNode(origin?._id, destination?._id, origin);
+                        }}>{loadingRoute ? <Spinner color={"white"} /> : "Buscar ruta"}</Button>
                     </FormControl>
                 </HStack>
             </VStack>

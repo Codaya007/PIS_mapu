@@ -36,6 +36,7 @@ const SearchBar = () => {
       });
     }
 
+    // dispatch(restartSearch())
     dispatch(getSearchResults(searchText))
     navigate(ResultSearchName)
   };

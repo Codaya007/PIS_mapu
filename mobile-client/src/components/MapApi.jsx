@@ -92,7 +92,6 @@ export default function MapApi({
     );
   };
 
-
   useEffect(() => {
     handleNodes();
 
@@ -116,7 +115,7 @@ export default function MapApi({
           pitch: 0,
           heading: 0,
           altitude: 250, //altitud en metros para ios, ignorado por android
-          zoom: 15 //zoom para android, ignorado por ios
+          zoom: 17 //zoom para android, ignorado por ios
         }, 5000);
       }
       updateCoordinate(location.coords)
@@ -126,28 +125,15 @@ export default function MapApi({
     handleInitialLocation();
   }, [mapRef.current]);
 
-  // useEffect(() => {
-  //   if ((nodeMarkerStart != "") & (nodeMarkerEnd != "")) {
-  //     const node = {
-  //       type: "byNode",
-  //       origin: nodeMarkerStart,
-  //       destination: nodeMarkerEnd,
-  //     };
-  //     handleShortPath(node);
-  //     setNodeMarkerStart("");
-  //     setNodeMarkerEnd("");
-  //   }
-  // }, [nodeMarkerStart, nodeMarkerEnd]);
-
   const handleShortPath = () => {
     try {
       setPath(createArrayToMap(originalPath));
 
-      Toast.show({
-        type: "success",
-        text1: `Hay ${parseInt(totalDistance)} ms hasta su destino`,
-        position: "bottom",
-      });
+      // Toast.show({
+      //   type: "success",
+      //   text1: `Hay ${parseInt(totalDistance)} ms hasta su destino`,
+      //   position: "bottom",
+      // });
     } catch (error) {
       Toast.show({
         type: "error",
@@ -227,10 +213,10 @@ export default function MapApi({
         style={styles.map}
         onRegionChange={onRegionChange}
         initialRegion={{
-          latitude: -0.19964851407494397,
-          latitudeDelta: 100,
-          longitude: -78.48328033483989,
-          longitudeDelta: 100,
+          latitude: -4.032925984682419,
+          latitudeDelta: 0.095,
+          longitude: -79.20254656812386,
+          longitudeDelta: 0.095,
         }}
         showsUserLocation={true}
         followsUserLocation={false}

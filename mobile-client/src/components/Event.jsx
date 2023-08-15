@@ -13,7 +13,7 @@ import { getTimeAgo, mapISOStringToDate } from "../helpers";
 import { Entypo } from '@expo/vector-icons';
 import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { setCurrentNode, setSearchText } from "../store/slices/searchSlice";
+import { setCurrentNode, setDestination, setSearchText } from "../store/slices/searchSlice";
 import { HomeName } from "../constants";
 
 const Event = ({ event = {} }) => {
@@ -33,6 +33,7 @@ const Event = ({ event = {} }) => {
   const handlePress = () => {
     if (node?._id) {
       node.title = node.detail?.title || "Sin nombre";
+      dispatch(setDestination(node));
       dispatch(setCurrentNode(node));
       dispatch(setSearchText(node.title))
 
