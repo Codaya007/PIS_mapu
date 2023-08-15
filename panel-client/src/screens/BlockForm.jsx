@@ -203,8 +203,7 @@ const BlockForm = () => {
         });
 
         const mapedSubnodes = subnodes.map((sub) => {
-
-          deleteDbFields(sub.nomenclature)
+          deleteDbFields(sub.nomenclature);
           return {
             _id: sub._id,
             latitude: sub.latitude,
@@ -214,7 +213,6 @@ const BlockForm = () => {
             img: sub.img,
             category: sub.category,
             nomenclature: { ...sub.nomenclature, _id: undefined },
-
           };
         });
 
@@ -504,7 +502,7 @@ const BlockForm = () => {
                   } catch (error) {
                     toast.error(
                       error.response?.data?.message ||
-                      "No se pudo eliminar el subnodo"
+                        "No se pudo eliminar el subnodo"
                     );
                   }
                 }}
@@ -681,7 +679,7 @@ const BlockForm = () => {
                     value={subnode.nomenclature.floor}
                     onChange={(e) => handleChangeSubnodeNomenclature(e, index)}
                     borderColor="gray.500"
-                    required
+                    // required
                   />
                 </FormControl>
                 <FormControl>
@@ -693,7 +691,7 @@ const BlockForm = () => {
                     value={subnode.nomenclature.environment}
                     onChange={(e) => handleChangeSubnodeNomenclature(e, index)}
                     borderColor="gray.500"
-                    required
+                    // required
                   />
                 </FormControl>
                 <FormControl>
