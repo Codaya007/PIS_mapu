@@ -289,6 +289,8 @@ const deleteNodeById = async (_id) => {
 
   if (!deletedNode) throw new ValidationError("Nodo no encontrado");
 
+  await Adjacency.deleteMany({ $or: [{ origin: _id }, { destination: _id }] });
+
   return deletedNode;
 };
 
