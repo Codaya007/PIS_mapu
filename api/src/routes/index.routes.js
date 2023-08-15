@@ -6,6 +6,7 @@ const {
 const SubNode = require("../models/SubNode");
 const Detail = require("../models/Detail");
 const Node = require("../models/Node");
+const { getBlockNumberByTitle } = require("../helpers");
 // const middlewares = require("../middlewares");
 // const isLoggedIn = require("../policies/isLoggedIn");
 
@@ -59,6 +60,8 @@ const formatSubnodes = async (subnode) => {
   } = subnode;
   const node = await Node.findOne({ detail: detail?._id }).populate("campus");
 
+  nomenclature.campus = node?.campus?.symbol;
+  nomenclature.block = getBlockNumberByTitle(detail.title);
   return {
     _id: node?._id,
     latitude,
@@ -113,7 +116,7 @@ indexRouter.get("/search", async (req, res, next) => {
     .lean();
 
   const mapedNodes = await Promise.all(nodes.map(formatNode));
-  const mapedSubnodes = subnodes.map(formatSubnodes);
+  const mapedSubnodes = await Promise.all(subnodes.map(formatSubnodes));
 
   const results = [...mapedNodes, ...mapedSubnodes];
 

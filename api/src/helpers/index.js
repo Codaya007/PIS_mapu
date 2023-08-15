@@ -199,6 +199,8 @@ function generateLocationString(node) {
   return locationString.trim();
 }
 
+const getBlockNumberByTitle = (str = "") => str.split(" ")[1] || "-";
+
 module.exports = {
   getDistanceBetweenCoordinates,
   degreesToRadians,
@@ -211,4 +213,5 @@ module.exports = {
   timeBetweenCoordinates,
   cardinalToOrdinalLetters,
   generateLocationString,
+  getBlockNumberByTitle,
 };
