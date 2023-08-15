@@ -10,22 +10,17 @@ import {
   Select,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import MapSelector from "../components/MapToSelect";
+import { getCampuses } from "../services/campusServices";
 import {
   createRouteNode,
   fetchRouteNodeById,
   updateRouteNodeById,
 } from "../services/routeNodeServices";
-
-import { getCampuses } from "../services/campusServices";
-
-// import { MapContainer, TileLayer } from "react-leaflet";
-// import MapWithDrawNodes from "../components/MapWithDrawNodes";
-
-import MapSelector from "../components/MapToSelect";
 
 import { fetchRouteNodes } from "../store/actions/routeNodeActions";
 
@@ -36,32 +31,12 @@ const initialState = {
   campus: "",
 };
 
-/*
-campus -> symbol
-campus -> name
-avaible
-longitude
-latitude
-*/
-
 const RouteNodesForm = () => {
   const [routeNode, setRouteNode] = useState(initialState);
   const [campuses, setCampuses] = useState([]);
   const dispacth = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  // const center = [-4.032747, -79.202405];
-  // const zoom = 18;
-  // const markerRef = useRef();
-
-  // const handleMarkerDrawn = (markerCoordinates) => {
-  //   const coordinates = markerCoordinates.geometry.coordinates;
-  //   setRouteNode((prevState) => ({
-  //     ...prevState,
-  //     latitude: coordinates[1],
-  //     longitude: coordinates[0],
-  //   }));
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,8 +78,7 @@ const RouteNodesForm = () => {
     }
 
     fetchCampuses();
-    // }, []);
-  }, [id]); //SE EJECUTA CADA VEZ QUE EL ID CAMBIA
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -193,25 +167,6 @@ const RouteNodesForm = () => {
             </Heading>
 
             <MapSelector handleChangePointer={handleChangePointer} />
-            {/* 
-            <MapContainer
-              style={{ width: "100%", height: "60vh" }}
-              center={center}
-              zoom={zoom}
-              scrollWheelZoom={false}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-
-              <MapWithDrawNodes
-                onMarkerDrawn={handleMarkerDrawn}
-                markerRef={markerRef}
-                latitude={routeNode.latitude}
-                longitude={routeNode.longitude}
-              />
-            </MapContainer> */}
           </Box>
 
           <FormControl>
@@ -232,34 +187,6 @@ const RouteNodesForm = () => {
               />
             </HStack>
           </FormControl>
-
-          {/* <Box p={4} width={"100%"}>
-            <Heading as="h1" size="lg" color="blue.600" mb={4}>
-              Nodo Ruta
-            </Heading>
-
-            <MapContainer
-              style={{ width: "100%", height: "60vh" }}
-              center={center}
-              zoom={zoom}
-              scrollWheelZoom={false}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-
-              <MapWithDrawNodes
-                onMarkerDrawn={handleMarkerDrawn}
-                markerRef={markerRef}
-                latitude={routeNode.latitude}
-                longitude={routeNode.longitude}
-              />
-            </MapContainer>
-          </Box> */}
-
-          {/* Aquí debes implementar la funcionalidad para obtener los polígonos desde el mapa */}
-          {/* Puedes utilizar alguna biblioteca como react-leaflet para mostrar el mapa y seleccionar los polígonos */}
 
           <Button type="submit" bgColor="blue.600" color="white">
             {id ? "Guardar cambios" : "Crear Nodo Ruta"}

@@ -16,6 +16,8 @@ function App() {
   const [allNodes, setAllNodes] = useState([]);
   const [selectedNode, setSelectedNode] = useState(null);
   const [adjacencies, setAdjacencies] = useState([]);
+  const [allAdjacencies, setAllAdjacencies] = useState([]);
+  const [filteredAllAdjacencies, setFilteredAllAdjacencies] = useState([]);
   const [toDelete, setToDelete] = useState([]);
 
   useEffect(() => {
@@ -73,25 +75,49 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const getMarkers = async () => {
-      try {
-        const { results } = await getAllCoordinates({ adjacencies: true });
+  const getMarkers = async () => {
+    try {
+      const { results } = await getAllCoordinates({ adjacencies: true });
 
-        results.map((node, index) => {
-          if (node.type === ROUTE_NODO_TYPE) {
-            node.name = `${node.name} ${index + 1}`
-          }
-        })
-        setAllNodes(results);
-        setNodesData(results)
-        // setNodesData(results.filter((node) => node.type !== ROUTE_NODO_TYPE));
-      } catch (error) {
-        toast.error("No se han podido obtener las coordenadas");
-      }
-    };
+      results.map((node, index) => {
+        if (node.type === ROUTE_NODO_TYPE) {
+          node.name = `${node.name} ${index + 1}`;
+        }
+      });
+      let allAdjacencies = [];
+      results.map((res) => {
+        res.adjacencies.map((adj) => {
+          adj.origin = res._id;
+          adj.startCoordinates = res.coordinates;
+
+          allAdjacencies = allAdjacencies.concat(res.adjacencies || []);
+        });
+      });
+      setAllAdjacencies(allAdjacencies);
+      setAllNodes(results);
+      setNodesData(results);
+      // setNodesData(results.filter((node) => node.type !== ROUTE_NODO_TYPE));
+    } catch (error) {
+      toast.error("No se han podido obtener las coordenadas");
+    }
+  };
+
+  useEffect(() => {
     getMarkers();
   }, []);
+
+  useEffect(() => {
+    if (selectedNode) {
+      const filteredAllAdjacencies = allAdjacencies.filter(
+        (adj) =>
+          adj.origin !== selectedNode?._id &&
+          adj.destination !== selectedNode?._id
+      );
+      setFilteredAllAdjacencies(filteredAllAdjacencies);
+    } else {
+      setFilteredAllAdjacencies(allAdjacencies);
+    }
+  }, [selectedNode, allAdjacencies]);
 
   return (
     <Box>
@@ -111,8 +137,7 @@ function App() {
           Guardar adyacencias
         </Button>
       </Box>
-
-      <Box display={"flex"} margin={4} justifyContent={"space-evenly"}>
+      <Box display={"flex"} justifyContent={"space-evenly"}>
         <MapContainer
           height="65vh"
           nodes={allNodes}
@@ -120,6 +145,7 @@ function App() {
           onSelectNode={handleSelectNode}
           handleAddAdjacency={handleAddAdjacency}
           adjacencies={adjacencies}
+          allAdjacencies={filteredAllAdjacencies}
         />
         {selectedNode && (
           <Box>
