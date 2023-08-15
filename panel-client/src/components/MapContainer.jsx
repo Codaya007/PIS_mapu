@@ -32,7 +32,7 @@ function ChangeView({ center, zoom }) {
 const MapContainer = ({
   nodes,
   selectedNode,
-  handleAddAdjacency = () => {},
+  handleAddAdjacency = () => { },
   width = "100%",
   height = "80vh",
   adjacencies = [],
@@ -87,7 +87,7 @@ const MapContainer = ({
             >
               {/* Si hay un nodo seleccionado, se debe poder añadir como adyacencia este nodo, si aún no forma parte de sus adyacencias */}
               {selectedNode &&
-              !adjacencies.map((ad) => ad.destination).includes(node._id) ? (
+                !adjacencies.map((ad) => ad.destination).includes(node._id) ? (
                 <Popup>
                   <span
                     onClick={(e) => handleAddAdjacency(node)}
@@ -111,14 +111,17 @@ const MapContainer = ({
             />
           ))}
         {showAllAdjacencies &&
-          allAdjacencies?.map((adjacency, index) => (
-            <MapLine
+          allAdjacencies?.map((adjacency, index) => {
+            const { startCoordinates, destinationCoordinates } = adjacency;
+            if (!startCoordinates || !destinationCoordinates) return false;
+
+            return <MapLine
               color={"blue"}
               key={index}
-              start={adjacency.startCoordinates}
-              end={adjacency.destinationCoordinates}
+              start={startCoordinates}
+              end={destinationCoordinates}
             />
-          ))}
+          })}
       </Map>
     </Box>
   );
