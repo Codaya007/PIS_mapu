@@ -1,28 +1,24 @@
 const BadRequestError = require("../errors/BadRequestError");
 const accessNodeService = require("./accessNodeService");
 const nodeService = require("./nodeService");
-const adjacencyService = require("./adjacencyService");
-const routeNodeService = require("./routeNodeService");
 const Node = require("../models/Node");
+const Adjacency = require("../models/Adjacency");
 
 async function findShortestRoute(type, origin, destination, nomenclature) {
-  if (type === "byNomenclature") {
-    // Busco el nodo de destino por nomenclatura, para ello, busco el nodo tipo bloque que esté en ese campus y bloque
-  }
-
   // Paso 1: Validar que los nodos de origen y destino estén disponibles y existan
   let destinityNode = await nodeService.getNodeById(destination);
   let originNode = await nodeService.getNodeById(origin);
 
-  if (
-    !destinityNode ||
-    !originNode ||
-    !destinityNode?.available ||
-    !originNode?.available
-  ) {
-    throw new Error(
-      "Los nodos de origen y destino no están disponibles o no existen"
-    );
+  if (!destinityNode || !originNode) {
+    throw new Error("Los nodos de origen y destino seleccionados no existen");
+  }
+
+  if (!destinityNode?.available) {
+    throw new Error("El punto de destino ha sido desactivado");
+  }
+
+  if (!originNode?.available) {
+    throw new Error("El punto de origen ha sido desactivado");
   }
 
   let additionalMessage = null;
@@ -44,7 +40,7 @@ async function findShortestRoute(type, origin, destination, nomenclature) {
     // Si no hay ningún punto de acceso para ese campus, enviamos un error genérico
     if (!puntoAcceso)
       throw new ValidationError(
-        `El punto de origen y destino deben estar en el mismo campus, primero diríjase al campus '${campusDestino.name}'`
+        `El punto de origen y destino deben estar en el mismo campus, primero diríjase al campus '${campusDestino.name}' para poder iniciar una ruta`
       );
 
     originNode = puntoAcceso;
@@ -53,24 +49,23 @@ async function findShortestRoute(type, origin, destination, nomenclature) {
   }
 
   // Paso 4: Buscamos todos los nodos ruta del campus
-  const routeCampusNodes = await routeNodeService.getRouteNodes({
-    campus: campusDestino._id,
+  const allCampusNodes = await Node.find({
     available: true,
-  });
+    campus: campusDestino._id,
+  }).lean();
 
   // Paso 5: Buscar las adyacencias entre los nodos ruta del campus de origen
   //5.1 Mapeo para solo tener ids y poder filtrar las adyacencias
-  const routeCampusNodesId = routeCampusNodes.map((node) =>
-    node._id.toString()
-  );
-  // Añado los nodos de origen y destino
-  routeCampusNodesId.push(originNode._id.toString());
-  routeCampusNodesId.push(destinityNode._id.toString());
+  const allCampusNodesId = allCampusNodes.map((node) => node._id.toString());
 
-  const adjacencies = await adjacencyService.getAllAdjacencies({
-    origin: { $in: routeCampusNodesId },
-    destination: { $in: routeCampusNodesId },
-  });
+  // // Añado los nodos de origen y destino
+  // routeCampusNodesId.push(originNode._id.toString());
+  // routeCampusNodesId.push(destinityNode._id.toString());
+
+  const adjacencies = await Adjacency.find({
+    origin: { $in: allCampusNodesId },
+    destination: { $in: allCampusNodesId },
+  }).lean();
 
   // Paso 6: Se aplica el algoritmo de Dijkstra para encontrar la ruta más cercana entre el nodo origen y nodo destino
   let { path, totalDistance, distancesBetweenNodes } = findShortestPath(
@@ -98,82 +93,20 @@ async function findShortestRoute(type, origin, destination, nomenclature) {
   };
 }
 
-// const findShortestPath = (
-//   originNodeId,
-//   destinationNodeId,
-//   adjacencies = []
-// ) => {
-//   try {
-//     // Construye un objeto de grafo para usar con Dijkstra
-//     const graph = {};
+// Función para encontrar el nodo no visitado con la distancia mínima
+const findMinDistanceNode = (distances, visited) => {
+  let minDistance = Infinity;
+  let minNode = null;
 
-//     adjacencies.forEach((adjacency) => {
-//       const { origin, destination, weight } = adjacency;
-//       graph[origin] = graph[origin] || {};
-//       graph[origin][destination] = weight;
-//     });
+  for (const node in distances) {
+    if (!visited.includes(node) && distances[node].distance <= minDistance) {
+      minDistance = distances[node].distance;
+      minNode = node;
+    }
+  }
 
-//     // Función para encontrar el nodo no visitado con la distancia mínima
-//     const findMinDistanceNode = (distances, visited) => {
-//       let minDistance = Infinity;
-//       let minNode = null;
-
-//       for (const node in distances) {
-//         if (!visited.includes(node) && distances[node] <= minDistance) {
-//           minDistance = distances[node];
-//           minNode = node;
-//         }
-//       }
-
-//       return minNode;
-//     };
-
-//     // Inicializar distancias y rutas
-//     const distances = { [originNodeId]: 0 };
-//     const paths = { [originNodeId]: [originNodeId] };
-
-//     // Inicializar lista de nodos visitados
-//     const visited = [];
-
-//     // Encontrar la ruta más corta utilizando Dijkstra
-//     let currentNode = originNodeId;
-
-//     while (currentNode !== destinationNodeId) {
-//       visited.push(currentNode);
-
-//       for (const neighbor in graph[currentNode]) {
-//         const totalDistance =
-//           distances[currentNode] + graph[currentNode][neighbor];
-
-//         if (!distances[neighbor] || totalDistance < distances[neighbor]) {
-//           distances[neighbor] = totalDistance;
-//           paths[neighbor] = [...paths[currentNode], neighbor];
-//         }
-//       }
-
-//       currentNode = findMinDistanceNode(distances, visited);
-
-//       if (currentNode === null) {
-//         throw new Error(
-//           "No se ha podido encontrar una ruta entre el punto de origen y destino dado"
-//         );
-//       }
-//     }
-
-//     // Obtener el camino y la distancia total
-//     const shortestPath = paths[destinationNodeId];
-//     const totalDistance = distances[destinationNodeId];
-
-//     return { path: shortestPath, totalDistance };
-//   } catch (error) {
-//     console.log(error.message);
-//     console.log(error.name);
-
-//     throw new BadRequestError(
-//       "No se ha podido encontrar una ruta entre el punto de origen y destino dado"
-//     );
-//   }
-// };
+  return minNode;
+};
 
 const findShortestPath = (
   originNodeId,
@@ -186,27 +119,13 @@ const findShortestPath = (
 
     adjacencies.forEach((adjacency) => {
       const { origin, destination, weight } = adjacency;
+      //
       graph[origin] = graph[origin] || {};
       graph[origin][destination] = weight;
+      // Como es un grafo no dirigido, lo añado en lo contrario también
+      graph[destination] = graph[destination] || {};
+      graph[destination][origin] = weight;
     });
-
-    // Función para encontrar el nodo no visitado con la distancia mínima
-    const findMinDistanceNode = (distances, visited) => {
-      let minDistance = Infinity;
-      let minNode = null;
-
-      for (const node in distances) {
-        if (
-          !visited.includes(node) &&
-          distances[node].distance <= minDistance
-        ) {
-          minDistance = distances[node].distance;
-          minNode = node;
-        }
-      }
-
-      return minNode;
-    };
 
     // Inicializar distancias y rutas
     const distances = { [originNodeId]: { distance: 0, path: [originNodeId] } };
@@ -256,8 +175,9 @@ const findShortestPath = (
 
     return { path: shortestPath, totalDistance, distancesBetweenNodes };
   } catch (error) {
-    console.log(error.message);
-    console.log(error.name);
+    console.log({ error });
+    // console.log(error.message);
+    // console.log(error.name);
 
     throw new BadRequestError(
       "No se ha podido encontrar una ruta entre el punto de origen y destino dado"
