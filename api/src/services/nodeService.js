@@ -134,6 +134,7 @@ const getAllNodesCoordinates = async (
   const nodes = await Node.find(where)
     .select(["latitude", "longitude", "type", "available"])
     .populate("type", ["name"])
+    .populate("campus", ["name"])
     .populate("detail", ["title"])
     .sort({ createdAt: -1 })
     .lean();
@@ -143,8 +144,10 @@ const getAllNodesCoordinates = async (
       node.type = node.type?.name || null;
       node.name =
         node.type === ROUTE_NODO_TYPE
-          ? "Nodo ruta"
-          : node?.detail?.title || "Sin datos";
+          ? `Nodo ruta - ${node.campus?.name || ""}`
+          : node?.detail?.title
+          ? `${node?.detail?.title || ""} - ${node.campus?.name || ""}`
+          : "Sin datos";
       node.color = COLORS_DICTIONARY[node.type];
       node.coordinates = [node.latitude, node.longitude];
       node.detail = undefined;
@@ -197,6 +200,8 @@ const getAllNodesCoordinates = async (
           })
         );
       }
+
+      delete node.campus;
     })
   );
 
@@ -320,10 +325,11 @@ const getNodeByNomenclature = async (
 
   const block = await Block.findOne({
     number: parseInt(blockNumber),
+    campus: campus._id,
   });
 
   if (!block) {
-    throw new NotExist(`El bloque ${blockNumber} no existe`);
+    throw new NotExist(`El bloque ${campusSymbol}${blockNumber} no existe`);
   }
 
   if (campus?._id?.toString() !== block?.campus?.toString()) {

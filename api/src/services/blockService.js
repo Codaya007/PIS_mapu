@@ -17,8 +17,8 @@ const populateNode = async (block) => {
   return formated;
 };
 
-const blockNumberAlreadyExists = async (number) => {
-  const existingBlock = await Block.findOne({ number });
+const blockNumberAlreadyExists = async (number, campus) => {
+  const existingBlock = await Block.findOne({ number, campus });
 
   return !!existingBlock;
 };
@@ -45,11 +45,14 @@ const mapBlock = (row) => {
 };
 
 const createBlock = async (blockData) => {
-  const existingBlock = await blockNumberAlreadyExists(blockData.number);
+  const existingBlock = await blockNumberAlreadyExists(
+    blockData.number,
+    blockData.campus
+  );
 
   if (existingBlock)
     throw new FieldExistingError(
-      `El bloque número ${blockData.number} ya existe`
+      `El bloque número ${blockData.number} ya existe en el campus indicado`
     );
 
   const { node, ...newBlock } = blockData;
@@ -89,8 +92,8 @@ const getBlocks = async (where = {}, skip, limit, populate) => {
   return blocks;
 };
 
-const getBlockByNumber = async (number) => {
-  let block = await Block.findOne({ number })
+const getBlockByNumber = async (number, campus) => {
+  let block = await Block.findOne({ number, campus })
     .populate("faculty")
     .populate("campus");
 

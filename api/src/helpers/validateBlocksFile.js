@@ -6,8 +6,8 @@ const Faculty = require("../models/Faculty");
 const Category = require("../models/Category");
 const Block = require("../models/Block");
 
-const blockNumberAlreadyExists = async (number) => {
-  const existingBlock = await Block.findOne({ number });
+const blockNumberAlreadyExists = async (number, campus) => {
+  const existingBlock = await Block.findOne({ number, campus });
 
   // console.log({ number, existingBlock });
   return !!existingBlock;
@@ -63,10 +63,15 @@ async function validateBlocksExcelFile(file) {
           "El campo NUMERO debe ser un número entero mayor a 0."
         );
       } else {
-        const alreadyExists = await blockNumberAlreadyExists(row.NUMERO);
+        const alreadyExists = await blockNumberAlreadyExists(
+          row.NUMERO,
+          row.CAMPUS
+        );
 
         if (alreadyExists)
-          errorRow.ERRORES.push("Ya existe un bloque con este NUMERO");
+          errorRow.ERRORES.push(
+            "Ya existe un bloque con este NUMERO en ese campus"
+          );
       }
 
       // Validar FACULTAD y CAMPUS como ObjectId válido y requerido

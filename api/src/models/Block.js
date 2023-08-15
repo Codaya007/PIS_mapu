@@ -5,7 +5,7 @@ const blockSchema = new Schema({
   number: {
     type: Number,
     required: true,
-    unique: true,
+    // unique: true,
     min: 1,
   },
   available: {
