@@ -1,6 +1,5 @@
 const { Router } = require("express");
 const roleController = require("../controllers/roleController");
-const middlewares = require("../middlewares");
 const { createRoleSchema } = require("../validationSchemas/Role");
 const isAdmin = require("../policies/isAdmin");
 const roleRouter = Router();
